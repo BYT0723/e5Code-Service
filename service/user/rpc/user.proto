@@ -1,0 +1,74 @@
+syntax ="proto3";
+
+package user;
+import "google/protobuf/timestamp.proto";
+
+option go_package="user";
+
+message User {
+    string id = 1;
+    google.protobuf.Timestamp createdTime = 2;
+    google.protobuf.Timestamp updatedTime = 3;
+    string email = 4;
+    string name = 5;
+    string password = 6;
+}
+
+message getUserReq {
+   string id = 1;
+}
+
+message getUserByEmailReq {
+    string email = 1;
+}
+
+message getUserRsp {
+    User result = 1;
+}
+
+message addUserReq {
+    string email = 1;
+    string name = 2;
+    string password = 3;
+}
+
+message addUserRsp {
+    User result = 1;
+}
+
+message updateUserReq {
+   User payload = 1;
+}
+
+message updateUserRsp {
+    bool result = 1;
+}
+
+message deleteUserReq {
+   string id = 1;
+}
+
+message deleteUserRsp {
+   bool result = 1;
+}
+
+message loginReq {
+    string email = 1;
+    string password = 2;
+}
+
+message loginRsp {
+    User result = 1;
+    string accessToken = 2;
+    int64 accessExpire = 3;
+    int64 refreshAfter = 4;
+}
+
+service user {
+   rpc getUser(getUserReq) returns(getUserRsp);
+   rpc getUserByEmail(getUserByEmailReq) returns(getUserRsp);
+   rpc addUser(addUserReq) returns(addUserRsp);
+   rpc updateUser(updateUserReq) returns(updateUserRsp);
+   rpc deleteUser(deleteUserReq) returns(deleteUserRsp);
+   rpc login(loginReq) returns(loginRsp);
+}

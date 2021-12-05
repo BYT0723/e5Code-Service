@@ -1,0 +1,49 @@
+type (
+	Project {
+		ID      string `json:"id"`
+		Name    string `json:"name"`
+		Desc    string `json:"desc"`
+		Url     string `json:"url"`
+		OwnerId string `json:"owner_id"`
+	}
+	GetProjectReq {
+		ID string `json:"id"`
+	}
+	GetProjectReply {
+		Result Project `json:"result"`
+	}
+	AddProjectReq {
+		Name string `json:"name"`
+		Desc string `json:"desc"`
+		Url  string `json:"url"`
+	}
+	AddProjectReply {
+		Result Project `json:"result"`
+	}
+	UpdateProjectReq {
+		Payload Project `json:"payload"`
+	}
+	UpdateProjectReply {
+		Result bool `json:"result"`
+	}
+	DeleteProjectReq {
+		ID string `json:"id"`
+	}
+	DeleteProjectReply {
+		Result bool `json:"result"`
+	}
+)
+
+@server(
+	jwt: Auth
+)
+service project-api {
+	@handler getProject
+	get /project/getProject/:id(GetProjectReq) returns(GetProjectReply)
+	@handler addProject
+	post /project/addProject(AddProjectReq) returns(AddProjectReply)
+	@handler updateProject
+	post /project/updateProject(UpdateProjectReq) returns(UpdateProjectReply)
+	@handler deleteProject
+	get /project/deleteProject(DeleteProjectReq) returns(DeleteProjectReply)
+}

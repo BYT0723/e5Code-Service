@@ -1,0 +1,59 @@
+syntax ="proto3";
+
+package project;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package="project";
+
+message Deploy {
+    string id = 1;
+    google.protobuf.Timestamp createdTime = 2;
+    google.protobuf.Timestamp updatedTime = 3;
+    string name = 4;
+    string url = 5;
+    string projectID = 6;
+    string environments = 7;
+}
+
+message getDeployReq {
+   string id = 1;
+}
+
+message getDeployRsp {
+   Deploy result = 1;
+}
+
+message addDeployReq {
+    string name = 1;
+    string url = 2;
+    string projectID = 3;
+    string environments = 4;
+}
+
+message addDeployRsp {
+   Deploy result = 1;
+}
+
+message updateDeployReq {
+   Deploy payload = 1;
+}
+
+message updateDeployRsp {
+   bool result = 1;
+}
+
+message deleteDeployReq {
+   string id = 1;
+}
+
+message deleteDeployRsp{
+   bool result = 1;
+}
+
+service depoly {
+   rpc getDepoly(getDeployReq) returns(getDeployRsp);
+   rpc addDeploy(addDeployReq) returns(addDeployRsp);
+   rpc updateDeploy(updateDeployReq) returns(updateDeployRsp);
+   rpc deleteDeploy(deleteDeployReq) returns(deleteDeployRsp);
+}

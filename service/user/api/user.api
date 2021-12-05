@@ -1,0 +1,64 @@
+type (
+	User {
+		ID       string `json:"id"`
+		Email    string `json:"email"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}
+	LoginReq {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	LoginReply {
+		Result       User   `json:"result"`
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+	RegisterUserReq {
+		Email    string `json:"email"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}
+	RegisterUserReply {
+		Result User `json:"result"`
+	}
+	UpdateUserReq {
+		Id    string `json:"id"`
+		Email string `json:"email"`
+		Name  string `json:"name"`
+	}
+	UpdatePasswordReq {
+		Id          string `json:"id"`
+		OldPassword string `json:"oldPassword"`
+		NewPassword string `json:"newPassword"`
+	}
+	UpdateUserReply {
+		Result bool `json:"result"`
+	}
+	DeleteUserReq {
+		Id string `json:"id"`
+	}
+	DeleteUserReply {
+		Result bool `json:"result"`
+	}
+)
+
+@server(
+	jwt: Auth
+)
+service user-api {
+	@handler updateUser
+	post /user/updateUser(UpdateUserReq) returns(UpdateUserReply)
+	@handler updatePassword
+	post /user/updatePassword(UpdatePasswordReq) returns(UpdateUserReply)
+	@handler deleteUser
+	get /user/deleteUser/:id(DeleteUserReq) returns(DeleteUserReply)
+}
+
+service user-api {
+	@handler login
+	post /user/login(LoginReq) returns(LoginReply)
+	@handler registerUser
+	post /user/registerUser(RegisterUserReq) returns(RegisterUserReply)
+}
