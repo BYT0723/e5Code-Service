@@ -36,6 +36,7 @@ func (l *AddProjectLogic) AddProject(in *project.AddProjectReq) (*project.AddPro
 	payload := model.Project{
 		Id:      id,
 		Name:    in.Name,
+		Url:     in.Url,
 		Desc:    sql.NullString{String: in.Desc, Valid: true},
 		OwnerId: ownerID,
 	}

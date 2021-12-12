@@ -6,15 +6,15 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tal-tech/go-zero/core/stores/builder"
 	"github.com/tal-tech/go-zero/core/stores/cache"
 	"github.com/tal-tech/go-zero/core/stores/sqlc"
 	"github.com/tal-tech/go-zero/core/stores/sqlx"
 	"github.com/tal-tech/go-zero/core/stringx"
-	"github.com/tal-tech/go-zero/tools/goctl/model/sql/builderx"
 )
 
 var (
-	deployFieldNames          = builderx.RawFieldNames(&Deploy{})
+	deployFieldNames          = builder.RawFieldNames(&Deploy{})
 	deployRows                = strings.Join(deployFieldNames, ",")
 	deployRowsExpectAutoSet   = strings.Join(stringx.Remove(deployFieldNames, "`create_time`", "`update_time`"), ",")
 	deployRowsWithPlaceHolder = strings.Join(stringx.Remove(deployFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
@@ -24,9 +24,9 @@ var (
 
 type (
 	DeployModel interface {
-		Insert(data Deploy) (sql.Result, error)
+		Insert(data *Deploy) (sql.Result, error)
 		FindOne(id string) (*Deploy, error)
-		Update(data Deploy) error
+		Update(data *Deploy) error
 		Delete(id string) error
 	}
 
@@ -36,13 +36,13 @@ type (
 	}
 
 	Deploy struct {
-		Id           string    `db:"id"`
-		CreateAt     time.Time `db:"create_at"`
-		UpdateAt     time.Time `db:"update_at"`
-		Name         string    `db:"name"`
-		Url          string    `db:"url"`
-		ProjectId    string    `db:"project_id"`
-		Environments string    `db:"environments"`
+		Id              string         `db:"id"`
+		CreateTime      time.Time      `db:"create_time"`
+		UpdateTime      time.Time      `db:"update_time"`
+		Name            string         `db:"name"`
+		ProjectId       string         `db:"project_id"`
+		SshConfig       sql.NullString `db:"sshConfig"`
+		ContainerConfig sql.NullString `db:"containerConfig"`
 	}
 )
 
@@ -53,9 +53,9 @@ func NewDeployModel(conn sqlx.SqlConn, c cache.CacheConf) DeployModel {
 	}
 }
 
-func (m *defaultDeployModel) Insert(data Deploy) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, deployRowsExpectAutoSet)
-	ret, err := m.ExecNoCache(query, data.Id, data.CreateAt, data.UpdateAt, data.Name, data.Url, data.ProjectId, data.Environments)
+func (m *defaultDeployModel) Insert(data *Deploy) (sql.Result, error) {
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, deployRowsExpectAutoSet)
+	ret, err := m.ExecNoCache(query, data.Id, data.Name, data.ProjectId, data.SshConfig, data.ContainerConfig)
 
 	return ret, err
 }
@@ -77,11 +77,11 @@ func (m *defaultDeployModel) FindOne(id string) (*Deploy, error) {
 	}
 }
 
-func (m *defaultDeployModel) Update(data Deploy) error {
+func (m *defaultDeployModel) Update(data *Deploy) error {
 	deployIdKey := fmt.Sprintf("%s%v", cacheDeployIdPrefix, data.Id)
 	_, err := m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, deployRowsWithPlaceHolder)
-		return conn.Exec(query, data.CreateAt, data.UpdateAt, data.Name, data.Url, data.ProjectId, data.Environments, data.Id)
+		return conn.Exec(query, data.Name, data.ProjectId, data.SshConfig, data.ContainerConfig, data.Id)
 	}, deployIdKey)
 	return err
 }

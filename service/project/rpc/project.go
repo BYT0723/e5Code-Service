@@ -23,11 +23,11 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 	srv := server.NewProjectServer(ctx)
-	deploy := server.NewDepolyServer(ctx)
+	deploy := server.NewDeployServer(ctx)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		project.RegisterProjectServer(grpcServer, srv)
-		project.RegisterDepolyServer(grpcServer, deploy)
+		project.RegisterDeployServer(grpcServer, deploy)
 	})
 	defer s.Stop()
 

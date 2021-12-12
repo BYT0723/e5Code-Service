@@ -1,5 +1,7 @@
 package common
 
 const (
-	UserID = "userID"
+	UserID   = "userID"
+	PassWord = "password"
+	SSHKey   = "sshKey"
 )

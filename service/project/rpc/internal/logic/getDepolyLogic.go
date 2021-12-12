@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/project"
@@ -24,7 +25,26 @@ func NewGetDepolyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDepo
 }
 
 func (l *GetDepolyLogic) GetDepoly(in *project.GetDeployReq) (*project.GetDeployRsp, error) {
-	// todo: add your logic here and delete this line
-
-	return &project.GetDeployRsp{}, nil
+	deploy, err := l.svcCtx.DeployModel.FindOne(in.Id)
+	if err != nil {
+		logx.Error("Fail to findone deploy, err: ", err.Error())
+		return nil, err
+	}
+	sshConfig := project.SSHConfig{}
+	if deploy.SshConfig.Valid {
+		json.Unmarshal([]byte(deploy.SshConfig.String), sshConfig)
+	}
+	containerConfig := project.ContainerConfig{}
+	if deploy.ContainerConfig.Valid {
+		json.Unmarshal([]byte(deploy.ContainerConfig.String), containerConfig)
+	}
+	return &project.GetDeployRsp{
+		Result: &project.Deploy{
+			Id:              deploy.Id,
+			Name:            deploy.Name,
+			ProjectID:       deploy.ProjectId,
+			SshConfig:       &sshConfig,
+			ContainerConfig: &containerConfig,
+		},
+	}, nil
 }

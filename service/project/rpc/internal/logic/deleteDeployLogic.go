@@ -24,7 +24,9 @@ func NewDeleteDeployLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Dele
 }
 
 func (l *DeleteDeployLogic) DeleteDeploy(in *project.DeleteDeployReq) (*project.DeleteDeployRsp, error) {
-	// todo: add your logic here and delete this line
-
-	return &project.DeleteDeployRsp{}, nil
+	if err := l.svcCtx.DeployModel.Delete(in.Id); err != nil {
+		logx.Error("Fail to delete deploy, err: ", err.Error())
+		return &project.DeleteDeployRsp{Result: false}, err
+	}
+	return &project.DeleteDeployRsp{Result: true}, nil
 }

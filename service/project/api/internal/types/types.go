@@ -42,3 +42,70 @@ type DeleteProjectReq struct {
 type DeleteProjectReply struct {
 	Result bool `json:"result"`
 }
+
+type Deploy struct {
+	ID              string          `json:"id"`
+	ProjectID       string          `json:"projectID"`
+	Name            string          `json:"name"`
+	SSHConfig       SSHConfig       `json:"sshConfig"`
+	ContainerConfig ContainerConfig `json:"containerConfig"`
+}
+
+type SSHConfig struct {
+	Host     string `json:"host"`
+	User     string `json:"user"`
+	SSHType  string `json:"sshType"`
+	Password string `json:"password"`
+	SSHKey   string `json:"sshKey"`
+}
+
+type ContainerConfig struct {
+	Name         string   `json:"name"`
+	NetworkType  string   `json:"networkType"`
+	IP           string   `json:"ip"`
+	Ports        []string `json:"ports"`
+	Environments []string `json:"environments"`
+}
+
+type GetDeployReq struct {
+	ID string `json:"id"`
+}
+
+type GetDeployRsp struct {
+	Result Deploy `json:"result"`
+}
+
+type AddDeployReq struct {
+	ProjectID       string          `json:"projectID"`
+	Name            string          `json:"name"`
+	SSHConfig       SSHConfig       `json:"sshConfig"`
+	ContainerConfig ContainerConfig `json:"containerConfig"`
+}
+
+type AddDeployRsp struct {
+	Result Deploy `json:"result"`
+}
+
+type UpdateDeployReq struct {
+	Payload Deploy `json:"payload"`
+}
+
+type UpdateDeployRsp struct {
+	Result bool `json:"result"`
+}
+
+type DeleteDeployReq struct {
+	ID string `json:"id"`
+}
+
+type DeleteDeployRsp struct {
+	Result bool `json:"result"`
+}
+
+type DeployReq struct {
+	ID string `json:"id"`
+}
+
+type DeployRsp struct {
+	Result bool `json:"result"`
+}

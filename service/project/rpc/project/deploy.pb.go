@@ -30,13 +30,13 @@ type Deploy struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	CreatedTime  *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=createdTime,proto3" json:"createdTime,omitempty"`
-	UpdatedTime  *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=updatedTime,proto3" json:"updatedTime,omitempty"`
-	Name         string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Url          string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
-	ProjectID    string                 `protobuf:"bytes,6,opt,name=projectID,proto3" json:"projectID,omitempty"`
-	Environments string                 `protobuf:"bytes,7,opt,name=environments,proto3" json:"environments,omitempty"`
+	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CreatedTime     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=createdTime,proto3" json:"createdTime,omitempty"`
+	UpdatedTime     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=updatedTime,proto3" json:"updatedTime,omitempty"`
+	ProjectID       string                 `protobuf:"bytes,4,opt,name=projectID,proto3" json:"projectID,omitempty"`
+	Name            string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	SshConfig       *SSHConfig             `protobuf:"bytes,6,opt,name=sshConfig,proto3" json:"sshConfig,omitempty"`
+	ContainerConfig *ContainerConfig       `protobuf:"bytes,7,opt,name=containerConfig,proto3" json:"containerConfig,omitempty"`
 }
 
 func (x *Deploy) Reset() {
@@ -92,20 +92,6 @@ func (x *Deploy) GetUpdatedTime() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *Deploy) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Deploy) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
 func (x *Deploy) GetProjectID() string {
 	if x != nil {
 		return x.ProjectID
@@ -113,11 +99,183 @@ func (x *Deploy) GetProjectID() string {
 	return ""
 }
 
-func (x *Deploy) GetEnvironments() string {
+func (x *Deploy) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Deploy) GetSshConfig() *SSHConfig {
+	if x != nil {
+		return x.SshConfig
+	}
+	return nil
+}
+
+func (x *Deploy) GetContainerConfig() *ContainerConfig {
+	if x != nil {
+		return x.ContainerConfig
+	}
+	return nil
+}
+
+type SSHConfig struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Host     string `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`
+	User     string `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	SshType  string `protobuf:"bytes,3,opt,name=sshType,proto3" json:"sshType,omitempty"`
+	Password string `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	SshKey   string `protobuf:"bytes,5,opt,name=sshKey,proto3" json:"sshKey,omitempty"`
+}
+
+func (x *SSHConfig) Reset() {
+	*x = SSHConfig{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_deploy_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SSHConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SSHConfig) ProtoMessage() {}
+
+func (x *SSHConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_deploy_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SSHConfig.ProtoReflect.Descriptor instead.
+func (*SSHConfig) Descriptor() ([]byte, []int) {
+	return file_deploy_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *SSHConfig) GetHost() string {
+	if x != nil {
+		return x.Host
+	}
+	return ""
+}
+
+func (x *SSHConfig) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *SSHConfig) GetSshType() string {
+	if x != nil {
+		return x.SshType
+	}
+	return ""
+}
+
+func (x *SSHConfig) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *SSHConfig) GetSshKey() string {
+	if x != nil {
+		return x.SshKey
+	}
+	return ""
+}
+
+type ContainerConfig struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name         string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	NetworkType  string   `protobuf:"bytes,2,opt,name=networkType,proto3" json:"networkType,omitempty"`
+	Ip           string   `protobuf:"bytes,3,opt,name=ip,proto3" json:"ip,omitempty"`
+	Ports        []string `protobuf:"bytes,4,rep,name=ports,proto3" json:"ports,omitempty"`
+	Environments []string `protobuf:"bytes,5,rep,name=environments,proto3" json:"environments,omitempty"`
+}
+
+func (x *ContainerConfig) Reset() {
+	*x = ContainerConfig{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_deploy_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ContainerConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ContainerConfig) ProtoMessage() {}
+
+func (x *ContainerConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_deploy_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ContainerConfig.ProtoReflect.Descriptor instead.
+func (*ContainerConfig) Descriptor() ([]byte, []int) {
+	return file_deploy_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ContainerConfig) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ContainerConfig) GetNetworkType() string {
+	if x != nil {
+		return x.NetworkType
+	}
+	return ""
+}
+
+func (x *ContainerConfig) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+func (x *ContainerConfig) GetPorts() []string {
+	if x != nil {
+		return x.Ports
+	}
+	return nil
+}
+
+func (x *ContainerConfig) GetEnvironments() []string {
 	if x != nil {
 		return x.Environments
 	}
-	return ""
+	return nil
 }
 
 type GetDeployReq struct {
@@ -131,7 +289,7 @@ type GetDeployReq struct {
 func (x *GetDeployReq) Reset() {
 	*x = GetDeployReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[1]
+		mi := &file_deploy_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -144,7 +302,7 @@ func (x *GetDeployReq) String() string {
 func (*GetDeployReq) ProtoMessage() {}
 
 func (x *GetDeployReq) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[1]
+	mi := &file_deploy_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -157,7 +315,7 @@ func (x *GetDeployReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeployReq.ProtoReflect.Descriptor instead.
 func (*GetDeployReq) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{1}
+	return file_deploy_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetDeployReq) GetId() string {
@@ -178,7 +336,7 @@ type GetDeployRsp struct {
 func (x *GetDeployRsp) Reset() {
 	*x = GetDeployRsp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[2]
+		mi := &file_deploy_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -191,7 +349,7 @@ func (x *GetDeployRsp) String() string {
 func (*GetDeployRsp) ProtoMessage() {}
 
 func (x *GetDeployRsp) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[2]
+	mi := &file_deploy_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -204,7 +362,7 @@ func (x *GetDeployRsp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeployRsp.ProtoReflect.Descriptor instead.
 func (*GetDeployRsp) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{2}
+	return file_deploy_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetDeployRsp) GetResult() *Deploy {
@@ -219,16 +377,16 @@ type AddDeployReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name         string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Url          string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	ProjectID    string `protobuf:"bytes,3,opt,name=projectID,proto3" json:"projectID,omitempty"`
-	Environments string `protobuf:"bytes,4,opt,name=environments,proto3" json:"environments,omitempty"`
+	Name            string           `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	ProjectID       string           `protobuf:"bytes,2,opt,name=projectID,proto3" json:"projectID,omitempty"`
+	SshConfig       *SSHConfig       `protobuf:"bytes,3,opt,name=sshConfig,proto3" json:"sshConfig,omitempty"`
+	ContainerConfig *ContainerConfig `protobuf:"bytes,4,opt,name=containerConfig,proto3" json:"containerConfig,omitempty"`
 }
 
 func (x *AddDeployReq) Reset() {
 	*x = AddDeployReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[3]
+		mi := &file_deploy_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -241,7 +399,7 @@ func (x *AddDeployReq) String() string {
 func (*AddDeployReq) ProtoMessage() {}
 
 func (x *AddDeployReq) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[3]
+	mi := &file_deploy_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -254,19 +412,12 @@ func (x *AddDeployReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddDeployReq.ProtoReflect.Descriptor instead.
 func (*AddDeployReq) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{3}
+	return file_deploy_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *AddDeployReq) GetName() string {
 	if x != nil {
 		return x.Name
-	}
-	return ""
-}
-
-func (x *AddDeployReq) GetUrl() string {
-	if x != nil {
-		return x.Url
 	}
 	return ""
 }
@@ -278,11 +429,18 @@ func (x *AddDeployReq) GetProjectID() string {
 	return ""
 }
 
-func (x *AddDeployReq) GetEnvironments() string {
+func (x *AddDeployReq) GetSshConfig() *SSHConfig {
 	if x != nil {
-		return x.Environments
+		return x.SshConfig
 	}
-	return ""
+	return nil
+}
+
+func (x *AddDeployReq) GetContainerConfig() *ContainerConfig {
+	if x != nil {
+		return x.ContainerConfig
+	}
+	return nil
 }
 
 type AddDeployRsp struct {
@@ -296,7 +454,7 @@ type AddDeployRsp struct {
 func (x *AddDeployRsp) Reset() {
 	*x = AddDeployRsp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[4]
+		mi := &file_deploy_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -309,7 +467,7 @@ func (x *AddDeployRsp) String() string {
 func (*AddDeployRsp) ProtoMessage() {}
 
 func (x *AddDeployRsp) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[4]
+	mi := &file_deploy_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -322,7 +480,7 @@ func (x *AddDeployRsp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddDeployRsp.ProtoReflect.Descriptor instead.
 func (*AddDeployRsp) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{4}
+	return file_deploy_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AddDeployRsp) GetResult() *Deploy {
@@ -343,7 +501,7 @@ type UpdateDeployReq struct {
 func (x *UpdateDeployReq) Reset() {
 	*x = UpdateDeployReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[5]
+		mi := &file_deploy_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -356,7 +514,7 @@ func (x *UpdateDeployReq) String() string {
 func (*UpdateDeployReq) ProtoMessage() {}
 
 func (x *UpdateDeployReq) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[5]
+	mi := &file_deploy_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -369,7 +527,7 @@ func (x *UpdateDeployReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeployReq.ProtoReflect.Descriptor instead.
 func (*UpdateDeployReq) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{5}
+	return file_deploy_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *UpdateDeployReq) GetPayload() *Deploy {
@@ -390,7 +548,7 @@ type UpdateDeployRsp struct {
 func (x *UpdateDeployRsp) Reset() {
 	*x = UpdateDeployRsp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[6]
+		mi := &file_deploy_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -403,7 +561,7 @@ func (x *UpdateDeployRsp) String() string {
 func (*UpdateDeployRsp) ProtoMessage() {}
 
 func (x *UpdateDeployRsp) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[6]
+	mi := &file_deploy_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +574,7 @@ func (x *UpdateDeployRsp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeployRsp.ProtoReflect.Descriptor instead.
 func (*UpdateDeployRsp) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{6}
+	return file_deploy_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdateDeployRsp) GetResult() bool {
@@ -437,7 +595,7 @@ type DeleteDeployReq struct {
 func (x *DeleteDeployReq) Reset() {
 	*x = DeleteDeployReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[7]
+		mi := &file_deploy_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -450,7 +608,7 @@ func (x *DeleteDeployReq) String() string {
 func (*DeleteDeployReq) ProtoMessage() {}
 
 func (x *DeleteDeployReq) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[7]
+	mi := &file_deploy_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -463,7 +621,7 @@ func (x *DeleteDeployReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDeployReq.ProtoReflect.Descriptor instead.
 func (*DeleteDeployReq) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{7}
+	return file_deploy_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *DeleteDeployReq) GetId() string {
@@ -484,7 +642,7 @@ type DeleteDeployRsp struct {
 func (x *DeleteDeployRsp) Reset() {
 	*x = DeleteDeployRsp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_deploy_proto_msgTypes[8]
+		mi := &file_deploy_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -497,7 +655,7 @@ func (x *DeleteDeployRsp) String() string {
 func (*DeleteDeployRsp) ProtoMessage() {}
 
 func (x *DeleteDeployRsp) ProtoReflect() protoreflect.Message {
-	mi := &file_deploy_proto_msgTypes[8]
+	mi := &file_deploy_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -510,10 +668,104 @@ func (x *DeleteDeployRsp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDeployRsp.ProtoReflect.Descriptor instead.
 func (*DeleteDeployRsp) Descriptor() ([]byte, []int) {
-	return file_deploy_proto_rawDescGZIP(), []int{8}
+	return file_deploy_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeleteDeployRsp) GetResult() bool {
+	if x != nil {
+		return x.Result
+	}
+	return false
+}
+
+type DeployReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *DeployReq) Reset() {
+	*x = DeployReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_deploy_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeployReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeployReq) ProtoMessage() {}
+
+func (x *DeployReq) ProtoReflect() protoreflect.Message {
+	mi := &file_deploy_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeployReq.ProtoReflect.Descriptor instead.
+func (*DeployReq) Descriptor() ([]byte, []int) {
+	return file_deploy_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *DeployReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeployRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Result bool `protobuf:"varint,2,opt,name=result,proto3" json:"result,omitempty"`
+}
+
+func (x *DeployRsp) Reset() {
+	*x = DeployRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_deploy_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeployRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeployRsp) ProtoMessage() {}
+
+func (x *DeployRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_deploy_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeployRsp.ProtoReflect.Descriptor instead.
+func (*DeployRsp) Descriptor() ([]byte, []int) {
+	return file_deploy_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *DeployRsp) GetResult() bool {
 	if x != nil {
 		return x.Result
 	}
@@ -526,7 +778,7 @@ var file_deploy_proto_rawDesc = []byte{
 	0x0a, 0x0c, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x07,
 	0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f,
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
-	0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xfc, 0x01, 0x0a, 0x06, 0x44, 0x65, 0x70,
+	0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xbc, 0x02, 0x0a, 0x06, 0x44, 0x65, 0x70,
 	0x6c, 0x6f, 0x79, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x02, 0x69, 0x64, 0x12, 0x3c, 0x0a, 0x0b, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x54, 0x69,
 	0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
@@ -536,59 +788,92 @@ var file_deploy_proto_rawDesc = []byte{
 	0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
 	0x6d, 0x70, 0x52, 0x0b, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x12,
-	0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e,
-	0x61, 0x6d, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x1c, 0x0a, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
-	0x49, 0x44, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x49, 0x44, 0x12, 0x22, 0x0a, 0x0c, 0x65, 0x6e, 0x76, 0x69, 0x72, 0x6f, 0x6e, 0x6d, 0x65,
-	0x6e, 0x74, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x65, 0x6e, 0x76, 0x69, 0x72,
-	0x6f, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22, 0x1e, 0x0a, 0x0c, 0x67, 0x65, 0x74, 0x44, 0x65,
-	0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x37, 0x0a, 0x0c, 0x67, 0x65, 0x74, 0x44, 0x65,
-	0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x27, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c,
-	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74,
-	0x22, 0x76, 0x0a, 0x0c, 0x61, 0x64, 0x64, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71,
-	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
-	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x1c, 0x0a, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x49, 0x44, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65,
-	0x63, 0x74, 0x49, 0x44, 0x12, 0x22, 0x0a, 0x0c, 0x65, 0x6e, 0x76, 0x69, 0x72, 0x6f, 0x6e, 0x6d,
-	0x65, 0x6e, 0x74, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x65, 0x6e, 0x76, 0x69,
-	0x72, 0x6f, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22, 0x37, 0x0a, 0x0c, 0x61, 0x64, 0x64, 0x44,
-	0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x27, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75,
-	0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65,
-	0x63, 0x74, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c,
-	0x74, 0x22, 0x3c, 0x0a, 0x0f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f,
-	0x79, 0x52, 0x65, 0x71, 0x12, 0x29, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e,
-	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22,
-	0x29, 0x0a, 0x0f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52,
-	0x73, 0x70, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x08, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0x21, 0x0a, 0x0f, 0x64, 0x65,
-	0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a,
-	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x29, 0x0a,
-	0x0f, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70,
-	0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08,
-	0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0x86, 0x02, 0x0a, 0x06, 0x64, 0x65, 0x70,
-	0x6f, 0x6c, 0x79, 0x12, 0x39, 0x0a, 0x09, 0x67, 0x65, 0x74, 0x44, 0x65, 0x70, 0x6f, 0x6c, 0x79,
-	0x12, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x67, 0x65, 0x74, 0x44, 0x65,
-	0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x2e, 0x67, 0x65, 0x74, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x39,
-	0x0a, 0x09, 0x61, 0x64, 0x64, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x15, 0x2e, 0x70, 0x72,
-	0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x61, 0x64, 0x64, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52,
-	0x65, 0x71, 0x1a, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x61, 0x64, 0x64,
-	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x42, 0x0a, 0x0c, 0x75, 0x70, 0x64,
-	0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x6a,
-	0x65, 0x63, 0x74, 0x2e, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79,
-	0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x75, 0x70,
-	0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x42, 0x0a,
-	0x0c, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x18, 0x2e,
-	0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65,
-	0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73,
-	0x70, 0x42, 0x09, 0x5a, 0x07, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x1c, 0x0a, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x44, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x44, 0x12, 0x12, 0x0a,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d,
+	0x65, 0x12, 0x30, 0x0a, 0x09, 0x73, 0x73, 0x68, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18, 0x06,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x53,
+	0x53, 0x48, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x52, 0x09, 0x73, 0x73, 0x68, 0x43, 0x6f, 0x6e,
+	0x66, 0x69, 0x67, 0x12, 0x42, 0x0a, 0x0f, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72,
+	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x70,
+	0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72,
+	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x52, 0x0f, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65,
+	0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x22, 0x81, 0x01, 0x0a, 0x09, 0x53, 0x53, 0x48, 0x43,
+	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x12, 0x0a, 0x04, 0x68, 0x6f, 0x73, 0x74, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x68, 0x6f, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x75, 0x73, 0x65,
+	0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x12, 0x18, 0x0a,
+	0x07, 0x73, 0x73, 0x68, 0x54, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
+	0x73, 0x73, 0x68, 0x54, 0x79, 0x70, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77,
+	0x6f, 0x72, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77,
+	0x6f, 0x72, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x73, 0x68, 0x4b, 0x65, 0x79, 0x18, 0x05, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x73, 0x68, 0x4b, 0x65, 0x79, 0x22, 0x91, 0x01, 0x0a, 0x0f,
+	0x43, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12,
+	0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e,
+	0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x54, 0x79,
+	0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72,
+	0x6b, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x02, 0x69, 0x70, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x18, 0x04,
+	0x20, 0x03, 0x28, 0x09, 0x52, 0x05, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x12, 0x22, 0x0a, 0x0c, 0x65,
+	0x6e, 0x76, 0x69, 0x72, 0x6f, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28,
+	0x09, 0x52, 0x0c, 0x65, 0x6e, 0x76, 0x69, 0x72, 0x6f, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22,
+	0x1e, 0x0a, 0x0c, 0x67, 0x65, 0x74, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x12,
+	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22,
+	0x37, 0x0a, 0x0c, 0x67, 0x65, 0x74, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12,
+	0x27, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79,
+	0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0xb6, 0x01, 0x0a, 0x0c, 0x61, 0x64, 0x64,
+	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1c, 0x0a,
+	0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x44, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x44, 0x12, 0x30, 0x0a, 0x09, 0x73,
+	0x73, 0x68, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12,
+	0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x53, 0x53, 0x48, 0x43, 0x6f, 0x6e, 0x66,
+	0x69, 0x67, 0x52, 0x09, 0x73, 0x73, 0x68, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x42, 0x0a,
+	0x0f, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
+	0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
+	0x52, 0x0f, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x69, 0x6e, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x22, 0x37, 0x0a, 0x0c, 0x61, 0x64, 0x64, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73,
+	0x70, 0x12, 0x27, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x44, 0x65, 0x70, 0x6c,
+	0x6f, 0x79, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0x3c, 0x0a, 0x0f, 0x75, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x12, 0x29, 0x0a,
+	0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f,
+	0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52,
+	0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0x29, 0x0a, 0x0f, 0x75, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x16, 0x0a, 0x06, 0x72,
+	0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x72, 0x65, 0x73,
+	0x75, 0x6c, 0x74, 0x22, 0x21, 0x0a, 0x0f, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70,
+	0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x29, 0x0a, 0x0f, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x73,
+	0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c,
+	0x74, 0x22, 0x1b, 0x0a, 0x09, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x12, 0x0e,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x23,
+	0x0a, 0x09, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x16, 0x0a, 0x06, 0x72,
+	0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x72, 0x65, 0x73,
+	0x75, 0x6c, 0x74, 0x32, 0xb8, 0x02, 0x0a, 0x06, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x39,
+	0x0a, 0x09, 0x67, 0x65, 0x74, 0x44, 0x65, 0x70, 0x6f, 0x6c, 0x79, 0x12, 0x15, 0x2e, 0x70, 0x72,
+	0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x67, 0x65, 0x74, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52,
+	0x65, 0x71, 0x1a, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x67, 0x65, 0x74,
+	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x39, 0x0a, 0x09, 0x61, 0x64, 0x64,
+	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
+	0x2e, 0x61, 0x64, 0x64, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x15, 0x2e,
+	0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x61, 0x64, 0x64, 0x44, 0x65, 0x70, 0x6c, 0x6f,
+	0x79, 0x52, 0x73, 0x70, 0x12, 0x42, 0x0a, 0x0c, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65,
+	0x70, 0x6c, 0x6f, 0x79, 0x12, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x75,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x18,
+	0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44,
+	0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x42, 0x0a, 0x0c, 0x64, 0x65, 0x6c, 0x65,
+	0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65,
+	0x63, 0x74, 0x2e, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52,
+	0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x64, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x12, 0x30, 0x0a, 0x06,
+	0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x12, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
+	0x2e, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x70, 0x72, 0x6f,
+	0x6a, 0x65, 0x63, 0x74, 0x2e, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x73, 0x70, 0x42, 0x09,
+	0x5a, 0x07, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -603,38 +888,48 @@ func file_deploy_proto_rawDescGZIP() []byte {
 	return file_deploy_proto_rawDescData
 }
 
-var file_deploy_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_deploy_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_deploy_proto_goTypes = []interface{}{
 	(*Deploy)(nil),                // 0: project.Deploy
-	(*GetDeployReq)(nil),          // 1: project.getDeployReq
-	(*GetDeployRsp)(nil),          // 2: project.getDeployRsp
-	(*AddDeployReq)(nil),          // 3: project.addDeployReq
-	(*AddDeployRsp)(nil),          // 4: project.addDeployRsp
-	(*UpdateDeployReq)(nil),       // 5: project.updateDeployReq
-	(*UpdateDeployRsp)(nil),       // 6: project.updateDeployRsp
-	(*DeleteDeployReq)(nil),       // 7: project.deleteDeployReq
-	(*DeleteDeployRsp)(nil),       // 8: project.deleteDeployRsp
-	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
+	(*SSHConfig)(nil),             // 1: project.SSHConfig
+	(*ContainerConfig)(nil),       // 2: project.ContainerConfig
+	(*GetDeployReq)(nil),          // 3: project.getDeployReq
+	(*GetDeployRsp)(nil),          // 4: project.getDeployRsp
+	(*AddDeployReq)(nil),          // 5: project.addDeployReq
+	(*AddDeployRsp)(nil),          // 6: project.addDeployRsp
+	(*UpdateDeployReq)(nil),       // 7: project.updateDeployReq
+	(*UpdateDeployRsp)(nil),       // 8: project.updateDeployRsp
+	(*DeleteDeployReq)(nil),       // 9: project.deleteDeployReq
+	(*DeleteDeployRsp)(nil),       // 10: project.deleteDeployRsp
+	(*DeployReq)(nil),             // 11: project.deployReq
+	(*DeployRsp)(nil),             // 12: project.deployRsp
+	(*timestamppb.Timestamp)(nil), // 13: google.protobuf.Timestamp
 }
 var file_deploy_proto_depIdxs = []int32{
-	9, // 0: project.Deploy.createdTime:type_name -> google.protobuf.Timestamp
-	9, // 1: project.Deploy.updatedTime:type_name -> google.protobuf.Timestamp
-	0, // 2: project.getDeployRsp.result:type_name -> project.Deploy
-	0, // 3: project.addDeployRsp.result:type_name -> project.Deploy
-	0, // 4: project.updateDeployReq.payload:type_name -> project.Deploy
-	1, // 5: project.depoly.getDepoly:input_type -> project.getDeployReq
-	3, // 6: project.depoly.addDeploy:input_type -> project.addDeployReq
-	5, // 7: project.depoly.updateDeploy:input_type -> project.updateDeployReq
-	7, // 8: project.depoly.deleteDeploy:input_type -> project.deleteDeployReq
-	2, // 9: project.depoly.getDepoly:output_type -> project.getDeployRsp
-	4, // 10: project.depoly.addDeploy:output_type -> project.addDeployRsp
-	6, // 11: project.depoly.updateDeploy:output_type -> project.updateDeployRsp
-	8, // 12: project.depoly.deleteDeploy:output_type -> project.deleteDeployRsp
-	9, // [9:13] is the sub-list for method output_type
-	5, // [5:9] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	13, // 0: project.Deploy.createdTime:type_name -> google.protobuf.Timestamp
+	13, // 1: project.Deploy.updatedTime:type_name -> google.protobuf.Timestamp
+	1,  // 2: project.Deploy.sshConfig:type_name -> project.SSHConfig
+	2,  // 3: project.Deploy.containerConfig:type_name -> project.ContainerConfig
+	0,  // 4: project.getDeployRsp.result:type_name -> project.Deploy
+	1,  // 5: project.addDeployReq.sshConfig:type_name -> project.SSHConfig
+	2,  // 6: project.addDeployReq.containerConfig:type_name -> project.ContainerConfig
+	0,  // 7: project.addDeployRsp.result:type_name -> project.Deploy
+	0,  // 8: project.updateDeployReq.payload:type_name -> project.Deploy
+	3,  // 9: project.deploy.getDepoly:input_type -> project.getDeployReq
+	5,  // 10: project.deploy.addDeploy:input_type -> project.addDeployReq
+	7,  // 11: project.deploy.updateDeploy:input_type -> project.updateDeployReq
+	9,  // 12: project.deploy.deleteDeploy:input_type -> project.deleteDeployReq
+	11, // 13: project.deploy.deploy:input_type -> project.deployReq
+	4,  // 14: project.deploy.getDepoly:output_type -> project.getDeployRsp
+	6,  // 15: project.deploy.addDeploy:output_type -> project.addDeployRsp
+	8,  // 16: project.deploy.updateDeploy:output_type -> project.updateDeployRsp
+	10, // 17: project.deploy.deleteDeploy:output_type -> project.deleteDeployRsp
+	12, // 18: project.deploy.deploy:output_type -> project.deployRsp
+	14, // [14:19] is the sub-list for method output_type
+	9,  // [9:14] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_deploy_proto_init() }
@@ -656,7 +951,7 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDeployReq); i {
+			switch v := v.(*SSHConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -668,7 +963,7 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDeployRsp); i {
+			switch v := v.(*ContainerConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -680,7 +975,7 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddDeployReq); i {
+			switch v := v.(*GetDeployReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -692,7 +987,7 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddDeployRsp); i {
+			switch v := v.(*GetDeployRsp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -704,7 +999,7 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDeployReq); i {
+			switch v := v.(*AddDeployReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -716,7 +1011,7 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDeployRsp); i {
+			switch v := v.(*AddDeployRsp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -728,7 +1023,7 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDeployReq); i {
+			switch v := v.(*UpdateDeployReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -740,7 +1035,55 @@ func file_deploy_proto_init() {
 			}
 		}
 		file_deploy_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateDeployRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_deploy_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteDeployReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_deploy_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeleteDeployRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_deploy_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeployReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_deploy_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeployRsp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -758,7 +1101,7 @@ func file_deploy_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_deploy_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -780,180 +1123,216 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// DepolyClient is the client API for Depoly service.
+// DeployClient is the client API for Deploy service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type DepolyClient interface {
+type DeployClient interface {
 	GetDepoly(ctx context.Context, in *GetDeployReq, opts ...grpc.CallOption) (*GetDeployRsp, error)
 	AddDeploy(ctx context.Context, in *AddDeployReq, opts ...grpc.CallOption) (*AddDeployRsp, error)
 	UpdateDeploy(ctx context.Context, in *UpdateDeployReq, opts ...grpc.CallOption) (*UpdateDeployRsp, error)
 	DeleteDeploy(ctx context.Context, in *DeleteDeployReq, opts ...grpc.CallOption) (*DeleteDeployRsp, error)
+	Deploy(ctx context.Context, in *DeployReq, opts ...grpc.CallOption) (*DeployRsp, error)
 }
 
-type depolyClient struct {
+type deployClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewDepolyClient(cc grpc.ClientConnInterface) DepolyClient {
-	return &depolyClient{cc}
+func NewDeployClient(cc grpc.ClientConnInterface) DeployClient {
+	return &deployClient{cc}
 }
 
-func (c *depolyClient) GetDepoly(ctx context.Context, in *GetDeployReq, opts ...grpc.CallOption) (*GetDeployRsp, error) {
+func (c *deployClient) GetDepoly(ctx context.Context, in *GetDeployReq, opts ...grpc.CallOption) (*GetDeployRsp, error) {
 	out := new(GetDeployRsp)
-	err := c.cc.Invoke(ctx, "/project.depoly/getDepoly", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.deploy/getDepoly", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *depolyClient) AddDeploy(ctx context.Context, in *AddDeployReq, opts ...grpc.CallOption) (*AddDeployRsp, error) {
+func (c *deployClient) AddDeploy(ctx context.Context, in *AddDeployReq, opts ...grpc.CallOption) (*AddDeployRsp, error) {
 	out := new(AddDeployRsp)
-	err := c.cc.Invoke(ctx, "/project.depoly/addDeploy", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.deploy/addDeploy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *depolyClient) UpdateDeploy(ctx context.Context, in *UpdateDeployReq, opts ...grpc.CallOption) (*UpdateDeployRsp, error) {
+func (c *deployClient) UpdateDeploy(ctx context.Context, in *UpdateDeployReq, opts ...grpc.CallOption) (*UpdateDeployRsp, error) {
 	out := new(UpdateDeployRsp)
-	err := c.cc.Invoke(ctx, "/project.depoly/updateDeploy", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.deploy/updateDeploy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *depolyClient) DeleteDeploy(ctx context.Context, in *DeleteDeployReq, opts ...grpc.CallOption) (*DeleteDeployRsp, error) {
+func (c *deployClient) DeleteDeploy(ctx context.Context, in *DeleteDeployReq, opts ...grpc.CallOption) (*DeleteDeployRsp, error) {
 	out := new(DeleteDeployRsp)
-	err := c.cc.Invoke(ctx, "/project.depoly/deleteDeploy", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.deploy/deleteDeploy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// DepolyServer is the server API for Depoly service.
-type DepolyServer interface {
+func (c *deployClient) Deploy(ctx context.Context, in *DeployReq, opts ...grpc.CallOption) (*DeployRsp, error) {
+	out := new(DeployRsp)
+	err := c.cc.Invoke(ctx, "/project.deploy/deploy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DeployServer is the server API for Deploy service.
+type DeployServer interface {
 	GetDepoly(context.Context, *GetDeployReq) (*GetDeployRsp, error)
 	AddDeploy(context.Context, *AddDeployReq) (*AddDeployRsp, error)
 	UpdateDeploy(context.Context, *UpdateDeployReq) (*UpdateDeployRsp, error)
 	DeleteDeploy(context.Context, *DeleteDeployReq) (*DeleteDeployRsp, error)
+	Deploy(context.Context, *DeployReq) (*DeployRsp, error)
 }
 
-// UnimplementedDepolyServer can be embedded to have forward compatible implementations.
-type UnimplementedDepolyServer struct {
+// UnimplementedDeployServer can be embedded to have forward compatible implementations.
+type UnimplementedDeployServer struct {
 }
 
-func (*UnimplementedDepolyServer) GetDepoly(context.Context, *GetDeployReq) (*GetDeployRsp, error) {
+func (*UnimplementedDeployServer) GetDepoly(context.Context, *GetDeployReq) (*GetDeployRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDepoly not implemented")
 }
-func (*UnimplementedDepolyServer) AddDeploy(context.Context, *AddDeployReq) (*AddDeployRsp, error) {
+func (*UnimplementedDeployServer) AddDeploy(context.Context, *AddDeployReq) (*AddDeployRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDeploy not implemented")
 }
-func (*UnimplementedDepolyServer) UpdateDeploy(context.Context, *UpdateDeployReq) (*UpdateDeployRsp, error) {
+func (*UnimplementedDeployServer) UpdateDeploy(context.Context, *UpdateDeployReq) (*UpdateDeployRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDeploy not implemented")
 }
-func (*UnimplementedDepolyServer) DeleteDeploy(context.Context, *DeleteDeployReq) (*DeleteDeployRsp, error) {
+func (*UnimplementedDeployServer) DeleteDeploy(context.Context, *DeleteDeployReq) (*DeleteDeployRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDeploy not implemented")
 }
-
-func RegisterDepolyServer(s *grpc.Server, srv DepolyServer) {
-	s.RegisterService(&_Depoly_serviceDesc, srv)
+func (*UnimplementedDeployServer) Deploy(context.Context, *DeployReq) (*DeployRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Deploy not implemented")
 }
 
-func _Depoly_GetDepoly_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func RegisterDeployServer(s *grpc.Server, srv DeployServer) {
+	s.RegisterService(&_Deploy_serviceDesc, srv)
+}
+
+func _Deploy_GetDepoly_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDeployReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DepolyServer).GetDepoly(ctx, in)
+		return srv.(DeployServer).GetDepoly(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.depoly/GetDepoly",
+		FullMethod: "/project.deploy/GetDepoly",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DepolyServer).GetDepoly(ctx, req.(*GetDeployReq))
+		return srv.(DeployServer).GetDepoly(ctx, req.(*GetDeployReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Depoly_AddDeploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Deploy_AddDeploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddDeployReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DepolyServer).AddDeploy(ctx, in)
+		return srv.(DeployServer).AddDeploy(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.depoly/AddDeploy",
+		FullMethod: "/project.deploy/AddDeploy",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DepolyServer).AddDeploy(ctx, req.(*AddDeployReq))
+		return srv.(DeployServer).AddDeploy(ctx, req.(*AddDeployReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Depoly_UpdateDeploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Deploy_UpdateDeploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateDeployReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DepolyServer).UpdateDeploy(ctx, in)
+		return srv.(DeployServer).UpdateDeploy(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.depoly/UpdateDeploy",
+		FullMethod: "/project.deploy/UpdateDeploy",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DepolyServer).UpdateDeploy(ctx, req.(*UpdateDeployReq))
+		return srv.(DeployServer).UpdateDeploy(ctx, req.(*UpdateDeployReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Depoly_DeleteDeploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Deploy_DeleteDeploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteDeployReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DepolyServer).DeleteDeploy(ctx, in)
+		return srv.(DeployServer).DeleteDeploy(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.depoly/DeleteDeploy",
+		FullMethod: "/project.deploy/DeleteDeploy",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DepolyServer).DeleteDeploy(ctx, req.(*DeleteDeployReq))
+		return srv.(DeployServer).DeleteDeploy(ctx, req.(*DeleteDeployReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _Depoly_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "project.depoly",
-	HandlerType: (*DepolyServer)(nil),
+func _Deploy_Deploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeployReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeployServer).Deploy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.deploy/Deploy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeployServer).Deploy(ctx, req.(*DeployReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Deploy_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "project.deploy",
+	HandlerType: (*DeployServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "getDepoly",
-			Handler:    _Depoly_GetDepoly_Handler,
+			Handler:    _Deploy_GetDepoly_Handler,
 		},
 		{
 			MethodName: "addDeploy",
-			Handler:    _Depoly_AddDeploy_Handler,
+			Handler:    _Deploy_AddDeploy_Handler,
 		},
 		{
 			MethodName: "updateDeploy",
-			Handler:    _Depoly_UpdateDeploy_Handler,
+			Handler:    _Deploy_UpdateDeploy_Handler,
 		},
 		{
 			MethodName: "deleteDeploy",
-			Handler:    _Depoly_DeleteDeploy_Handler,
+			Handler:    _Deploy_DeleteDeploy_Handler,
+		},
+		{
+			MethodName: "deploy",
+			Handler:    _Deploy_Deploy_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

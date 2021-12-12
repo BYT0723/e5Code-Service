@@ -1,3 +1,5 @@
+import "deploy.api"
+
 type (
 	Project {
 		ID      string `json:"id"`
@@ -46,4 +48,15 @@ service project-api {
 	post /project/updateProject(UpdateProjectReq) returns(UpdateProjectReply)
 	@handler deleteProject
 	get /project/deleteProject(DeleteProjectReq) returns(DeleteProjectReply)
+	
+	@handler getDeploy
+	get /project/getDeploy/:id(GetDeployReq) returns(GetDeployRsp);
+	@handler addDeploy
+	post /project/addDeploy(AddDeployReq) returns(AddDeployRsp);
+	@handler updateDeploy
+	post /project/updateDeploy(UpdateDeployReq) returns(UpdateDeployRsp);
+	@handler deleteDeploy
+	get /project/deleteDeploy(DeleteDeployReq) returns(DeleteDeployRsp);
+	@handler deploy
+	post /project/deploy(DeployReq) returns(DeployRsp);
 }
