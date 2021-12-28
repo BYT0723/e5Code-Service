@@ -9,6 +9,10 @@ Token:
   Expire: 36000
 Mysql:
   DataSource: root:wangtao@tcp(frp.byt0723.xyz:3306)/test?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Redis:
+  Host: frp.byt0723.xyz:6379
+  Pass: wangtao
+  DB: 1
 CacheRedis:
   - Host: frp.byt0723.xyz:6379
     Pass: wangtao

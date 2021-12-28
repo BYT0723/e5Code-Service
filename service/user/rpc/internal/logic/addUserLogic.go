@@ -27,7 +27,7 @@ func NewAddUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddUserLo
 
 func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.AddUserRsp, error) {
 	// todo: add your logic here and delete this line
-	id := common.GetUUID()
+	id := common.GenUUID()
 	if _, err := l.svcCtx.UserModel.Insert(model.User{
 		Id:       id,
 		Email:    in.Email,

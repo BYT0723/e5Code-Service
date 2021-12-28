@@ -1,13 +1,17 @@
 package common
 
 import (
+	"context"
+	"errors"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/metadata"
 )
 
 // return a uuid string
-func GetUUID() string {
+func GenUUID() string {
 	return uuid.New().String()
 }
 
@@ -36,4 +40,11 @@ func GenerateToken(secretKey string, iat, seconds int64, info map[string]interfa
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims
 	return token.SignedString([]byte(secretKey))
+}
+
+func GetUserID(ctx context.Context) (string, error) {
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		return md.Get(UserID)[0], nil
+	}
+	return "", errors.New("fail to get userid from incomingContext")
 }

@@ -38,18 +38,27 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 	}
 
 	now := time.Now().Unix()
-	info := make(map[string]interface{})
-	info[common.UserID] = u.Id
 	accessExpire := l.svcCtx.Config.Token.Expire
-	conn := l.svcCtx.Config.Redis.NewRedis()
-	token, err := conn.Get(in.Email)
-	if token == "" {
-		token, err = common.GenerateToken(l.svcCtx.Config.Token.JwtKey, now, accessExpire, info)
-		conn.Set(in.Email, token)
-	}
+
+	// 从redis获取token
+	conn := l.svcCtx.RedisClient
+	token, err := conn.Get(in.Email).Result()
 	if err != nil {
-		logx.Error("Fail to generate token, err: ", err.Error())
-		return nil, err
+		// 否则生成新token
+		info := make(map[string]interface{})
+		info[common.UserID] = u.Id
+
+		token, err = common.GenerateToken(l.svcCtx.Config.Token.JwtKey, now, accessExpire, info)
+		if err != nil {
+			logx.Error("Fail to generate token, err: ", err.Error())
+			return nil, err
+		}
+
+		// 将新token放入redis
+		if err := conn.Set(in.Email, token, time.Duration(accessExpire*int64(time.Second))).Err(); err != nil {
+			logx.Error("Fail to save token to redis, err: ", err.Error())
+		}
+
 	}
 
 	return &user.LoginRsp{

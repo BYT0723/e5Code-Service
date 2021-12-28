@@ -14,4 +14,4 @@ UserRpc:
   Etcd:
     Hosts:
     - frp.byt0723.xyz:2379
-    Key: user.rpc
+    Key: user.rpc.test
