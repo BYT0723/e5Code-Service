@@ -6,7 +6,7 @@ RUN apk add git
 
 RUN git clone https://github.com/BYT0723/e5Code-Service.git
 
-ENV GOPROXY="https://goproxy.io"
+ENV GOPROXY="https://goproxy.cn"
 
 WORKDIR /go/src/e5Code-Service/service/user/api/
 
