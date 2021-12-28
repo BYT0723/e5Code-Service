@@ -5,6 +5,10 @@ Etcd:
   - frp.byt0723.xyz:2379
   Key: user.rpc
   # Key: user.rpc.test
+Log:
+  ServiceName: userRpc
+  Mode: console
+  Level: error
 Token:
   JwtKey: a966227a-e009-405a-911b-056b46453441
   Expire: 36000
