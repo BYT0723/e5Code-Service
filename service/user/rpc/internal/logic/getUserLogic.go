@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
@@ -28,7 +29,7 @@ func (l *GetUserLogic) GetUser(in *user.GetUserReq) (*user.GetUserRsp, error) {
 	rsp, err := l.svcCtx.UserModel.FindOne(in.Id)
 	if err != nil {
 		l.Logger.Errorf("Fail to get user(id: %s)", in.Id)
-		return nil, err
+		return nil, errorx.NewRpcError(errorx.UserNotFound, err.Error())
 	}
 	createTime, err := ptypes.TimestampProto(rsp.CreateTime)
 	if err != nil {

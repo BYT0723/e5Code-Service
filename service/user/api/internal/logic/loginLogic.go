@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
 	"e5Code-Service/service/user/rpc/user"
@@ -30,7 +31,7 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 	})
 	if err != nil {
 		logx.Errorf("Fail to Login(email: %s), err: %s", req.Email, err.Error())
-		return nil, err
+		return nil, errorx.NewCodeError(errorx.ServiceError, err.Error())
 	}
 	return &types.LoginReply{
 		Result: types.User{

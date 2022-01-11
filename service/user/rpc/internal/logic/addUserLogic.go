@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"e5Code-Service/common"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
@@ -35,7 +36,7 @@ func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.AddUserRsp, error) {
 		Password: in.Password,
 	}); err != nil {
 		l.Logger.Errorf("Fail to add user(%s)", in.Email)
-		return nil, err
+		return nil, errorx.NewRpcError(errorx.ExecSQLError, err.Error())
 	}
 	return &user.AddUserRsp{
 		Result: &user.User{

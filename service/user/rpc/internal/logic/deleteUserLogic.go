@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
@@ -26,9 +27,7 @@ func (l *DeleteUserLogic) DeleteUser(in *user.DeleteUserReq) (*user.DeleteUserRs
 	err := l.svcCtx.UserModel.Delete(in.Id)
 	if err != nil {
 		l.Logger.Errorf("Fail to delete user(%s)", in.Id)
-		return &user.DeleteUserRsp{
-			Result: false,
-		}, nil
+		return &user.DeleteUserRsp{Result: false}, errorx.NewRpcError(errorx.ExecSQLError, err.Error())
 	}
 
 	return &user.DeleteUserRsp{Result: true}, nil

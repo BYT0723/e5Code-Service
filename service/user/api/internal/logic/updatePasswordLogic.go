@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"e5Code-Service/common"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
 	"e5Code-Service/service/user/rpc/user"
@@ -29,7 +30,7 @@ func (l *UpdatePasswordLogic) UpdatePassword(req types.UpdatePasswordReq) (*type
 	gRsp, err := l.svcCtx.UserRpc.GetUser(l.ctx, &user.GetUserReq{Id: req.Id})
 	if err != nil {
 		logx.Errorf("Fail to get user(id: %s)", req.Id)
-		return &types.UpdateUserReply{Result: false}, err
+		return &types.UpdateUserReply{Result: false}, errorx.NewCodeError(errorx.ServiceError, err.Error())
 	}
 	if gRsp.Result == nil {
 		logx.Errorf("User(id: %s) is not exist", req.Id)

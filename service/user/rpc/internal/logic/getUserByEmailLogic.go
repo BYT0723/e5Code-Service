@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
@@ -28,7 +29,7 @@ func (l *GetUserByEmailLogic) GetUserByEmail(in *user.GetUserByEmailReq) (*user.
 	rsp, err := l.svcCtx.UserModel.FindOneByEmail(in.Email)
 	if err != nil {
 		l.Logger.Errorf("Fail to get user(email: %s)", in.Email)
-		return nil, err
+		return nil, errorx.NewRpcError(errorx.UserNotFound, err.Error())
 	}
 
 	createTime, err := ptypes.TimestampProto(rsp.CreateTime)

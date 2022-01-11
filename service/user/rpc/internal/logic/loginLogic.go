@@ -2,10 +2,10 @@ package logic
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"e5Code-Service/common"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
@@ -30,11 +30,11 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 	u, err := l.svcCtx.UserModel.FindOneByEmail(in.Email)
 	if err != nil {
 		logx.Errorf("Fail to get User(email: %s), err: %s", in.Email, err.Error())
-		return nil, errors.New("UserNotExist")
+		return nil, errorx.NewRpcError(errorx.UserNotFound, err.Error())
 	}
 	if !common.ComparePwd(u.Password, in.Password) {
-		l.Logger.Errorf("Password error")
-		return nil, errors.New("Password error")
+		l.Logger.Errorf("Password isn't match")
+		return nil, errorx.NewRpcError(errorx.PasswordNoMatch, "password isn't match")
 	}
 
 	now := time.Now().Unix()
@@ -51,7 +51,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 		token, err = common.GenerateToken(l.svcCtx.Config.Token.JwtKey, now, accessExpire, info)
 		if err != nil {
 			logx.Error("Fail to generate token, err: ", err.Error())
-			return nil, err
+			return nil, errorx.NewRpcError(errorx.TokenGenerateError, err.Error())
 		}
 
 		// 将新token放入redis

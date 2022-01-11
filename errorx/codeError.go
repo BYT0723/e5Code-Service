@@ -1,7 +1,16 @@
 package errorx
 
+import "fmt"
+
 const (
-// code error
+	SQLError = 100
+
+	ServiceError = 200
+
+	APIError = 300
+
+	// API ERROR
+	EncryptPwdError = 301
 )
 
 type CodeError struct {
@@ -19,7 +28,7 @@ func NewCodeError(code int, msg string) error {
 }
 
 func (e *CodeError) Error() string {
-	return e.Msg
+	return fmt.Sprintf("%v: %s", e.Code, e.Msg)
 }
 
 func (e *CodeError) Data() *CodeErrorResponse {
@@ -27,4 +36,8 @@ func (e *CodeError) Data() *CodeErrorResponse {
 		Code: e.Code,
 		Msg:  e.Msg,
 	}
+}
+
+func (e *CodeError) Belong(parent *CodeError) bool {
+	return e.Code-parent.Code > 0 && e.Code-parent.Code < 100
 }

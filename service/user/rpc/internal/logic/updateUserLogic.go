@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
@@ -39,8 +40,7 @@ func (l *UpdateUserLogic) UpdateUser(in *user.UpdateUserReq) (*user.UpdateUserRs
 	}
 	if err = l.svcCtx.UserModel.Update(*u); err != nil {
 		l.Logger.Errorf("Fail to update user(id: %s)", in.Payload.Id)
-		return &user.UpdateUserRsp{Result: false}, err
+		return &user.UpdateUserRsp{Result: false}, errorx.NewRpcError(errorx.ExecSQLError, err.Error())
 	}
-
 	return &user.UpdateUserRsp{Result: true}, nil
 }

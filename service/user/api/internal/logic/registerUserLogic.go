@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"e5Code-Service/common"
+	"e5Code-Service/errorx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
 	"e5Code-Service/service/user/rpc/user"
@@ -28,7 +29,7 @@ func (l *RegisterUserLogic) RegisterUser(req types.RegisterUserReq) (*types.Regi
 	password, err := common.EncryptPwd(req.Password)
 	if err != nil {
 		logx.Errorf("Fail to encrypt Password, err: ", err.Error())
-		return nil, err
+		return nil, errorx.NewCodeError(errorx.APIError, err.Error())
 	}
 	rsp, err := l.svcCtx.UserRpc.AddUser(l.ctx, &user.AddUserReq{
 		Email:    req.Email,
@@ -37,7 +38,7 @@ func (l *RegisterUserLogic) RegisterUser(req types.RegisterUserReq) (*types.Regi
 	})
 	if err != nil {
 		logx.Errorf("Fail to register User(email: %s), err: %s", req.Email, err.Error())
-		return nil, err
+		return nil, errorx.NewCodeError(errorx.ServiceError, err.Error())
 	}
 	return &types.RegisterUserReply{
 		Result: types.User{
