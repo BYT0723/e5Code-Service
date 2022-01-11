@@ -38,7 +38,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 	}
 
 	now := time.Now().Unix()
-	accessExpire := l.svcCtx.Config.Token.Expire
+	var accessExpire int64
 
 	// 从redis获取token
 	conn := l.svcCtx.RedisClient
@@ -49,6 +49,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 		info[common.UserID] = u.Id
 
 		token, err = common.GenerateToken(l.svcCtx.Config.Token.JwtKey, now, accessExpire, info)
+		accessExpire = l.svcCtx.Config.Token.Expire
 		if err != nil {
 			logx.Error("Fail to generate token, err: ", err.Error())
 			return nil, errorx.NewRpcError(errorx.TokenGenerateError, err.Error())
@@ -58,7 +59,8 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 		if err := conn.Set(in.Email, token, time.Duration(accessExpire*int64(time.Second))).Err(); err != nil {
 			logx.Error("Fail to save token to redis, err: ", err.Error())
 		}
-
+	} else {
+		accessExpire = conn.TTL(in.Email).Val().Microseconds()
 	}
 
 	return &user.LoginRsp{
