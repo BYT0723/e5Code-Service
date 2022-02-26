@@ -2,7 +2,8 @@ package logic
 
 import (
 	"context"
-	"e5Code-Service/errorx"
+	"e5Code-Service/common/errorx"
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
 	"e5Code-Service/service/user/rpc/user"
@@ -25,24 +26,13 @@ func NewUpdateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) UpdateU
 }
 
 func (l *UpdateUserLogic) UpdateUser(req types.UpdateUserReq) (*types.UpdateUserReply, error) {
-	gRsp, err := l.svcCtx.UserRpc.GetUser(l.ctx, &user.GetUserReq{Id: req.Id})
-	if err != nil {
-		l.Logger.Errorf("Fail to get user(id: %s)", req.Id)
-		return &types.UpdateUserReply{Result: false}, errorx.NewCodeError(errorx.ServiceError, err.Error())
-	}
-	if gRsp.Result == nil {
-		l.Logger.Errorf("User(id: %s) is not exist", req.Id)
-		return &types.UpdateUserReply{Result: false}, nil
-	}
-	rsp, err := l.svcCtx.UserRpc.UpdateUser(l.ctx, &user.UpdateUserReq{Payload: &user.User{
+	if _, err := l.svcCtx.UserRpc.UpdateUser(l.ctx, &user.UpdateUserReq{
 		Id:       req.Id,
-		Email:    req.Email,
 		Name:     req.Name,
-		Password: gRsp.Result.Password,
-	}})
-	if err != nil {
+		Password: req.Password,
+	}); err != nil {
 		logx.Errorf("Fail to Update User(id:%s), err: %s", req.Id, err.Error())
-		return &types.UpdateUserReply{Result: false}, nil
+		return &types.UpdateUserReply{Result: false}, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
-	return &types.UpdateUserReply{Result: rsp.Result}, nil
+	return &types.UpdateUserReply{Result: true}, nil
 }

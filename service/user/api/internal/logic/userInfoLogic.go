@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+
 	"e5Code-Service/common/errorx"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/api/internal/svc"
@@ -11,33 +12,30 @@ import (
 	"github.com/tal-tech/go-zero/core/logx"
 )
 
-type RegisterUserLogic struct {
+type UserInfoLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewRegisterUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) RegisterUserLogic {
-	return RegisterUserLogic{
+func NewUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) UserInfoLogic {
+	return UserInfoLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *RegisterUserLogic) RegisterUser(req types.RegisterUserReq) (*types.RegisterUserReply, error) {
-	rsp, err := l.svcCtx.UserRpc.AddUser(l.ctx, &user.AddUserReq{
-		Email:    req.Email,
-		Name:     req.Name,
-		Password: req.Password,
-	})
+func (l *UserInfoLogic) UserInfo(req types.UserInfoReq) (resp *types.UserInfoReply, err error) {
+	rsp, err := l.svcCtx.UserRpc.GetUserByEmail(l.ctx, &user.GetUserByEmailReq{Email: req.Email})
 	if err != nil {
-		logx.Errorf("Fail to register User(email: %s), err: %s", req.Email, err.Error())
+		logx.Error("Fail to getUserByEmail, err: ", err.Error())
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
-	return &types.RegisterUserReply{
+	resp = &types.UserInfoReply{
 		Id:    rsp.Id,
 		Email: rsp.Email,
 		Name:  rsp.Name,
-	}, nil
+	}
+	return
 }

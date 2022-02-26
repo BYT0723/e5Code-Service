@@ -11,9 +11,15 @@ type Config struct {
 	Mysql struct {
 		DataSource string
 	}
+	Redis struct {
+		Host string
+		Pass string
+		DB   uint32
+	}
 	CacheRedis cache.CacheConf
 	UserRpc    zrpc.RpcClientConf
-	Auth       struct {
+
+	Auth struct {
 		AccessSecret string
 		AccessExpire int64
 	}

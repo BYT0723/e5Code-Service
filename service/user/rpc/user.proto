@@ -3,15 +3,10 @@ syntax ="proto3";
 package user;
 import "google/protobuf/timestamp.proto";
 
-option go_package="user";
+option go_package="user/pb";
 
 message User {
     string id = 1;
-    google.protobuf.Timestamp createdTime = 2;
-    google.protobuf.Timestamp updatedTime = 3;
-    string email = 4;
-    string name = 5;
-    string password = 6;
 }
 
 message getUserReq {
@@ -23,7 +18,11 @@ message getUserByEmailReq {
 }
 
 message getUserRsp {
-    User result = 1;
+    string id = 1;
+    google.protobuf.Timestamp createdTime = 2;
+    google.protobuf.Timestamp updatedTime = 3;
+    string email = 4;
+    string name = 5;
 }
 
 message addUserReq {
@@ -33,24 +32,24 @@ message addUserReq {
 }
 
 message addUserRsp {
-    User result = 1;
+    string id = 1;
+    string email = 2;
+    string name = 3;
 }
 
 message updateUserReq {
-   User payload = 1;
+    string id = 1;
+    string name = 2;
+    string password = 3;
 }
 
-message updateUserRsp {
-    bool result = 1;
-}
+message updateUserRsp {}
 
 message deleteUserReq {
    string id = 1;
 }
 
-message deleteUserRsp {
-   bool result = 1;
-}
+message deleteUserRsp {}
 
 message loginReq {
     string email = 1;
@@ -58,10 +57,9 @@ message loginReq {
 }
 
 message loginRsp {
-    User result = 1;
-    string accessToken = 2;
-    int64 accessExpire = 3;
-    int64 refreshAfter = 4;
+    string id = 1;
+    string email = 2;
+    string name = 3;
 }
 
 service user {

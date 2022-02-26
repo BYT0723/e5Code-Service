@@ -2,7 +2,8 @@ package logic
 
 import (
 	"context"
-	"e5Code-Service/errorx"
+	"e5Code-Service/common/errorx"
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
 	"e5Code-Service/service/user/rpc/user"
@@ -25,11 +26,9 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) DeleteU
 }
 
 func (l *DeleteUserLogic) DeleteUser(req types.DeleteUserReq) (*types.DeleteUserReply, error) {
-	rsp, err := l.svcCtx.UserRpc.DeleteUser(l.ctx, &user.DeleteUserReq{Id: req.Id})
-	if err != nil {
+	if _, err := l.svcCtx.UserRpc.DeleteUser(l.ctx, &user.DeleteUserReq{Id: req.Id}); err != nil {
 		l.Logger.Errorf("Fail to delete user(id: %s)", req.Id)
-		return &types.DeleteUserReply{Result: false}, errorx.NewCodeError(errorx.ServiceError,  err.Error())
+		return &types.DeleteUserReply{Result: false}, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
-
-	return &types.DeleteUserReply{Result: rsp.Result}, nil
+	return &types.DeleteUserReply{Result: true}, nil
 }

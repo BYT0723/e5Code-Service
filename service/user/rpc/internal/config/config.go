@@ -11,15 +11,7 @@ type Config struct {
 	Mysql struct {
 		DataSource string
 	}
-	Redis struct {
-		Host string
-		Pass string
-		DB   int
-	}
 	CacheRedis cache.CacheConf
-	Token      struct {
-		JwtKey string
-		Expire int64
-	}
-	Log logx.LogConf
+	Log        logx.LogConf
+	Salt       string
 }

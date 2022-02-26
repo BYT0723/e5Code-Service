@@ -1,7 +1,7 @@
 package main
 
 import (
-	"e5Code-Service/errorx"
+	"e5Code-Service/common/errorx"
 	"e5Code-Service/service/user/api/internal/config"
 	"e5Code-Service/service/user/api/internal/handler"
 	"e5Code-Service/service/user/api/internal/svc"

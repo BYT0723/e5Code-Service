@@ -9,8 +9,8 @@ import (
 	"github.com/tal-tech/go-zero/rest"
 )
 
-func RegisterHandlers(engine *rest.Server, serverCtx *svc.ServiceContext) {
-	engine.AddRoutes(
+func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
@@ -19,19 +19,19 @@ func RegisterHandlers(engine *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/user/updatePassword",
-				Handler: updatePasswordHandler(serverCtx),
+				Path:    "/user/deleteUser",
+				Handler: deleteUserHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/user/deleteUser/:id",
-				Handler: deleteUserHandler(serverCtx),
+				Method:  http.MethodPost,
+				Path:    "/user/userInfo",
+				Handler: userInfoHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)
 
-	engine.AddRoutes(
+	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,

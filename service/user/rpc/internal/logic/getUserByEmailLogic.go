@@ -2,12 +2,14 @@ package logic
 
 import (
 	"context"
-	"e5Code-Service/errorx"
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
+	"fmt"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/tal-tech/go-zero/core/logx"
+	"github.com/tal-tech/go-zero/core/stores/sqlx"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -28,28 +30,18 @@ func NewGetUserByEmailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetUserByEmailLogic) GetUserByEmail(in *user.GetUserByEmailReq) (*user.GetUserRsp, error) {
 	rsp, err := l.svcCtx.UserModel.FindOneByEmail(in.Email)
 	if err != nil {
-		l.Logger.Errorf("Fail to get user(email: %s)", in.Email)
-		return nil, errorx.NewRpcError(errorx.UserNotFound, err.Error())
+		logx.Errorf("Fail to get user(email: %s)", in.Email)
+		if err == sqlx.ErrNotFound {
+			return nil, status.Error(codesx.UserNotFound, fmt.Sprintf("UserNotFound(email: %v)", in.Email))
+		}
+		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 
-	createTime, err := ptypes.TimestampProto(rsp.CreateTime)
-	if err != nil {
-		logx.Error("Fail to parse user's CreateAt, err: ", err.Error)
-		createTime = timestamppb.Now()
-	}
-	updateTime, err := ptypes.TimestampProto(rsp.UpdateTime)
-	if err != nil {
-		logx.Error("Fail to parse user's UpdateAt, err: ", err.Error)
-		updateTime = timestamppb.Now()
-	}
 	return &user.GetUserRsp{
-		Result: &user.User{
-			Id:          rsp.Id,
-			CreatedTime: createTime,
-			UpdatedTime: updateTime,
-			Email:       in.Email,
-			Name:        rsp.Name,
-			Password:    rsp.Password,
-		},
+		Id:          rsp.Id,
+		CreatedTime: timestamppb.New(rsp.CreateTime),
+		UpdatedTime: timestamppb.New(rsp.UpdateTime),
+		Email:       in.Email,
+		Name:        rsp.Name,
 	}, nil
 }

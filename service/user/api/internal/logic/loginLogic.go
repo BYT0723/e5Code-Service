@@ -2,10 +2,14 @@ package logic
 
 import (
 	"context"
-	"e5Code-Service/errorx"
+	"e5Code-Service/common/contextx"
+	"e5Code-Service/common/errorx"
+	"e5Code-Service/common/errorx/codesx"
+	"e5Code-Service/common/jwtx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
 	"e5Code-Service/service/user/rpc/user"
+	"time"
 
 	"github.com/tal-tech/go-zero/core/logx"
 )
@@ -31,17 +35,34 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 	})
 	if err != nil {
 		logx.Errorf("Fail to Login(email: %s), err: %s", req.Email, err.Error())
-		return nil, errorx.NewCodeError(errorx.ServiceError, err.Error())
+		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
+
+	now := time.Now().Unix()
+	var accessExpire int64
+
+	token, err := l.svcCtx.Redis.Get(rsp.Email).Result()
+	if err != nil {
+		// 否则生成新token
+		accessExpire = l.svcCtx.Config.Auth.AccessExpire
+		token, err := jwtx.GenerateToken(l.svcCtx.Config.Auth.AccessSecret, now, accessExpire, map[string]interface{}{
+			contextx.UserID: rsp.Id,
+		})
+		if err != nil {
+			logx.Error("Fail to generate token, err: ", err.Error())
+			return nil, errorx.NewCodeError(codesx.TokenGenerateError, err.Error())
+		}
+
+		// 将新token放入redis
+		if err := l.svcCtx.Redis.Set(req.Email, token, time.Duration(accessExpire*int64(time.Second))).Err(); err != nil {
+			logx.Error("Fail to save token to redis, err: ", err.Error())
+		}
+	} else {
+		accessExpire = int64(l.svcCtx.Redis.TTL(req.Email).Val().Seconds())
+	}
+
 	return &types.LoginReply{
-		Result: types.User{
-			ID:       rsp.Result.Id,
-			Email:    rsp.Result.Email,
-			Name:     rsp.Result.Name,
-			Password: rsp.Result.Password,
-		},
-		AccessToken:  rsp.AccessToken,
-		AccessExpire: rsp.AccessExpire,
-		RefreshAfter: rsp.RefreshAfter,
+		AccessToken:  token,
+		AccessExpire: accessExpire,
 	}, nil
 }
