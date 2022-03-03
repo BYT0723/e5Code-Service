@@ -17,3 +17,4 @@ UserRpc:
     Hosts:
       - etcd:2379
     Key: user.rpc
+    NonBlock: true

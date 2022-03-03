@@ -2,10 +2,9 @@ Name: project-api
 Host: 0.0.0.0
 Port: 8052
 Mysql:
-  DataSource: root:wangtao@tcp(frp.byt0723.xyz:3306)/test?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:wangtao@tcp(db:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 CacheRedis:
-  - Host: frp.byt0723.xyz:6379
-    Pass: wangtao
+  - Host: redis:6379
     Type: node
 Auth:
   AccessSecret: a966227a-e009-405a-911b-056b46453441
@@ -13,5 +12,6 @@ Auth:
 ProjectRpc:
   Etcd:
     Hosts:
-    - frp.byt0723.xyz:2379
+      - etcd:2379
     Key: project.rpc
+  NonBlock: true

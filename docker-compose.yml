@@ -62,6 +62,8 @@ services:
       - 8002:8002
     networks:
       - e5Code
+    depends_on:
+      - user-rpc
 
   project-api:
     build:
