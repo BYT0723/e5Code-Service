@@ -7,7 +7,7 @@ import (
 	"e5Code-Service/service/project/api/internal/svc"
 	"e5Code-Service/service/project/api/internal/types"
 
-	"github.com/tal-tech/go-zero/rest/httpx"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func addProjectHandler(ctx *svc.ServiceContext) http.HandlerFunc {

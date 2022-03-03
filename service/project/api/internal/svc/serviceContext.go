@@ -5,7 +5,7 @@ import (
 	"e5Code-Service/service/project/rpc/deploy"
 	"e5Code-Service/service/project/rpc/projectClient"
 
-	"github.com/tal-tech/go-zero/zrpc"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {

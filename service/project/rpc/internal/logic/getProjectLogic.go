@@ -7,7 +7,7 @@ import (
 	"e5Code-Service/service/project/rpc/project"
 
 	"github.com/golang/protobuf/ptypes"
-	"github.com/tal-tech/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type GetProjectLogic struct {
@@ -34,14 +34,12 @@ func (l *GetProjectLogic) GetProject(in *project.GetProjectReq) (*project.GetPro
 	updatedTime, err := ptypes.TimestampProto(p.UpdateTime)
 
 	return &project.GetProjectRsp{
-		Result: &project.Project{
-			Id:          p.Id,
-			Name:        p.Name,
-			Desc:        p.Desc.String,
-			CreatedTime: createdTime,
-			UpdatedTime: updatedTime,
-			Url:         p.Url,
-			OwnerID:     p.OwnerId,
-		},
+		Id:         p.Id,
+		Name:       p.Name,
+		Desc:       p.Desc.String,
+		Url:        p.Url,
+		OwnerID:    p.OwnerId,
+		CreateTime: createdTime,
+		UpdateTime: updatedTime,
 	}, nil
 }

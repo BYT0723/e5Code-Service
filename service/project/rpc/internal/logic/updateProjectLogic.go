@@ -4,11 +4,12 @@ import (
 	"context"
 	"database/sql"
 
-	"e5Code-Service/service/project/model"
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/project"
 
-	"github.com/tal-tech/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/status"
 )
 
 type UpdateProjectLogic struct {
@@ -26,22 +27,23 @@ func NewUpdateProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 }
 
 func (l *UpdateProjectLogic) UpdateProject(in *project.UpdateProjectReq) (*project.UpdateProjectRsp, error) {
-	payload := model.Project{}
-	if in.Payload.Name != "" {
-		payload.Name = in.Payload.Name
+	pj, err := l.svcCtx.ProjectModel.FindOne(in.Id)
+	if err != nil {
+		logx.Error("Fail to GetProject on UpdateProject: ", err.Error())
+		return nil, status.Error(codesx.NotFound, err.Error())
 	}
-	if in.Payload.Desc != "" {
-		payload.Desc = sql.NullString{String: in.Payload.Desc, Valid: true}
+	if in.Name != "" {
+		pj.Name = in.Name
 	}
-	if in.Payload.Url != "" {
-		payload.Url = in.Payload.Url
+	if in.Desc != "" {
+		pj.Desc = sql.NullString{String: in.Desc, Valid: true}
 	}
-	if in.Payload.OwnerID != "" {
-		payload.OwnerId = in.Payload.OwnerID
+	if in.Url != "" {
+		pj.Url = in.Url
 	}
-	if err := l.svcCtx.ProjectModel.Update(payload); err != nil {
-		logx.Error("Fail to Update Project, err: ", err.Error())
-		return &project.UpdateProjectRsp{Result: false}, err
+	if err := l.svcCtx.ProjectModel.Update(*pj); err != nil {
+		logx.Error("Fail to UpdateProject : ", err.Error())
+		return nil, status.Error(codesx.SQLError, err.Error())
 	}
-	return &project.UpdateProjectRsp{Result: true}, nil
+	return &project.UpdateProjectRsp{}, nil
 }

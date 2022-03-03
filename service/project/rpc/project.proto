@@ -2,26 +2,22 @@ syntax ="proto3";
 
 package project;
 
-option go_package="project";
+option go_package="./pb";
 
 import "google/protobuf/timestamp.proto";
-
-message Project {
-    string id = 1;
-    google.protobuf.Timestamp createdTime = 2;
-    google.protobuf.Timestamp updatedTime = 3;
-    string name = 4;
-    string desc = 5;
-    string url = 6;
-    string ownerID = 7;
-}
 
 message getProjectReq {
    string id = 1;
 }
 
 message getProjectRsp {
-    Project result = 1;
+    string id = 1;
+    google.protobuf.Timestamp create_time = 2;
+    google.protobuf.Timestamp update_time = 3;
+    string name = 4;
+    string desc = 5;
+    string url = 6;
+    string ownerID = 7;
 }
 
 message addProjectReq {
@@ -31,23 +27,47 @@ message addProjectReq {
 }
 
 message addProjectRsp {
-    Project result = 1;
+    string id = 1;
 }
 
 message updateProjectReq {
-   Project payload = 1;
+    string id = 1;
+    string name = 2;
+    string desc = 3;
+    string url = 4;
 }
 
-message updateProjectRsp {
-    bool result = 1;
-}
+message updateProjectRsp {}
 
 message deleteProjectReq {
    string id = 1;
 }
 
-message deleteProjectRsp {
-   bool result = 1;
+message deleteProjectRsp {}
+
+message addUserReq {
+   string userID = 1;
+   string projectID = 2;
+}
+
+message addUserRsp {}
+
+message modifyPermissionReq {
+   string userID = 1;
+   string projectID = 2;
+   int64 modifiedType = 3;
+   int64 value = 4;
+}
+
+message modifyPermissionRsp {}
+
+message removeUserReq {
+    string userID = 1;
+    string projectID = 2;
+}
+
+message removeUserRsp {
+   
 }
 
 service project {
@@ -55,4 +75,8 @@ service project {
    rpc addProject(addProjectReq) returns(addProjectRsp);
    rpc updateProject(updateProjectReq) returns(updateProjectRsp);
    rpc deleteProject(deleteProjectReq) returns(deleteProjectRsp);
+
+   rpc addUser(addUserReq) returns(addUserRsp);
+   rpc removeUser(removeUserReq) returns(removeUserRsp);
+   rpc modifyPermission(modifyPermissionReq) returns(modifyPermissionRsp);
 }

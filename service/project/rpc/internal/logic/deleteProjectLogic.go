@@ -3,10 +3,12 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/project"
 
-	"github.com/tal-tech/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/status"
 )
 
 type DeleteProjectLogic struct {
@@ -26,7 +28,7 @@ func NewDeleteProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 func (l *DeleteProjectLogic) DeleteProject(in *project.DeleteProjectReq) (*project.DeleteProjectRsp, error) {
 	if err := l.svcCtx.ProjectModel.Delete(in.Id); err != nil {
 		logx.Error("Fail to delete Project, err: ", err.Error())
-		return &project.DeleteProjectRsp{Result: false}, err
+		return nil, status.Error(codesx.SQLError, err.Error())
 	}
-	return &project.DeleteProjectRsp{Result: true}, nil
+	return &project.DeleteProjectRsp{}, nil
 }

@@ -7,11 +7,13 @@ import (
 	"e5Code-Service/service/project/rpc/internal/config"
 	"e5Code-Service/service/project/rpc/internal/server"
 	"e5Code-Service/service/project/rpc/internal/svc"
-	"e5Code-Service/service/project/rpc/project"
+	"e5Code-Service/service/project/rpc/pb"
 
-	"github.com/tal-tech/go-zero/core/conf"
-	"github.com/tal-tech/go-zero/zrpc"
+	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/service"
+	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 var configFile = flag.String("f", "etc/project.yaml", "the config file")
@@ -23,11 +25,13 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 	srv := server.NewProjectServer(ctx)
-	deploy := server.NewDeployServer(ctx)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		project.RegisterProjectServer(grpcServer, srv)
-		project.RegisterDeployServer(grpcServer, deploy)
+		pb.RegisterProjectServer(grpcServer, srv)
+
+		if c.Mode == service.DevMode || c.Mode == service.TestMode {
+			reflection.Register(grpcServer)
+		}
 	})
 	defer s.Stop()
 

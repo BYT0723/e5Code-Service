@@ -5,12 +5,14 @@ import (
 	"database/sql"
 
 	"e5Code-Service/common"
+	"e5Code-Service/common/contextx"
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/project/model"
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/project"
 
-	"github.com/tal-tech/go-zero/core/logx"
-	"google.golang.org/grpc/metadata"
+	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/status"
 )
 
 type AddProjectLogic struct {
@@ -28,10 +30,11 @@ func NewAddProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddPro
 }
 
 func (l *AddProjectLogic) AddProject(in *project.AddProjectReq) (*project.AddProjectRsp, error) {
-	id := common.GetUUID()
-	ownerID := "nobody"
-	if md, ok := metadata.FromIncomingContext(l.ctx); ok {
-		ownerID = md.Get(common.UserID)[0]
+	id := common.GenUUID()
+	ownerID, err := contextx.GetUserID(l.ctx)
+	if err != nil {
+		logx.Error("Fail to getUserID from Context: ", err.Error())
+		return nil, status.Error(codesx.ContextError, err.Error())
 	}
 	payload := model.Project{
 		Id:      id,
@@ -45,12 +48,6 @@ func (l *AddProjectLogic) AddProject(in *project.AddProjectReq) (*project.AddPro
 		return nil, err
 	}
 	return &project.AddProjectRsp{
-		Result: &project.Project{
-			Id:      id,
-			Name:    in.Name,
-			Desc:    in.Desc,
-			Url:     in.Url,
-			OwnerID: ownerID,
-		},
+		Id: id,
 	}, nil
 }

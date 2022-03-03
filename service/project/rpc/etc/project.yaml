@@ -10,3 +10,8 @@ CacheRedis:
   - Host: frp.byt0723.xyz:6379
     Pass: wangtao
     Type: node
+UserRpc:
+  Etcd:
+    Hosts:
+    - 192.168.31.23:2379
+    Key: user.rpc

@@ -3,23 +3,23 @@ package svc
 import (
 	"e5Code-Service/service/project/model"
 	"e5Code-Service/service/project/rpc/internal/config"
+	"e5Code-Service/service/user/rpc/user"
 
-	"github.com/tal-tech/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
-	Config         config.Config
-	ProjectModel   model.ProjectModel
-	DeployModel    model.DeployModel
-	ContainerModel model.ContainerModel
+	Config       config.Config
+	ProjectModel model.ProjectModel
+	UserRpc      user.User
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Mysql.DataSource)
 	return &ServiceContext{
-		Config:         c,
-		ProjectModel:   model.NewProjectModel(conn, c.CacheRedis),
-		DeployModel:    model.NewDeployModel(conn, c.CacheRedis),
-		ContainerModel: model.NewContainerModel(conn, c.CacheRedis),
+		Config:       c,
+		ProjectModel: model.NewProjectModel(conn, c.CacheRedis),
+		UserRpc:      user.NewUser(zrpc.MustNewClient(c.UserRpc)),
 	}
 }
