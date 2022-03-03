@@ -1,4 +1,4 @@
-package common
+package influxx
 
 import (
 	"fmt"

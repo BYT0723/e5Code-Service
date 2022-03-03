@@ -6,7 +6,7 @@ import (
 	"e5Code-Service/service/user/api/internal/logic"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
-	"github.com/tal-tech/go-zero/rest/httpx"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func userInfoHandler(ctx *svc.ServiceContext) http.HandlerFunc {

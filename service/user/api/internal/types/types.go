@@ -7,8 +7,8 @@ type LoginReq struct {
 }
 
 type LoginReply struct {
-	AccessToken  string `json:"accessToken"`
-	AccessExpire int64  `json:"accessExpire"`
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
 }
 
 type RegisterUserReq struct {
@@ -49,4 +49,23 @@ type UserInfoReply struct {
 	Id    string `json:"id"`
 	Email string `json:"email"`
 	Name  string `json:"Name"`
+}
+
+type GetPermissionReq struct {
+	UserID    string `json:"user_id"`
+	ProjectID string `json:"project_id"`
+}
+
+type GetPermissionReply struct {
+	Permission int64 `json:"permission"`
+}
+
+type SetPermissionReq struct {
+	UserID     string `json:"user_id"`
+	ProjectID  string `json:"project_id"`
+	Permission int64  `json:"permission"`
+}
+
+type SetPermissionReply struct {
+	Result bool `json:"result"`
 }

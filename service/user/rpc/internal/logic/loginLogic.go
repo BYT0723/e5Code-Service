@@ -8,8 +8,8 @@ import (
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
-	"github.com/tal-tech/go-zero/core/logx"
-	"github.com/tal-tech/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
 )
 
@@ -33,7 +33,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 	if err != nil {
 		logx.Errorf("Fail to get User(email: %s), err: %s", in.Email, err.Error())
 		if err == sqlx.ErrNotFound {
-			return nil, status.Error(codesx.UserNotFound, "UserNotFound")
+			return nil, status.Error(codesx.NotFound, "UserNotFound")
 		}
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}

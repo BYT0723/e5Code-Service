@@ -8,11 +8,12 @@ import (
 
 	"e5Code-Service/service/user/rpc/internal/logic"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/user"
+	"e5Code-Service/service/user/rpc/pb"
 )
 
 type UserServer struct {
 	svcCtx *svc.ServiceContext
+	pb.UnimplementedUserServer
 }
 
 func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
@@ -21,32 +22,42 @@ func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
 	}
 }
 
-func (s *UserServer) GetUser(ctx context.Context, in *user.GetUserReq) (*user.GetUserRsp, error) {
+func (s *UserServer) GetUser(ctx context.Context, in *pb.GetUserReq) (*pb.GetUserRsp, error) {
 	l := logic.NewGetUserLogic(ctx, s.svcCtx)
 	return l.GetUser(in)
 }
 
-func (s *UserServer) GetUserByEmail(ctx context.Context, in *user.GetUserByEmailReq) (*user.GetUserRsp, error) {
+func (s *UserServer) GetUserByEmail(ctx context.Context, in *pb.GetUserByEmailReq) (*pb.GetUserRsp, error) {
 	l := logic.NewGetUserByEmailLogic(ctx, s.svcCtx)
 	return l.GetUserByEmail(in)
 }
 
-func (s *UserServer) AddUser(ctx context.Context, in *user.AddUserReq) (*user.AddUserRsp, error) {
+func (s *UserServer) AddUser(ctx context.Context, in *pb.AddUserReq) (*pb.AddUserRsp, error) {
 	l := logic.NewAddUserLogic(ctx, s.svcCtx)
 	return l.AddUser(in)
 }
 
-func (s *UserServer) UpdateUser(ctx context.Context, in *user.UpdateUserReq) (*user.UpdateUserRsp, error) {
+func (s *UserServer) UpdateUser(ctx context.Context, in *pb.UpdateUserReq) (*pb.UpdateUserRsp, error) {
 	l := logic.NewUpdateUserLogic(ctx, s.svcCtx)
 	return l.UpdateUser(in)
 }
 
-func (s *UserServer) DeleteUser(ctx context.Context, in *user.DeleteUserReq) (*user.DeleteUserRsp, error) {
+func (s *UserServer) DeleteUser(ctx context.Context, in *pb.DeleteUserReq) (*pb.DeleteUserRsp, error) {
 	l := logic.NewDeleteUserLogic(ctx, s.svcCtx)
 	return l.DeleteUser(in)
 }
 
-func (s *UserServer) Login(ctx context.Context, in *user.LoginReq) (*user.LoginRsp, error) {
+func (s *UserServer) Login(ctx context.Context, in *pb.LoginReq) (*pb.LoginRsp, error) {
 	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
+}
+
+func (s *UserServer) GetPermission(ctx context.Context, in *pb.GetPermissionReq) (*pb.GetPermissionRsp, error) {
+	l := logic.NewGetPermissionLogic(ctx, s.svcCtx)
+	return l.GetPermission(in)
+}
+
+func (s *UserServer) SetPermission(ctx context.Context, in *pb.SetPermissionReq) (*pb.SetPermissionRsp, error) {
+	l := logic.NewSetPermissionLogic(ctx, s.svcCtx)
+	return l.SetPermission(in)
 }

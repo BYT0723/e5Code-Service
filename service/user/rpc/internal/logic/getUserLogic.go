@@ -7,8 +7,8 @@ import (
 	"e5Code-Service/service/user/rpc/user"
 	"fmt"
 
-	"github.com/tal-tech/go-zero/core/logx"
-	"github.com/tal-tech/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -32,7 +32,7 @@ func (l *GetUserLogic) GetUser(in *user.GetUserReq) (*user.GetUserRsp, error) {
 	if err != nil {
 		logx.Errorf("Fail to get user(id: %s)", in.Id)
 		if err == sqlx.ErrNotFound {
-			return nil, status.Error(codesx.UserNotFound, fmt.Sprintf("UserNotFound(id: %v)", in.Id))
+			return nil, status.Error(codesx.NotFound, fmt.Sprintf("UserNotFound(id: %v)", in.Id))
 		}
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}

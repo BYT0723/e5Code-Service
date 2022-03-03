@@ -6,15 +6,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tal-tech/go-zero/core/stores/cache"
-	"github.com/tal-tech/go-zero/core/stores/sqlc"
-	"github.com/tal-tech/go-zero/core/stores/sqlx"
-	"github.com/tal-tech/go-zero/core/stringx"
-	"github.com/tal-tech/go-zero/tools/goctl/model/sql/builderx"
+	"github.com/zeromicro/go-zero/core/stores/builder"
+	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-zero/core/stores/sqlc"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/stringx"
 )
 
 var (
-	userFieldNames          = builderx.RawFieldNames(&User{})
+	userFieldNames          = builder.RawFieldNames(&User{})
 	userRows                = strings.Join(userFieldNames, ",")
 	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`create_time`", "`update_time`"), ",")
 	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
@@ -25,10 +25,10 @@ var (
 
 type (
 	UserModel interface {
-		Insert(data User) (sql.Result, error)
+		Insert(data *User) (sql.Result, error)
 		FindOne(id string) (*User, error)
 		FindOneByEmail(email string) (*User, error)
-		Update(data User) error
+		Update(data *User) error
 		Delete(id string) error
 	}
 
@@ -54,12 +54,13 @@ func NewUserModel(conn sqlx.SqlConn, c cache.CacheConf) UserModel {
 	}
 }
 
-func (m *defaultUserModel) Insert(data User) (sql.Result, error) {
+func (m *defaultUserModel) Insert(data *User) (sql.Result, error) {
+	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
 	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
 	ret, err := m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
 		return conn.Exec(query, data.Id, data.Email, data.Name, data.Password)
-	}, userEmailKey)
+	}, userIdKey, userEmailKey)
 	return ret, err
 }
 
@@ -100,9 +101,9 @@ func (m *defaultUserModel) FindOneByEmail(email string) (*User, error) {
 	}
 }
 
-func (m *defaultUserModel) Update(data User) error {
-	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
+func (m *defaultUserModel) Update(data *User) error {
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
+	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
 	_, err := m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
 		return conn.Exec(query, data.Email, data.Name, data.Password, data.Id)

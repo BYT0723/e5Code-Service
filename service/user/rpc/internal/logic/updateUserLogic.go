@@ -7,8 +7,8 @@ import (
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
-	"github.com/tal-tech/go-zero/core/logx"
-	"github.com/tal-tech/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
 )
 
@@ -31,7 +31,7 @@ func (l *UpdateUserLogic) UpdateUser(in *user.UpdateUserReq) (*user.UpdateUserRs
 	if err != nil {
 		logx.Errorf("Fail to get user(id: %s), err: %s", in.Id, err.Error())
 		if err == sqlx.ErrNotFound {
-			return nil, status.Error(codesx.UserNotFound, "UserNotFound")
+			return nil, status.Error(codesx.NotFound, "UserNotFound")
 		}
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
@@ -41,7 +41,7 @@ func (l *UpdateUserLogic) UpdateUser(in *user.UpdateUserReq) (*user.UpdateUserRs
 	if in.Password != "" {
 		u.Password = cryptx.EncryptPwd(in.Password, l.svcCtx.Config.Salt)
 	}
-	if err = l.svcCtx.UserModel.Update(*u); err != nil {
+	if err = l.svcCtx.UserModel.Update(u); err != nil {
 		l.Logger.Errorf("Fail to update user(id: %s)", in.Id)
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}

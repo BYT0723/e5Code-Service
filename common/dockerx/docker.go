@@ -1,7 +1,8 @@
-package common
+package dockerx
 
 import (
 	"context"
+	"e5Code-Service/common/influxx"
 	"encoding/json"
 	"log"
 	"time"
@@ -113,11 +114,9 @@ func (cli DockerClient) ListStats(ctx context.Context, ids []string) (stats []*C
 	return
 }
 
-func NewDockerClient(host, userID string) (*DockerClient, error) {
+func NewDockerClient() (*DockerClient, error) {
 	dCli, err := client.NewClientWithOpts(
 		client.FromEnv,
-		client.WithTLSClientConfig("./SSL/myDocker/ca.pem", "./SSL/myDocker/cert.pem", "./SSL/myDocker/key.pem"),
-		client.WithHost(host),
 	)
 	if err != nil {
 		return nil, err
@@ -127,11 +126,7 @@ func NewDockerClient(host, userID string) (*DockerClient, error) {
 
 func StoreActiveContainer(ctx context.Context, dockerHost string) error {
 	// 新建docker client
-	userid, err := GetUserID(ctx)
-	if err != nil {
-		return err
-	}
-	cli, err := NewDockerClient("https://42.192.5.238:2375", userid)
+	cli, err := NewDockerClient()
 	if err != nil {
 		return err
 	}
@@ -151,13 +146,13 @@ func StoreActiveContainer(ctx context.Context, dockerHost string) error {
 
 	stats := cli.ListStats(ctx, rIDs)
 
-	config := InfluxConnConfig{
+	config := influxx.InfluxConnConfig{
 		Host: "http://frp.byt0723.xyz:8086",
 		User: "root",
 		Pass: "wangtao",
 		DB:   "e5Code",
 	}
-	client, err := NewInfluxClient(config)
+	client, err := influxx.NewInfluxClient(config)
 	if err != nil {
 		return err
 	}

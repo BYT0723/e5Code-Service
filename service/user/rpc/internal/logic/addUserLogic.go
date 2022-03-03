@@ -9,8 +9,8 @@ import (
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
-	"github.com/tal-tech/go-zero/core/logx"
-	"github.com/tal-tech/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
 )
 
@@ -37,10 +37,10 @@ func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.AddUserRsp, error) {
 			return nil, status.Error(codesx.SQLError, err.Error())
 		}
 	} else {
-		return nil, status.Error(codesx.UserAlreadyExist, "UserAlreadyExist")
+		return nil, status.Error(codesx.AlreadyExist, "UserAlreadyExist")
 	}
 
-	if _, err := l.svcCtx.UserModel.Insert(model.User{
+	if _, err := l.svcCtx.UserModel.Insert(&model.User{
 		Id:       id,
 		Email:    in.Email,
 		Name:     in.Name,

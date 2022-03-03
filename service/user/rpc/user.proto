@@ -3,11 +3,7 @@ syntax ="proto3";
 package user;
 import "google/protobuf/timestamp.proto";
 
-option go_package="user/pb";
-
-message User {
-    string id = 1;
-}
+option go_package="./pb";
 
 message getUserReq {
    string id = 1;
@@ -62,6 +58,24 @@ message loginRsp {
     string name = 3;
 }
 
+message getPermissionReq {
+    string userID = 1;
+    string projectID = 2;
+}
+
+message getPermissionRsp {
+    int64 permission = 1;
+}
+
+message setPermissionReq {
+    string userID = 1;
+    string projectID = 2;
+    int64 permission = 3;
+}
+
+message setPermissionRsp {}
+
+
 service user {
    rpc getUser(getUserReq) returns(getUserRsp);
    rpc getUserByEmail(getUserByEmailReq) returns(getUserRsp);
@@ -69,4 +83,7 @@ service user {
    rpc updateUser(updateUserReq) returns(updateUserRsp);
    rpc deleteUser(deleteUserReq) returns(deleteUserRsp);
    rpc login(loginReq) returns(loginRsp);
+
+   rpc getPermission(getPermissionReq) returns(getPermissionRsp);
+   rpc setPermission(setPermissionReq) returns(setPermissionRsp);
 }

@@ -6,7 +6,7 @@ import (
 
 	"e5Code-Service/service/user/api/internal/svc"
 
-	"github.com/tal-tech/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest"
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
@@ -26,6 +26,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/user/userInfo",
 				Handler: userInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/getPermission",
+				Handler: getPermissionHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/setPermission",
+				Handler: setPermissionHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

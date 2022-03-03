@@ -6,8 +6,8 @@ import (
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
-	"github.com/tal-tech/go-zero/core/logx"
-	"github.com/tal-tech/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
 )
 
@@ -30,7 +30,7 @@ func (l *DeleteUserLogic) DeleteUser(in *user.DeleteUserReq) (*user.DeleteUserRs
 	if err != nil {
 		logx.Errorf("Fail to delete user(%s), err: %v", in.Id, err.Error())
 		if err == sqlx.ErrNotFound {
-			return nil, status.Error(codesx.UserNotFound, "UserNotFound")
+			return nil, status.Error(codesx.NotFound, "UserNotFound")
 		}
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}

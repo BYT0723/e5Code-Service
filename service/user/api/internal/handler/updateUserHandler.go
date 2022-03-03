@@ -6,7 +6,7 @@ import (
 	"e5Code-Service/service/user/api/internal/types"
 	"net/http"
 
-	"github.com/tal-tech/go-zero/rest/httpx"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func updateUserHandler(ctx *svc.ServiceContext) http.HandlerFunc {

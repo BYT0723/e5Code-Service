@@ -2,22 +2,22 @@ package svc
 
 import (
 	"e5Code-Service/service/user/api/internal/config"
-	"e5Code-Service/service/user/rpc/userclient"
+	"e5Code-Service/service/user/rpc/user"
 
 	"github.com/go-redis/redis"
-	"github.com/tal-tech/go-zero/zrpc"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
 	Config  config.Config
-	UserRpc userclient.UserServer
+	UserRpc user.User
 	Redis   *redis.Client
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:  c,
-		UserRpc: userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		UserRpc: user.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		Redis: redis.NewClient(&redis.Options{
 			Addr:     c.Redis.Host,
 			Password: c.Redis.Pass,
