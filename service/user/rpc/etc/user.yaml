@@ -2,17 +2,11 @@ Name: user.rpc
 ListenOn: :8001
 Etcd:
   Hosts:
-  - 192.168.31.23:2379
+    - http://etcd:2379
   Key: user.rpc
-  # Key: user.rpc.test
-Log:
-  ServiceName: userRpc
-  Mode: console
-  Level: error
 Mysql:
-  DataSource: root:wangtao@tcp(192.168.31.23:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:wangtao@tcp(db:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 CacheRedis:
-  - Host: 192.168.31.23:6379
-    Pass: wangtao
+  - Host: redis:6379
     Type: node
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe

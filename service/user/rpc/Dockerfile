@@ -1,10 +1,9 @@
-FROM golang:1.17-alpine AS builder
+FROM golang:1.17.7-alpine AS builder
 
 LABEL stage=gobuilder
 
 ENV CGO_ENABLED 0
 ENV GOOS linux
-ENV GOARCH arm
 ENV GOPROXY https://goproxy.cn,direct
 
 WORKDIR /build/zero
@@ -13,15 +12,20 @@ ADD go.mod .
 ADD go.sum .
 RUN go mod download
 COPY . .
+COPY service/user/rpc/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/user service/user/rpc/user.go
 
 
 FROM alpine
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN apk update --no-cache && apk add --no-cache ca-certificates tzdata
+ENV TZ Asia/Shanghai
+
 WORKDIR /app
-COPY --from=builder /build/zero/service/user/rpc/etc/user.yaml /app/etc/user.yaml
 COPY --from=builder /app/user /app/user
+COPY --from=builder /app/etc /app/etc
 
 EXPOSE 8001
 
-CMD ["./user"]
+CMD ["./user", "-f", "etc/user.yaml"]

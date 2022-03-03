@@ -13,8 +13,7 @@ type Config struct {
 	}
 	Redis struct {
 		Host string
-		Pass string
-		DB   uint32
+		DB   int
 	}
 	CacheRedis cache.CacheConf
 	UserRpc    zrpc.RpcClientConf

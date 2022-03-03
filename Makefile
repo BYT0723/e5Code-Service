@@ -15,6 +15,16 @@ build:
 	cp ./service/user/api/etc/user-api.yaml ./app/etc/
 	cp ./service/project/rpc/etc/project.yaml ./app/etc/
 	cp ./service/project/api/etc/project-api.yaml ./app/etc/
+	CGO_ENABLED=0 GOOS=linux go build -o ./app/userRpc ./service/user/rpc/user.go
+	CGO_ENABLED=0 GOOS=linux go build -o ./app/userApi ./service/user/api/user.go
+	CGO_ENABLED=0 GOOS=linux go build -o ./app/projectRpc ./service/project/rpc/project.go
+	CGO_ENABLED=0 GOOS=linux go build -o ./app/projectApi ./service/project/api/project.go
+
+build_arm:
+	cp ./service/user/rpc/etc/user.yaml ./app/etc/
+	cp ./service/user/api/etc/user-api.yaml ./app/etc/
+	cp ./service/project/rpc/etc/project.yaml ./app/etc/
+	cp ./service/project/api/etc/project-api.yaml ./app/etc/
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ./app/userRpc ./service/user/rpc/user.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ./app/userApi ./service/user/api/user.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ./app/projectRpc ./service/project/rpc/project.go

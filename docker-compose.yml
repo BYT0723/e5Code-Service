@@ -1,15 +1,75 @@
 version: '3'
+
+networks:
+  e5Code:
+    driver: bridge
+
 services:
-  redis:
-    image:
+  Etcd:
+    image: 'bitnami/etcd:latest'
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
     ports:
-      - "6379"
+      - 2379:2379
+      - 2380:2380
     networks:
       - e5Code
-    deploy:
-      replicas: 2
-      update_config:
-        parallelism: 2
-        delay: 10s
-      restart_policy:
-        condition: on-failure
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - 6379:6379
+    networks:
+      - e5Code
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    networks:
+      - e5Code
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'wangtao'
+
+  user-rpc:
+    build:
+      context: .
+      dockerfile: ./service/user/rpc/Dockerfile
+    ports:
+      - 8001:8001
+    networks:
+      - e5Code
+
+  user-api:
+    build:
+      context: .
+      dockerfile: ./service/user/api/Dockerfile
+    ports:
+      - 8051:8051
+    networks:
+      - e5Code
+    depends_on:
+      - user-rpc
+
+  project-rpc:
+    build:
+      context: .
+      dockerfile: ./service/project/rpc/Dockerfile
+    ports:
+      - 8002:8002
+    networks:
+      - e5Code
+
+  project-api:
+    build:
+      context: .
+      dockerfile: ./service/project/api/Dockerfile
+    ports:
+      - 8052:8052
+    networks:
+      - e5Code
+    depends_on:
+      - project-rpc
