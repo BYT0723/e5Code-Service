@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func addDeployHandler(ctx *svc.ServiceContext) http.HandlerFunc {
+func modifyPermissionHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.AddDeployReq
+		var req types.ModifyPermissionReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
 		}
 
-		l := logic.NewAddDeployLogic(r.Context(), ctx)
-		resp, err := l.AddDeploy(req)
+		l := logic.NewModifyPermissionLogic(r.Context(), svcCtx)
+		resp, err := l.ModifyPermission(req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

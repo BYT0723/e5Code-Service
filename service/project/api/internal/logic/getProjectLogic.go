@@ -3,8 +3,11 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/common/errorx"
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/project/api/internal/svc"
 	"e5Code-Service/service/project/api/internal/types"
+	"e5Code-Service/service/project/rpc/project"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +27,19 @@ func NewGetProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetProj
 }
 
 func (l *GetProjectLogic) GetProject(req types.GetProjectReq) (*types.GetProjectReply, error) {
-	// todo: add your logic here and delete this line
+	rsp, err := l.svcCtx.ProjectRpc.GetProject(l.ctx, &project.GetProjectReq{
+		Id: req.ID,
+	})
+	if err != nil {
+		logx.Error("Fail to GetProject: ", err.Error())
+		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
+	}
 
-	return &types.GetProjectReply{}, nil
+	return &types.GetProjectReply{
+		ID:      rsp.Id,
+		Name:    rsp.Name,
+		Desc:    rsp.Desc,
+		Url:     rsp.Url,
+		OwnerID: rsp.OwnerID,
+	}, nil
 }

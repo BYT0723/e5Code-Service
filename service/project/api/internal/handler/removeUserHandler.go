@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func updateDeployHandler(ctx *svc.ServiceContext) http.HandlerFunc {
+func removeUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UpdateDeployReq
+		var req types.RemoveUserReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
 		}
 
-		l := logic.NewUpdateDeployLogic(r.Context(), ctx)
-		resp, err := l.UpdateDeploy(req)
+		l := logic.NewRemoveUserLogic(r.Context(), svcCtx)
+		resp, err := l.RemoveUser(req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

@@ -1,18 +1,13 @@
-import "deploy.api"
-
 type (
-	Project {
-		ID      string `json:"id"`
-		Name    string `json:"name"`
-		Desc    string `json:"desc"`
-		Url     string `json:"url"`
-		OwnerId string `json:"owner_id"`
-	}
 	GetProjectReq {
 		ID string `json:"id"`
 	}
 	GetProjectReply {
-		Result Project `json:"result"`
+		ID      string `json:"id"`
+		Name    string `json:"name"`
+		Desc    string `json:"desc"`
+		Url     string `json:"url"`
+		OwnerID string `json:"owner_id"`
 	}
 	AddProjectReq {
 		Name string `json:"name"`
@@ -20,10 +15,13 @@ type (
 		Url  string `json:"url"`
 	}
 	AddProjectReply {
-		Result Project `json:"result"`
+		ID string `json:"id"`
 	}
 	UpdateProjectReq {
-		Payload Project `json:"payload"`
+		ID   string `json:"id"`
+		Name string `json:"name"`
+		Desc string `json:"desc"`
+		Url  string `json:"url"`
 	}
 	UpdateProjectReply {
 		Result bool `json:"result"`
@@ -34,6 +32,29 @@ type (
 	DeleteProjectReply {
 		Result bool `json:"result"`
 	}
+	AddUserReq {
+		UserID    string `json:"user_id"`
+		ProjectID string `json:"project_id"`
+	}
+	AddUserReply {
+		Result bool `json:"result"`
+	}
+	RemoveUserReq {
+		UserID    string `json:"user_id"`
+		ProjectID string `json:"project_id"`
+	}
+	RemoveUserReply {
+		Result bool `json:"result"`
+	}
+	ModifyPermissionReq {
+		UserID       string `json:"user_id"`
+		ProjectID    string `json:"project_id"`
+		ModifiedType int64  `json:"modified_type"`
+		Value        int64  `json:"value"`
+	}
+	ModifyPermissionReply {
+		Result bool `json:"result"`
+	}
 )
 
 @server(
@@ -41,22 +62,18 @@ type (
 )
 service project-api {
 	@handler getProject
-	get /project/getProject/:id(GetProjectReq) returns(GetProjectReply)
+	post /project/getProject(GetProjectReq) returns(GetProjectReply)
 	@handler addProject
 	post /project/addProject(AddProjectReq) returns(AddProjectReply)
 	@handler updateProject
 	post /project/updateProject(UpdateProjectReq) returns(UpdateProjectReply)
 	@handler deleteProject
-	get /project/deleteProject(DeleteProjectReq) returns(DeleteProjectReply)
+	post /project/deleteProject(DeleteProjectReq) returns(DeleteProjectReply)
 	
-	@handler getDeploy
-	get /project/getDeploy/:id(GetDeployReq) returns(GetDeployRsp);
-	@handler addDeploy
-	post /project/addDeploy(AddDeployReq) returns(AddDeployRsp);
-	@handler updateDeploy
-	post /project/updateDeploy(UpdateDeployReq) returns(UpdateDeployRsp);
-	@handler deleteDeploy
-	get /project/deleteDeploy(DeleteDeployReq) returns(DeleteDeployRsp);
-	@handler deploy
-	post /project/deploy(DeployReq) returns(DeployRsp);
+	@handler addUser
+	post /project/addUser(AddUserReq) returns(AddUserReply)
+	@handler removeUser
+	post /project/removeUser(RemoveUserReq) returns(RemoveUserReply)
+	@handler modifyPermission
+	post /project/moidfyPermission(ModifyPermissionReq) returns(ModifyPermissionReply)
 }

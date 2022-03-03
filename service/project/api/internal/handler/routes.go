@@ -13,8 +13,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodGet,
-				Path:    "/project/getProject/:id",
+				Method:  http.MethodPost,
+				Path:    "/project/getProject",
 				Handler: getProjectHandler(serverCtx),
 			},
 			{
@@ -28,34 +28,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: updateProjectHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/project/deleteProject",
 				Handler: deleteProjectHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/project/getDeploy/:id",
-				Handler: getDeployHandler(serverCtx),
+				Method:  http.MethodPost,
+				Path:    "/project/addUser",
+				Handler: addUserHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/project/addDeploy",
-				Handler: addDeployHandler(serverCtx),
+				Path:    "/project/removeUser",
+				Handler: removeUserHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/project/updateDeploy",
-				Handler: updateDeployHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/project/deleteDeploy",
-				Handler: deleteDeployHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/deploy",
-				Handler: deployHandler(serverCtx),
+				Path:    "/project/moidfyPermission",
+				Handler: modifyPermissionHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

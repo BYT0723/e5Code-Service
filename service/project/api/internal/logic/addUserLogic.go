@@ -12,25 +12,28 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type DeleteProjectLogic struct {
+type AddUserLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewDeleteProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) DeleteProjectLogic {
-	return DeleteProjectLogic{
+func NewAddUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) AddUserLogic {
+	return AddUserLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *DeleteProjectLogic) DeleteProject(req types.DeleteProjectReq) (*types.DeleteProjectReply, error) {
-	if _, err := l.svcCtx.ProjectRpc.DeleteProject(l.ctx, &project.DeleteProjectReq{Id: req.ID}); err != nil {
-		logx.Error("Fail to DeleteProject: ", err.Error())
+func (l *AddUserLogic) AddUser(req types.AddUserReq) (resp *types.AddUserReply, err error) {
+	if _, err := l.svcCtx.ProjectRpc.AddUser(l.ctx, &project.AddUserReq{
+		UserID:    req.UserID,
+		ProjectID: req.ProjectID,
+	}); err != nil {
+		logx.Error("Fail to AddUser: ", err.Error())
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
-
-	return &types.DeleteProjectReply{Result: true}, nil
+	resp.Result = true
+	return
 }

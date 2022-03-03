@@ -2,15 +2,15 @@ package logic
 
 import (
 	"context"
-	"fmt"
 
-	"e5Code-Service/common"
+	"e5Code-Service/common/contextx"
+	"e5Code-Service/common/errorx"
+	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/project/api/internal/svc"
 	"e5Code-Service/service/project/api/internal/types"
 	"e5Code-Service/service/project/rpc/project"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/metadata"
 )
 
 type AddProjectLogic struct {
@@ -28,29 +28,23 @@ func NewAddProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) AddProj
 }
 
 func (l *AddProjectLogic) AddProject(req types.AddProjectReq) (*types.AddProjectReply, error) {
-	if userID, ok := l.ctx.Value(common.UserID).(string); ok {
-		fmt.Printf("userID: %v\n", userID)
-		md := metadata.Pairs("userID", userID)
-		l.ctx = metadata.NewOutgoingContext(l.ctx, md)
-	} else {
-		logx.Error("Fail to get UserID")
+	userID, err := contextx.GetUserID(l.ctx)
+	if err != nil {
+		logx.Error("Fail to GetUserID on AddProject: ", err.Error())
+		return nil, errorx.NewCodeError(codesx.ContextError, err.Error())
 	}
-	rsp, err := l.svcCtx.ProjectServer.AddProject(l.ctx, &project.AddProjectReq{
+	l.ctx = contextx.SetUserID(l.ctx, userID)
+
+	rsp, err := l.svcCtx.ProjectRpc.AddProject(l.ctx, &project.AddProjectReq{
 		Name: req.Name,
 		Desc: req.Desc,
 		Url:  req.Url,
 	})
 	if err != nil {
 		logx.Error("Fail to add Project, err: ", err.Error())
-		return nil, err
+		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
 	return &types.AddProjectReply{
-		Result: types.Project{
-			ID:      rsp.Result.Id,
-			Name:    rsp.Result.Name,
-			Desc:    rsp.Result.Desc,
-			Url:     rsp.Result.Url,
-			OwnerId: rsp.Result.OwnerID,
-		},
+		ID: rsp.Id,
 	}, nil
 }

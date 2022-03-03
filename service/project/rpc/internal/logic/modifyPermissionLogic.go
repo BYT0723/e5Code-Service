@@ -9,7 +9,6 @@ import (
 	"e5Code-Service/service/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/internal/status"
 	"google.golang.org/grpc/status"
 )
 
