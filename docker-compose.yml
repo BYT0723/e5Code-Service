@@ -51,8 +51,6 @@ services:
       - 8051:8051
     networks:
       - e5Code
-    depends_on:
-      - user-rpc
 
   project-rpc:
     build:
@@ -73,5 +71,3 @@ services:
       - 8052:8052
     networks:
       - e5Code
-    depends_on:
-      - project-rpc
