@@ -1,28 +1,47 @@
 package gitx
 
 import (
+	"e5Code-Service/common/sshx"
 	"fmt"
-	"os"
-
-	git "github.com/go-git/go-git/v5"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
-func Clone(url string) {
-	// res, err := git.Clone(url)
-	// if err != nil {
-	//     logx.Error("Fail to clone : ", err.Error())
-	//     return
-	// }
-	// fmt.Printf("res: %v\n", res)
+type Cli struct {
+	sshCli *sshx.Cli
+}
 
-	rsp, err := git.PlainClone("/tmp/gitCloneProjectName", false, &git.CloneOptions{
-		URL:      url,
-		Progress: os.Stdout,
-	})
-	if err != nil {
-		logx.Error("Fail to PlainClone Registry: ", err.Error())
-		return
+func NewCli(addr, user, pwd string) *Cli {
+	return &Cli{
+		sshx.NewCli(addr, user, pwd),
 	}
-	fmt.Printf("rsp: %v\n", rsp)
+}
+
+func (c *Cli) CreateUser(name string) (string, error) {
+	// 添加Git下目录
+	addDir := fmt.Sprintf("mkdir %s", name)
+	// 添加Apache验证
+	// addApache := fmt.Sprintf("htpasswd -mb /etc/httpd/conf.d/git-team.htpasswd %s %s", name, password)
+	return c.sshCli.Run(addDir)
+}
+
+func (c *Cli) DestoryUser(name string) (string, error) {
+	// 移除Git下目录
+	rmDir := fmt.Sprintf("rm %s", name)
+	// 移除Apache验证
+	// rmApache := fmt.Sprintf("htpasswd -D /etc/httpd/conf.d/git-team.htpasswd %s", name)
+	return c.sshCli.Run(rmDir)
+}
+
+func (c *Cli) CreateRegistry(name, registry string) (string, error) {
+	cmd := fmt.Sprintf("cd %s && git init --bare %s.git", name, registry)
+	return c.sshCli.Run(cmd)
+}
+
+func (c *Cli) DestoryRegistry(name, registry string) (string, error) {
+	cmd := fmt.Sprintf("rm %s/%s", name, registry)
+	return c.sshCli.Run(cmd)
+}
+
+func (c *Cli) AddSSHKey(key string) (string, error) {
+	cmd := fmt.Sprintf("echo '%s' >> $HOME/.ssh/authorized_keys", key)
+	return c.sshCli.Run(cmd)
 }
