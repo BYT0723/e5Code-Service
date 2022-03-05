@@ -11,7 +11,8 @@ CREATE TABLE `user` (
     `name` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`email`)
+    UNIQUE KEY (`email`),
+    UNIQUE KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;

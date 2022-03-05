@@ -26,6 +26,7 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteUserLogic) DeleteUser(in *user.DeleteUserReq) (*user.DeleteUserRsp, error) {
+	u, _ := l.svcCtx.UserModel.FindOne(in.Id)
 	err := l.svcCtx.UserModel.Delete(in.Id)
 	if err != nil {
 		logx.Errorf("Fail to delete user(%s), err: %v", in.Id, err.Error())
@@ -33,6 +34,10 @@ func (l *DeleteUserLogic) DeleteUser(in *user.DeleteUserReq) (*user.DeleteUserRs
 			return nil, status.Error(codesx.NotFound, "UserNotFound")
 		}
 		return nil, status.Error(codesx.SQLError, err.Error())
+	}
+	if res, err := l.svcCtx.GitCli.DestoryUser(u.Name); err != nil {
+		logx.Error("Fail to DestoryGitUser on DeleteUser: ", err.Error())
+		return nil, status.Error(codesx.GitError, res)
 	}
 
 	return &user.DeleteUserRsp{}, nil
