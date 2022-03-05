@@ -9,9 +9,15 @@ type Cli struct {
 	sshCli *sshx.Cli
 }
 
-func NewCli(addr, user, pwd string) *Cli {
+func NewCliWithOpt(addr, user, pwd string) *Cli {
 	return &Cli{
 		sshx.NewCli(addr, user, pwd),
+	}
+}
+
+func NewCli() *Cli {
+	return &Cli{
+		sshx.NewCli("git.byt0723.xyz:22", "git", "wangtao"),
 	}
 }
 
