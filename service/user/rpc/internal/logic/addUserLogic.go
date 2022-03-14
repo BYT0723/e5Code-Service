@@ -49,6 +49,10 @@ func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.AddUserRsp, error) {
 		l.Logger.Errorf("Fail to add user(%s)", in.Email)
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
+	if res, err := l.svcCtx.GitCli.CreateUser(in.Name); err != nil {
+		logx.Error("Fail to createGitUser on CreateUser: ", err.Error())
+		return nil, status.Error(codesx.GitError, res)
+	}
 	return &user.AddUserRsp{
 		Id:    id,
 		Email: in.Email,
