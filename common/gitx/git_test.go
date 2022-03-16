@@ -17,5 +17,4 @@ func TestGit(t *testing.T) {
 	res, err = cli.CreateRegistry("test", "testFirst")
 	fmt.Printf("res: %v\n", res)
 	fmt.Printf("err: %v\n", err)
-
 }
