@@ -34,6 +34,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 'wangtao'
 
+  ImageRegistry:
+    image: registry
+    ports:
+      - 5000:5000
+    networks:
+      - e5Code
+    restart: always
+
   user-rpc:
     build:
       context: .
