@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/docker/docker/api/types"
-	git "github.com/go-git/go-git/v5"
 )
 
 // 存储docker中所有容器的数据
@@ -85,20 +84,6 @@ func StoreActiveContainer(ctx context.Context, dockerHost string) error {
 		if err := client.Insert("container_datas", nil, fields); err != nil {
 			log.Fatalf("Fail to insert(name: %s), err: %s", v.Name, err.Error())
 		}
-	}
-	return nil
-}
-
-type GitCloneOpt struct {
-	Local  string
-	IsBare bool
-	*git.CloneOptions
-}
-
-// Clone远程仓库到本地，返回Clone到的本地URL
-func Clone(opt GitCloneOpt) error {
-	if _, err := git.PlainClone(opt.Local, opt.IsBare, opt.CloneOptions); err != nil {
-		return err
 	}
 	return nil
 }
