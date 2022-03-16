@@ -22,10 +22,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProjectClient interface {
+	// basic operation
 	GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*GetProjectRsp, error)
 	AddProject(ctx context.Context, in *AddProjectReq, opts ...grpc.CallOption) (*AddProjectRsp, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*UpdateProjectRsp, error)
 	DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*DeleteProjectRsp, error)
+	// permission manager
 	AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*AddUserRsp, error)
 	RemoveUser(ctx context.Context, in *RemoveUserReq, opts ...grpc.CallOption) (*RemoveUserRsp, error)
 	ModifyPermission(ctx context.Context, in *ModifyPermissionReq, opts ...grpc.CallOption) (*ModifyPermissionRsp, error)
@@ -106,10 +108,12 @@ func (c *projectClient) ModifyPermission(ctx context.Context, in *ModifyPermissi
 // All implementations must embed UnimplementedProjectServer
 // for forward compatibility
 type ProjectServer interface {
+	// basic operation
 	GetProject(context.Context, *GetProjectReq) (*GetProjectRsp, error)
 	AddProject(context.Context, *AddProjectReq) (*AddProjectRsp, error)
 	UpdateProject(context.Context, *UpdateProjectReq) (*UpdateProjectRsp, error)
 	DeleteProject(context.Context, *DeleteProjectReq) (*DeleteProjectRsp, error)
+	// permission manager
 	AddUser(context.Context, *AddUserReq) (*AddUserRsp, error)
 	RemoveUser(context.Context, *RemoveUserReq) (*RemoveUserRsp, error)
 	ModifyPermission(context.Context, *ModifyPermissionReq) (*ModifyPermissionRsp, error)

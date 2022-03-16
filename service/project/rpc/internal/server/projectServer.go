@@ -22,6 +22,7 @@ func NewProjectServer(svcCtx *svc.ServiceContext) *ProjectServer {
 	}
 }
 
+//  basic operation
 func (s *ProjectServer) GetProject(ctx context.Context, in *pb.GetProjectReq) (*pb.GetProjectRsp, error) {
 	l := logic.NewGetProjectLogic(ctx, s.svcCtx)
 	return l.GetProject(in)
@@ -42,6 +43,7 @@ func (s *ProjectServer) DeleteProject(ctx context.Context, in *pb.DeleteProjectR
 	return l.DeleteProject(in)
 }
 
+//  permission manager
 func (s *ProjectServer) AddUser(ctx context.Context, in *pb.AddUserReq) (*pb.AddUserRsp, error) {
 	l := logic.NewAddUserLogic(ctx, s.svcCtx)
 	return l.AddUser(in)

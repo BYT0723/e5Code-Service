@@ -66,17 +66,18 @@ message removeUserReq {
     string projectID = 2;
 }
 
-message removeUserRsp {
-   
-}
+message removeUserRsp {}
+
 
 service project {
-   rpc getProject(getProjectReq) returns(getProjectRsp);
-   rpc addProject(addProjectReq) returns(addProjectRsp);
-   rpc updateProject(updateProjectReq) returns(updateProjectRsp);
-   rpc deleteProject(deleteProjectReq) returns(deleteProjectRsp);
+    // basic operation
+    rpc getProject(getProjectReq) returns(getProjectRsp);
+    rpc addProject(addProjectReq) returns(addProjectRsp);
+    rpc updateProject(updateProjectReq) returns(updateProjectRsp);
+    rpc deleteProject(deleteProjectReq) returns(deleteProjectRsp);
 
-   rpc addUser(addUserReq) returns(addUserRsp);
-   rpc removeUser(removeUserReq) returns(removeUserRsp);
-   rpc modifyPermission(modifyPermissionReq) returns(modifyPermissionRsp);
+    // permission manager
+    rpc addUser(addUserReq) returns(addUserRsp);
+    rpc removeUser(removeUserReq) returns(removeUserRsp);
+    rpc modifyPermission(modifyPermissionReq) returns(modifyPermissionRsp);
 }

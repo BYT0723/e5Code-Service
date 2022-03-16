@@ -29,10 +29,12 @@ type (
 	UpdateProjectRsp    = pb.UpdateProjectRsp
 
 	Project interface {
+		//  basic operation
 		GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*GetProjectRsp, error)
 		AddProject(ctx context.Context, in *AddProjectReq, opts ...grpc.CallOption) (*AddProjectRsp, error)
 		UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*UpdateProjectRsp, error)
 		DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*DeleteProjectRsp, error)
+		//  permission manager
 		AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*AddUserRsp, error)
 		RemoveUser(ctx context.Context, in *RemoveUserReq, opts ...grpc.CallOption) (*RemoveUserRsp, error)
 		ModifyPermission(ctx context.Context, in *ModifyPermissionReq, opts ...grpc.CallOption) (*ModifyPermissionRsp, error)
@@ -49,6 +51,7 @@ func NewProject(cli zrpc.Client) Project {
 	}
 }
 
+//  basic operation
 func (m *defaultProject) GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*GetProjectRsp, error) {
 	client := pb.NewProjectClient(m.cli.Conn())
 	return client.GetProject(ctx, in, opts...)
@@ -69,6 +72,7 @@ func (m *defaultProject) DeleteProject(ctx context.Context, in *DeleteProjectReq
 	return client.DeleteProject(ctx, in, opts...)
 }
 
+//  permission manager
 func (m *defaultProject) AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*AddUserRsp, error) {
 	client := pb.NewProjectClient(m.cli.Conn())
 	return client.AddUser(ctx, in, opts...)
