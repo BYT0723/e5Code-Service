@@ -7,8 +7,6 @@ import (
 	"testing"
 
 	"github.com/docker/docker/api/types"
-	git "github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
 func TestFlag(t *testing.T) {
@@ -36,25 +34,6 @@ func TestFlag(t *testing.T) {
 			return
 		}
 		fmt.Println(line)
-	}
-}
-
-func TestClone(t *testing.T) {
-	auth, err := ssh.NewPublicKeysFromFile("git", "/home/tao/.ssh/id_rsa", "")
-	if err != nil {
-		log.Fatal("Fail to get ssh public key: ", err.Error())
-		return
-	}
-
-	if err := Clone(GitCloneOpt{
-		Local: "./tmp/git_registry/",
-		CloneOptions: &git.CloneOptions{
-			URL:  "git@github.com:BYT0723/e5Code.git",
-			Auth: auth,
-		},
-	}); err != nil {
-		log.Fatal("Fail to Clone registry: ", err.Error())
-		return
 	}
 }
 
