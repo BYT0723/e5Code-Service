@@ -5,12 +5,13 @@ import (
 
 	"e5Code-Service/common/cryptx"
 	"e5Code-Service/common/errorx/codesx"
+	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 )
 
 type LoginLogic struct {
@@ -29,12 +30,12 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 	// 判断用户是否存在
-	u, err := l.svcCtx.UserModel.FindOneByEmail(in.Email)
-	if err != nil {
-		logx.Errorf("Fail to get User(email: %s), err: %s", in.Email, err.Error())
-		if err == sqlx.ErrNotFound {
+	u := &model.User{}
+	if err := l.svcCtx.Db.Where("email = ?", in.Email).First(u).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
 			return nil, status.Error(codesx.NotFound, "UserNotFound")
 		}
+		logx.Errorf("Fail to get User(email: %s), err: %s", in.Email, err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 
@@ -44,7 +45,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 	}
 
 	return &user.LoginRsp{
-		Id:    u.Id,
+		Id:    u.ID,
 		Email: u.Email,
 		Name:  u.Name,
 	}, nil

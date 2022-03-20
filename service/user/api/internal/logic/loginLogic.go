@@ -62,6 +62,7 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 	}
 
 	return &types.LoginReply{
+		Id:           rsp.Id,
 		AccessToken:  token,
 		AccessExpire: accessExpire,
 	}, nil

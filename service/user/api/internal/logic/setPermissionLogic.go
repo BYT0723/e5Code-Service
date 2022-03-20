@@ -34,6 +34,7 @@ func (l *SetPermissionLogic) SetPermission(req types.SetPermissionReq) (resp *ty
 	}); err != nil {
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
-	resp.Result = true
-	return
+	return &types.SetPermissionReply{
+		Result: true,
+	}, nil
 }

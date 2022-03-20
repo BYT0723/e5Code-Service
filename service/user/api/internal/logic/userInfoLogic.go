@@ -27,15 +27,16 @@ func NewUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) UserInfoL
 }
 
 func (l *UserInfoLogic) UserInfo(req types.UserInfoReq) (resp *types.UserInfoReply, err error) {
-	rsp, err := l.svcCtx.UserRpc.GetUserByEmail(l.ctx, &user.GetUserByEmailReq{Email: req.Email})
+	rsp, err := l.svcCtx.UserRpc.GetUser(l.ctx, &user.GetUserReq{Id: req.Id})
 	if err != nil {
-		logx.Error("Fail to getUserByEmail, err: ", err.Error())
+		logx.Error("Fail to getUser, err: ", err.Error())
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
 	resp = &types.UserInfoReply{
-		Id:    rsp.Id,
-		Email: rsp.Email,
-		Name:  rsp.Name,
+		Id:      rsp.Id,
+		Email:   rsp.Email,
+		Account: rsp.Account,
+		Name:    rsp.Name,
 	}
 	return
 }

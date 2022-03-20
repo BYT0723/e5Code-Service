@@ -10,7 +10,6 @@ import (
 	"e5Code-Service/service/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
 )
 
@@ -32,30 +31,27 @@ func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.AddUserRsp, error) {
 	id := common.GenUUID()
 
 	// 判断email是否已被注册
-	if _, err := l.svcCtx.UserModel.FindOneByEmail(in.Email); err != nil {
-		if err != sqlx.ErrNotFound {
-			return nil, status.Error(codesx.SQLError, err.Error())
-		}
-	} else {
+	if err := l.svcCtx.Db.Where("email = ?", in.Email).First(&model.User{}).Error; err == nil {
 		return nil, status.Error(codesx.AlreadyExist, "UserAlreadyExist")
 	}
 
-	if _, err := l.svcCtx.UserModel.Insert(&model.User{
-		Id:       id,
-		Email:    in.Email,
-		Name:     in.Name,
-		Password: cryptx.EncryptPwd(in.Password, l.svcCtx.Config.Salt),
-	}); err != nil {
-		l.Logger.Errorf("Fail to add user(%s)", in.Email)
-		return nil, status.Error(codesx.SQLError, err.Error())
-	}
-	if res, err := l.svcCtx.GitCli.CreateUser(in.Name); err != nil {
+	if res, err := l.svcCtx.GitCli.CreateUser(in.Account); err != nil {
 		logx.Error("Fail to createGitUser on CreateUser: ", err.Error())
 		return nil, status.Error(codesx.GitError, res)
 	}
+
+	if err := l.svcCtx.Db.Model(&model.User{}).Create(&model.User{
+		ID:       id,
+		Email:    in.Email,
+		Accout:   in.Account,
+		Name:     in.Name,
+		Password: cryptx.EncryptPwd(in.Password, l.svcCtx.Config.Salt),
+	}).Error; err != nil {
+		l.Logger.Errorf("Fail to add user(%s): %s", in.Email, err.Error())
+		return nil, status.Error(codesx.SQLError, err.Error())
+	}
+
 	return &user.AddUserRsp{
-		Id:    id,
-		Email: in.Email,
-		Name:  in.Name,
+		Id: id,
 	}, nil
 }

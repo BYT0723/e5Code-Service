@@ -15,22 +15,22 @@ message getUserByEmailReq {
 
 message getUserRsp {
     string id = 1;
-    google.protobuf.Timestamp createdTime = 2;
-    google.protobuf.Timestamp updatedTime = 3;
+    google.protobuf.Timestamp createdAt = 2;
+    google.protobuf.Timestamp updatedAt = 3;
     string email = 4;
-    string name = 5;
+    string account = 5;
+    string name = 6;
 }
 
 message addUserReq {
     string email = 1;
-    string name = 2;
-    string password = 3;
+    string account = 2;
+    string name = 3;
+    string password = 4;
 }
 
 message addUserRsp {
     string id = 1;
-    string email = 2;
-    string name = 3;
 }
 
 message updateUserReq {

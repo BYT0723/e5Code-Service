@@ -10,8 +10,8 @@ import (
 	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 )
 
 type SetPermissionLogic struct {
@@ -29,25 +29,26 @@ func NewSetPermissionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Set
 }
 
 func (l *SetPermissionLogic) SetPermission(in *pb.SetPermissionReq) (*pb.SetPermissionRsp, error) {
-	if pm, err := l.svcCtx.PermissionModel.FindOneByUserIdProjectId(in.UserID, in.ProjectID); err == sqlx.ErrNotFound {
-		if _, err := l.svcCtx.PermissionModel.Insert(&model.Permission{
-			Id:         common.GenUUID(),
-			UserId:     in.UserID,
-			ProjectId:  in.ProjectID,
-			Permission: in.Permission,
-		}); err != nil {
-			logx.Error("Fail to insert permission on SetPermission :", err.Error())
+	p := &model.Permission{}
+	if err := l.svcCtx.Db.Where("user_id = ? and project_id = ?", in.UserID, in.ProjectID).First(&p).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			if err2 := l.svcCtx.Db.Model(&model.Permission{}).Create(&model.Permission{
+				ID:         common.GenUUID(),
+				UserID:     in.UserID,
+				ProjectID:  in.ProjectID,
+				Permission: int(in.Permission),
+			}).Error; err2 != nil {
+				logx.Error("Fail to insert permission on SetPermission :", err2.Error())
+				return nil, status.Error(codesx.SQLError, err2.Error())
+			}
+		} else {
+			logx.Error("Fail to select permission on SetPermission :", err.Error())
 			return nil, status.Error(codesx.SQLError, err.Error())
 		}
-	} else if err == nil {
-		if err := l.svcCtx.PermissionModel.Update(&model.Permission{
-			Id:         pm.Id,
-			UserId:     pm.UserId,
-			ProjectId:  pm.ProjectId,
-			Permission: in.Permission,
-		}); err != nil {
-			logx.Error("Fail to update permission on SetPermission :", err.Error())
-			return nil, status.Error(codesx.SQLError, err.Error())
+	} else {
+		if err2 := l.svcCtx.Db.Model(&p).Update("permission", in.Permission).Error; err2 != nil {
+			logx.Error("Fail to update permission on SetPermission :", err2.Error())
+			return nil, status.Error(codesx.SQLError, err2.Error())
 		}
 	}
 	return &pb.SetPermissionRsp{}, nil

@@ -28,6 +28,7 @@ func NewRegisterUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) Regis
 func (l *RegisterUserLogic) RegisterUser(req types.RegisterUserReq) (*types.RegisterUserReply, error) {
 	rsp, err := l.svcCtx.UserRpc.AddUser(l.ctx, &user.AddUserReq{
 		Email:    req.Email,
+		Account:  req.Account,
 		Name:     req.Name,
 		Password: req.Password,
 	})
@@ -36,8 +37,6 @@ func (l *RegisterUserLogic) RegisterUser(req types.RegisterUserReq) (*types.Regi
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
 	return &types.RegisterUserReply{
-		Id:    rsp.Id,
-		Email: rsp.Email,
-		Name:  rsp.Name,
+		Id: rsp.Id,
 	}, nil
 }

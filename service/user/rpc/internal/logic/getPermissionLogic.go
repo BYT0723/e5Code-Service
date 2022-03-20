@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"e5Code-Service/common/errorx/codesx"
+	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 )
 
 type GetPermissionLogic struct {
@@ -27,13 +28,13 @@ func NewGetPermissionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *GetPermissionLogic) GetPermission(in *pb.GetPermissionReq) (*pb.GetPermissionRsp, error) {
-	ps, err := l.svcCtx.PermissionModel.FindOneByUserIdProjectId(in.UserID, in.ProjectID)
-	if err != nil {
-		logx.Errorf("Fail to get permission(%s-%s) : %s", in.UserID, in.ProjectID, err.Error())
-		if err == sqlx.ErrNotFound {
+	p := &model.Permission{}
+	if err := l.svcCtx.Db.Where("user_id = ? and project_id = ?", in.UserID, in.ProjectID).First(&p).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
 			return nil, status.Error(codesx.NotFound, "PermissionNotFound")
 		}
+		logx.Errorf("Fail to get permission(%s-%s) : %s", in.UserID, in.ProjectID, err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
-	return &pb.GetPermissionRsp{Permission: ps.Permission}, nil
+	return &pb.GetPermissionRsp{Permission: int64(p.Permission)}, nil
 }

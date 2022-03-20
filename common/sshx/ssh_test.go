@@ -7,6 +7,6 @@ import (
 
 func TestSSH(t *testing.T) {
 	cli := NewCli("git.byt0723.xyz:22", "git", "wangtao")
-	cli.Run("ls")
+	cli.Run("mkdir test")
 	fmt.Printf("cli.LastResult: %v\n", cli.LastResult)
 }

@@ -15,6 +15,8 @@ require (
 	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58
 	google.golang.org/grpc v1.43.0
 	google.golang.org/protobuf v1.27.1
+	gorm.io/driver/mysql v1.3.2
+	gorm.io/gorm v1.23.3
 )
 
 require (
@@ -45,6 +47,8 @@ require (
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/justinas/alice v1.2.0 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect

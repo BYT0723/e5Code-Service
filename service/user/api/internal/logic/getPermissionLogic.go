@@ -34,6 +34,7 @@ func (l *GetPermissionLogic) GetPermission(req types.GetPermissionReq) (resp *ty
 	if err != nil {
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
-	resp.Permission = pm.Permission
-	return
+	return &types.GetPermissionReply{
+		Permission: pm.Permission,
+	}, nil
 }

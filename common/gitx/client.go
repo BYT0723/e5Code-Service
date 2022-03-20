@@ -23,7 +23,7 @@ func NewCli() *Cli {
 
 func (c *Cli) CreateUser(name string) (string, error) {
 	// 添加Git下目录
-	addDir := fmt.Sprintf("mkdir %s", name)
+	addDir := fmt.Sprintf("mkdir ./%s", name)
 	// 添加Apache验证
 	// addApache := fmt.Sprintf("htpasswd -mb /etc/httpd/conf.d/git-team.htpasswd %s %s", name, password)
 	return c.sshCli.Run(addDir)
@@ -31,7 +31,7 @@ func (c *Cli) CreateUser(name string) (string, error) {
 
 func (c *Cli) DestoryUser(name string) (string, error) {
 	// 移除Git下目录
-	rmDir := fmt.Sprintf("rm %s", name)
+	rmDir := fmt.Sprintf("rm -rf ./%s", name)
 	// 移除Apache验证
 	// rmApache := fmt.Sprintf("htpasswd -D /etc/httpd/conf.d/git-team.htpasswd %s", name)
 	return c.sshCli.Run(rmDir)

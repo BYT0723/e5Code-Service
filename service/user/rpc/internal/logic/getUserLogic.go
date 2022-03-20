@@ -3,14 +3,14 @@ package logic
 import (
 	"context"
 	"e5Code-Service/common/errorx/codesx"
+	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/user"
-	"fmt"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"gorm.io/gorm"
 )
 
 type GetUserLogic struct {
@@ -28,20 +28,21 @@ func NewGetUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserLo
 }
 
 func (l *GetUserLogic) GetUser(in *user.GetUserReq) (*user.GetUserRsp, error) {
-	rsp, err := l.svcCtx.UserModel.FindOne(in.Id)
-	if err != nil {
-		logx.Errorf("Fail to get user(id: %s)", in.Id)
-		if err == sqlx.ErrNotFound {
-			return nil, status.Error(codesx.NotFound, fmt.Sprintf("UserNotFound(id: %v)", in.Id))
+	u := &model.User{}
+	if err := l.svcCtx.Db.Where("id = ?", in.Id).First(&u).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Error(codesx.NotFound, "UserNotFound")
 		}
+		logx.Errorf("Fail to get user(id: %s): %s", in.Id, err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 
 	return &user.GetUserRsp{
-		CreatedTime: timestamppb.New(rsp.CreateTime),
-		UpdatedTime: timestamppb.New(rsp.UpdateTime),
-		Id:          in.Id,
-		Email:       rsp.Email,
-		Name:        rsp.Name,
+		CreatedAt: timestamppb.New(u.CreatedAt),
+		UpdatedAt: timestamppb.New(u.UpdatedAt),
+		Id:        in.Id,
+		Email:     u.Email,
+		Account:   u.Accout,
+		Name:      u.Name,
 	}, nil
 }
