@@ -45,7 +45,7 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 	if err != nil {
 		// 否则生成新token
 		accessExpire = l.svcCtx.Config.Auth.AccessExpire
-		token, err := jwtx.GenerateToken(l.svcCtx.Config.Auth.AccessSecret, now, accessExpire, map[string]interface{}{
+		token, err = jwtx.GenerateToken(l.svcCtx.Config.Auth.AccessSecret, now, accessExpire, map[string]interface{}{
 			contextx.UserID: rsp.Id,
 		})
 		if err != nil {
@@ -54,7 +54,7 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 		}
 
 		// 将新token放入redis
-		if err := l.svcCtx.Redis.Set(req.Email, token, time.Duration(accessExpire*int64(time.Second))).Err(); err != nil {
+		if err = l.svcCtx.Redis.Set(req.Email, token, time.Duration(accessExpire*int64(time.Second))).Err(); err != nil {
 			logx.Error("Fail to save token to redis, err: ", err.Error())
 		}
 	} else {
