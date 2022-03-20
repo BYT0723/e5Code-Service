@@ -37,6 +37,7 @@ func (l *ModifyPermissionLogic) ModifyPermission(req types.ModifyPermissionReq) 
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
 
-	resp.Result = true
-	return
+	return &types.ModifyPermissionReply{
+		Result: true,
+	}, nil
 }

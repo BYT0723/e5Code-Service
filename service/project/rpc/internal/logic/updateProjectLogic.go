@@ -2,14 +2,15 @@ package logic
 
 import (
 	"context"
-	"database/sql"
 
 	"e5Code-Service/common/errorx/codesx"
+	"e5Code-Service/service/project/model"
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/project"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 )
 
 type UpdateProjectLogic struct {
@@ -27,21 +28,25 @@ func NewUpdateProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 }
 
 func (l *UpdateProjectLogic) UpdateProject(in *project.UpdateProjectReq) (*project.UpdateProjectRsp, error) {
-	pj, err := l.svcCtx.ProjectModel.FindOne(in.Id)
-	if err != nil {
+	p := &model.Project{}
+	if err := l.svcCtx.DB.Where("id = ?", in.Id).First(p).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Error(codesx.NotFound, "ProjectNotFound")
+		}
 		logx.Error("Fail to GetProject on UpdateProject: ", err.Error())
-		return nil, status.Error(codesx.NotFound, err.Error())
+		return nil, status.Error(codesx.SQLError, err.Error())
 	}
+
 	if in.Name != "" {
-		pj.Name = in.Name
+		p.Name = in.Name
 	}
 	if in.Desc != "" {
-		pj.Desc = sql.NullString{String: in.Desc, Valid: true}
+		p.Desc = in.Desc
 	}
 	if in.Url != "" {
-		pj.Url = in.Url
+		p.Url = in.Url
 	}
-	if err := l.svcCtx.ProjectModel.Update(*pj); err != nil {
+	if err := l.svcCtx.DB.Save(p).Error; err != nil {
 		logx.Error("Fail to UpdateProject : ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}

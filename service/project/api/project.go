@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"e5Code-Service/common/contextx"
 	"e5Code-Service/common/errorx"
 	"e5Code-Service/service/project/api/internal/config"
 	"e5Code-Service/service/project/api/internal/handler"
@@ -29,8 +28,6 @@ func main() {
 	defer server.Stop()
 
 	handler.RegisterHandlers(server, ctx)
-
-	server.Use(contextx.LoadValues)
 
 	httpx.SetErrorHandler(func(e error) (int, interface{}) {
 		switch err := e.(type) {

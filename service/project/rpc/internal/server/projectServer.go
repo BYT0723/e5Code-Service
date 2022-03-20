@@ -43,6 +43,11 @@ func (s *ProjectServer) DeleteProject(ctx context.Context, in *pb.DeleteProjectR
 	return l.DeleteProject(in)
 }
 
+func (s *ProjectServer) ListProject(ctx context.Context, in *pb.ListProjectReq) (*pb.ListProjectRsp, error) {
+	l := logic.NewListProjectLogic(ctx, s.svcCtx)
+	return l.ListProject(in)
+}
+
 //  permission manager
 func (s *ProjectServer) AddUser(ctx context.Context, in *pb.AddUserReq) (*pb.AddUserRsp, error) {
 	l := logic.NewAddUserLogic(ctx, s.svcCtx)

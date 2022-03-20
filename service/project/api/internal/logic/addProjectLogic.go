@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 
-	"e5Code-Service/common/contextx"
 	"e5Code-Service/common/errorx"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/project/api/internal/svc"
@@ -28,12 +27,12 @@ func NewAddProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) AddProj
 }
 
 func (l *AddProjectLogic) AddProject(req types.AddProjectReq) (*types.AddProjectReply, error) {
-	userID, err := contextx.GetValue(l.ctx, contextx.UserID)
-	if err != nil {
-		logx.Error("Fail to GetUserID on AddProject: ", err.Error())
-		return nil, errorx.NewCodeError(codesx.ContextError, err.Error())
-	}
-	l.ctx = contextx.SetValue(l.ctx, contextx.UserID, userID)
+	// userID, err := contextx.GetValueFromContext(l.ctx, contextx.UserID)
+	// if err != nil {
+	//   logx.Error("Fail to GetUserID on AddProject: ", err.Error())
+	//   return nil, errorx.NewCodeError(codesx.ContextError, err.Error())
+	// }
+	// l.ctx = contextx.SetValueToMetadata(l.ctx, contextx.UserID, userID)
 
 	rsp, err := l.svcCtx.ProjectRpc.AddProject(l.ctx, &project.AddProjectReq{
 		Name: req.Name,

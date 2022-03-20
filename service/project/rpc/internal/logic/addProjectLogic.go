@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
 	"e5Code-Service/common"
@@ -33,12 +32,13 @@ func NewAddProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddPro
 
 func (l *AddProjectLogic) AddProject(in *project.AddProjectReq) (*project.AddProjectRsp, error) {
 	id := common.GenUUID()
-	ownerID, err := contextx.GetValue(l.ctx, contextx.UserID)
+
+	ownerID, err := contextx.GetValueFromMetadata(l.ctx, contextx.UserID)
 	if err != nil {
 		logx.Error("Fail to getUserID from Context: ", err.Error())
 		return nil, status.Error(codesx.ContextError, err.Error())
 	}
-	url := ""
+	var url string
 	if in.Url == "" {
 		u, _ := l.svcCtx.UserRpc.GetUser(l.ctx, &user.GetUserReq{Id: ownerID})
 		if res, err := l.svcCtx.GitCli.CreateRegistry(u.Name, in.Name); err != nil {
@@ -49,16 +49,16 @@ func (l *AddProjectLogic) AddProject(in *project.AddProjectReq) (*project.AddPro
 	} else {
 		url = in.Url
 	}
-	payload := model.Project{
-		Id:      id,
+	p := &model.Project{
+		ID:      id,
 		Name:    in.Name,
 		Url:     url,
-		Desc:    sql.NullString{String: in.Desc, Valid: true},
+		Desc:    in.Desc,
 		OwnerId: ownerID,
 	}
-	if _, err := l.svcCtx.ProjectModel.Insert(payload); err != nil {
+	if err := l.svcCtx.DB.Create(p).Error; err != nil {
 		logx.Errorf("Fail to insert Project(Name: %s), err: %s", in.Name, err.Error())
-		return nil, err
+		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 	return &project.AddProjectRsp{
 		Id: id,

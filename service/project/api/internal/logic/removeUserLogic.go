@@ -35,6 +35,7 @@ func (l *RemoveUserLogic) RemoveUser(req types.RemoveUserReq) (resp *types.Remov
 		return nil, status.Error(codesx.RPCError, err.Error())
 	}
 
-	resp.Result = true
-	return
+	return &types.RemoveUserReply{
+		Result: true,
+	}, nil
 }

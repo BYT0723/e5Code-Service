@@ -1,4 +1,11 @@
 type (
+	Project {
+		ID      string `json:"id"`
+		Name    string `json:"name"`
+		Desc    string `json:"desc"`
+		Url     string `json:"url"`
+		OwnerID string `json:"owner_id"`
+	}
 	GetProjectReq {
 		ID string `json:"id"`
 	}
@@ -19,9 +26,9 @@ type (
 	}
 	UpdateProjectReq {
 		ID   string `json:"id"`
-		Name string `json:"name"`
-		Desc string `json:"desc"`
-		Url  string `json:"url"`
+		Name string `json:"name,optional"`
+		Desc string `json:"desc,optional"`
+		Url  string `json:"url,optional"`
 	}
 	UpdateProjectReply {
 		Result bool `json:"result"`
@@ -59,6 +66,7 @@ type (
 
 @server(
 	jwt: Auth
+	middleware: LoadValue
 )
 service project-api {
 	@handler getProject

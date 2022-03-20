@@ -3,11 +3,15 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/common/errorx/codesx"
+	"e5Code-Service/service/project/model"
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/project"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"gorm.io/gorm"
 )
 
 type GetProjectLogic struct {
@@ -25,21 +29,22 @@ func NewGetProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPro
 }
 
 func (l *GetProjectLogic) GetProject(in *project.GetProjectReq) (*project.GetProjectRsp, error) {
-	p, err := l.svcCtx.ProjectModel.FindOne(in.Id)
-	if err != nil {
+	p := &model.Project{}
+	if err := l.svcCtx.DB.Where("id = ?", in.Id).First(p).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Error(codesx.NotFound, "ProjectNotFound")
+		}
 		logx.Errorf("Fail to find Project(Id: %s), err: %s", in.Id, err.Error())
-		return nil, err
+		return nil, status.Error(codesx.SQLError, err.Error())
 	}
-	createdTime, err := ptypes.TimestampProto(p.CreateTime)
-	updatedTime, err := ptypes.TimestampProto(p.UpdateTime)
 
 	return &project.GetProjectRsp{
-		Id:         p.Id,
-		Name:       p.Name,
-		Desc:       p.Desc.String,
-		Url:        p.Url,
-		OwnerID:    p.OwnerId,
-		CreateTime: createdTime,
-		UpdateTime: updatedTime,
+		Id:        p.ID,
+		Name:      p.Name,
+		Desc:      p.Desc,
+		Url:       p.Url,
+		OwnerID:   p.OwnerId,
+		CreatedAt: timestamppb.New(p.CreatedAt),
+		UpdatedAt: timestamppb.New(p.UpdatedAt),
 	}, nil
 }

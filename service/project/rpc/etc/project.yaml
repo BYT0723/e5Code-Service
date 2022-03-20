@@ -4,6 +4,9 @@ Etcd:
   Hosts:
     - etcd:2379
   Key: project.rpc
+GitRegistryUrl:
+  Http: 42.192.5.238
+  SSH: git.byt0723.xyz
 Mysql:
   DataSource: root:wangtao@tcp(db:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 CacheRedis:

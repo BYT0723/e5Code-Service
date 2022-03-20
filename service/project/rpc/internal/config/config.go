@@ -10,6 +10,10 @@ type Config struct {
 	Mysql struct {
 		DataSource string
 	}
-	CacheRedis cache.CacheConf
-	UserRpc    zrpc.RpcClientConf
+	CacheRedis     cache.CacheConf
+	UserRpc        zrpc.RpcClientConf
+	GitRegistryUrl struct {
+		Http string
+		SSH  string
+	}
 }

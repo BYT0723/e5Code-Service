@@ -11,43 +11,46 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/getProject",
-				Handler: getProjectHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/addProject",
-				Handler: addProjectHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/updateProject",
-				Handler: updateProjectHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/deleteProject",
-				Handler: deleteProjectHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/addUser",
-				Handler: addUserHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/removeUser",
-				Handler: removeUserHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/project/moidfyPermission",
-				Handler: modifyPermissionHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.LoadValue},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/getProject",
+					Handler: getProjectHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/addProject",
+					Handler: addProjectHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/updateProject",
+					Handler: updateProjectHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/deleteProject",
+					Handler: deleteProjectHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/addUser",
+					Handler: addUserHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/removeUser",
+					Handler: removeUserHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/moidfyPermission",
+					Handler: modifyPermissionHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)
 }

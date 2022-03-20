@@ -34,6 +34,7 @@ func (l *AddUserLogic) AddUser(req types.AddUserReq) (resp *types.AddUserReply, 
 		logx.Error("Fail to AddUser: ", err.Error())
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
-	resp.Result = true
-	return
+	return &types.AddUserReply{
+		Result: true,
+	}, nil
 }

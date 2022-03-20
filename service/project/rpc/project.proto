@@ -6,18 +6,36 @@ option go_package="./pb";
 
 import "google/protobuf/timestamp.proto";
 
+message ProjectModel {
+    string id = 1;
+    google.protobuf.Timestamp createdAt = 2;
+    google.protobuf.Timestamp updatedAt = 3;
+    string name = 4;
+    string desc = 5;
+    string url = 6;
+    string ownerID = 7;
+}
+
 message getProjectReq {
    string id = 1;
 }
 
 message getProjectRsp {
     string id = 1;
-    google.protobuf.Timestamp create_time = 2;
-    google.protobuf.Timestamp update_time = 3;
+    google.protobuf.Timestamp createdAt = 2;
+    google.protobuf.Timestamp updatedAt = 3;
     string name = 4;
     string desc = 5;
     string url = 6;
     string ownerID = 7;
+}
+
+message listProjectReq {
+  string filter = 1;
+}
+message listProjectRsp {
+  int64 count = 1;
+  repeated ProjectModel result = 2;
 }
 
 message addProjectReq {
@@ -75,6 +93,7 @@ service project {
     rpc addProject(addProjectReq) returns(addProjectRsp);
     rpc updateProject(updateProjectReq) returns(updateProjectRsp);
     rpc deleteProject(deleteProjectReq) returns(deleteProjectRsp);
+    rpc listProject(listProjectReq) returns(listProjectRsp);
 
     // permission manager
     rpc addUser(addUserReq) returns(addUserRsp);
