@@ -8,6 +8,7 @@ type File struct {
 	Name   string
 	IsFile bool
 	Size   int64 //unit:Byte
+	Path   string
 }
 
 type GitCloneOpt struct {
@@ -33,6 +34,7 @@ func Pull(rep *git.Repository, remoteName string) error {
 	return w.Pull(&git.PullOptions{RemoteName: remoteName})
 }
 
+// 获取指定Path下Files
 func ListFile(rep *git.Repository, path string) (files []*File, err error) {
 	ref, err := rep.Head()
 	if err != nil {
@@ -59,6 +61,10 @@ func ListFile(rep *git.Repository, path string) (files []*File, err error) {
 		res[i] = &File{
 			Name:   v.Name,
 			IsFile: v.Mode.IsFile(),
+			Path:   path + v.Name,
+		}
+		if path != "" {
+			res[i].Path = path + "/" + v.Name
 		}
 		if v.Mode.IsFile() {
 			file, _ := tree.File(v.Name)
