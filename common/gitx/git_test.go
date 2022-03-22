@@ -41,3 +41,11 @@ func TestClone(t *testing.T) {
 		return
 	}
 }
+
+func TestList(t *testing.T) {
+	rep, _ := git.PlainOpen("/home/tao/Documents/Github/e5code")
+	result, _ := ListFile(rep, "")
+	for _, v := range result {
+		fmt.Printf("v: %v\n", v)
+	}
+}
