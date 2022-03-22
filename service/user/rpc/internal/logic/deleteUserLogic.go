@@ -40,12 +40,12 @@ func (l *DeleteUserLogic) DeleteUser(in *user.DeleteUserReq) (*user.DeleteUserRs
 	// 开启自动事务
 	if err := l.svcCtx.Db.Transaction(func(tx *gorm.DB) error {
 		// 删除user-project关系(Permission)
-		if err := l.svcCtx.Db.Where("user_id = ?", in.Id).Delete(&model.Permission{}).Error; err != nil {
+		if err := tx.Where("user_id = ?", in.Id).Delete(&model.Permission{}).Error; err != nil {
 			logx.Error("Fail to DeletePermission on DeleteUser:", err.Error())
 			return status.Error(codesx.SQLError, err.Error())
 		}
 		// 删除用户
-		if err := l.svcCtx.Db.Delete(&model.User{ID: in.Id}).Error; err != nil {
+		if err := tx.Delete(&model.User{ID: in.Id}).Error; err != nil {
 			logx.Errorf("Fail to delete user(%s), err: %v", in.Id, err.Error())
 			return status.Error(codesx.SQLError, err.Error())
 		}
