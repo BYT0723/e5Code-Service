@@ -36,18 +36,25 @@ func Pull(rep *git.Repository, remoteName string) error {
 
 // 获取指定Path下Files
 func ListFile(rep *git.Repository, path string) (files []*File, err error) {
+	// 获取Head指针
 	ref, err := rep.Head()
 	if err != nil {
 		return
 	}
+
+	// 获取Head的Hash的提交
 	commit, err := rep.CommitObject(ref.Hash())
 	if err != nil {
 		return
 	}
+
+	//获取当前提交的文件树
 	tree, err := commit.Tree()
 	if err != nil {
 		return
 	}
+
+	// 获取指定Path的文件树
 	if path != "" {
 		tree, err = tree.Tree(path)
 		if err != nil {
@@ -55,8 +62,8 @@ func ListFile(rep *git.Repository, path string) (files []*File, err error) {
 		}
 	}
 
+	//组装Files
 	res := make([]*File, len(tree.Entries))
-
 	for i, v := range tree.Entries {
 		res[i] = &File{
 			Name:   v.Name,

@@ -92,6 +92,15 @@ message removeUserReq {
 
 message removeUserRsp {}
 
+message listProjectFilesReq {
+   string id = 1;
+   string opt = 2;
+}
+
+message listProjectFilesRsp {
+   
+}
+
 
 service project {
     // basic operation
@@ -100,6 +109,7 @@ service project {
     rpc updateProject(updateProjectReq) returns(updateProjectRsp);
     rpc deleteProject(deleteProjectReq) returns(deleteProjectRsp);
     rpc listProject(listProjectReq) returns(listProjectRsp);
+    rpc listProjectFiles(listProjectFilesReq) returns(listProjectFilesRsp);
 
     // permission manager
     rpc addUser(addUserReq) returns(addUserRsp);

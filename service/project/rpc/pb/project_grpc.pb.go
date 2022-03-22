@@ -28,6 +28,7 @@ type ProjectClient interface {
 	UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*UpdateProjectRsp, error)
 	DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*DeleteProjectRsp, error)
 	ListProject(ctx context.Context, in *ListProjectReq, opts ...grpc.CallOption) (*ListProjectRsp, error)
+	ListProjectFiles(ctx context.Context, in *ListProjectFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error)
 	// permission manager
 	AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*AddUserRsp, error)
 	RemoveUser(ctx context.Context, in *RemoveUserReq, opts ...grpc.CallOption) (*RemoveUserRsp, error)
@@ -87,6 +88,15 @@ func (c *projectClient) ListProject(ctx context.Context, in *ListProjectReq, opt
 	return out, nil
 }
 
+func (c *projectClient) ListProjectFiles(ctx context.Context, in *ListProjectFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error) {
+	out := new(ListProjectFilesRsp)
+	err := c.cc.Invoke(ctx, "/project.project/listProjectFiles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *projectClient) AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*AddUserRsp, error) {
 	out := new(AddUserRsp)
 	err := c.cc.Invoke(ctx, "/project.project/addUser", in, out, opts...)
@@ -124,6 +134,7 @@ type ProjectServer interface {
 	UpdateProject(context.Context, *UpdateProjectReq) (*UpdateProjectRsp, error)
 	DeleteProject(context.Context, *DeleteProjectReq) (*DeleteProjectRsp, error)
 	ListProject(context.Context, *ListProjectReq) (*ListProjectRsp, error)
+	ListProjectFiles(context.Context, *ListProjectFilesReq) (*ListProjectFilesRsp, error)
 	// permission manager
 	AddUser(context.Context, *AddUserReq) (*AddUserRsp, error)
 	RemoveUser(context.Context, *RemoveUserReq) (*RemoveUserRsp, error)
@@ -149,6 +160,9 @@ func (UnimplementedProjectServer) DeleteProject(context.Context, *DeleteProjectR
 }
 func (UnimplementedProjectServer) ListProject(context.Context, *ListProjectReq) (*ListProjectRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProject not implemented")
+}
+func (UnimplementedProjectServer) ListProjectFiles(context.Context, *ListProjectFilesReq) (*ListProjectFilesRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListProjectFiles not implemented")
 }
 func (UnimplementedProjectServer) AddUser(context.Context, *AddUserReq) (*AddUserRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUser not implemented")
@@ -262,6 +276,24 @@ func _Project_ListProject_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Project_ListProjectFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProjectFilesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServer).ListProjectFiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.project/listProjectFiles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServer).ListProjectFiles(ctx, req.(*ListProjectFilesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Project_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddUserReq)
 	if err := dec(in); err != nil {
@@ -342,6 +374,10 @@ var Project_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "listProject",
 			Handler:    _Project_ListProject_Handler,
+		},
+		{
+			MethodName: "listProjectFiles",
+			Handler:    _Project_ListProjectFiles_Handler,
 		},
 		{
 			MethodName: "addUser",

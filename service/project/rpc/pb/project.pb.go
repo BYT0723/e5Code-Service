@@ -1022,6 +1022,99 @@ func (*RemoveUserRsp) Descriptor() ([]byte, []int) {
 	return file_project_proto_rawDescGZIP(), []int{17}
 }
 
+type ListProjectFilesReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id  string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Opt string `protobuf:"bytes,2,opt,name=opt,proto3" json:"opt,omitempty"`
+}
+
+func (x *ListProjectFilesReq) Reset() {
+	*x = ListProjectFilesReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_project_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListProjectFilesReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProjectFilesReq) ProtoMessage() {}
+
+func (x *ListProjectFilesReq) ProtoReflect() protoreflect.Message {
+	mi := &file_project_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProjectFilesReq.ProtoReflect.Descriptor instead.
+func (*ListProjectFilesReq) Descriptor() ([]byte, []int) {
+	return file_project_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListProjectFilesReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ListProjectFilesReq) GetOpt() string {
+	if x != nil {
+		return x.Opt
+	}
+	return ""
+}
+
+type ListProjectFilesRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ListProjectFilesRsp) Reset() {
+	*x = ListProjectFilesRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_project_proto_msgTypes[19]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListProjectFilesRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProjectFilesRsp) ProtoMessage() {}
+
+func (x *ListProjectFilesRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_project_proto_msgTypes[19]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProjectFilesRsp.ProtoReflect.Descriptor instead.
+func (*ListProjectFilesRsp) Descriptor() ([]byte, []int) {
+	return file_project_proto_rawDescGZIP(), []int{19}
+}
+
 var File_project_proto protoreflect.FileDescriptor
 
 var file_project_proto_rawDesc = []byte{
@@ -1107,7 +1200,12 @@ var file_project_proto_rawDesc = []byte{
 	0x73, 0x65, 0x72, 0x49, 0x44, 0x12, 0x1c, 0x0a, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
 	0x49, 0x44, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
 	0x74, 0x49, 0x44, 0x22, 0x0f, 0x0a, 0x0d, 0x72, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x55, 0x73, 0x65,
-	0x72, 0x52, 0x73, 0x70, 0x32, 0x97, 0x04, 0x0a, 0x07, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
+	0x72, 0x52, 0x73, 0x70, 0x22, 0x37, 0x0a, 0x13, 0x6c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a,
+	0x65, 0x63, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x10, 0x0a, 0x03, 0x6f,
+	0x70, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6f, 0x70, 0x74, 0x22, 0x15, 0x0a,
+	0x13, 0x6c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x46, 0x69, 0x6c, 0x65,
+	0x73, 0x52, 0x73, 0x70, 0x32, 0xe7, 0x04, 0x0a, 0x07, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
 	0x12, 0x3c, 0x0a, 0x0a, 0x67, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x16,
 	0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x67, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x6a,
 	0x65, 0x63, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
@@ -1128,7 +1226,12 @@ var file_project_proto_rawDesc = []byte{
 	0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x6a,
 	0x65, 0x63, 0x74, 0x2e, 0x6c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52,
 	0x65, 0x71, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x6c, 0x69, 0x73,
-	0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x73, 0x70, 0x12, 0x33, 0x0a, 0x07, 0x61,
+	0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x73, 0x70, 0x12, 0x4e, 0x0a, 0x10, 0x6c,
+	0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x12,
+	0x1c, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x6c, 0x69, 0x73, 0x74, 0x50, 0x72,
+	0x6f, 0x6a, 0x65, 0x63, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x1c, 0x2e,
+	0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x6c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a,
+	0x65, 0x63, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x73, 0x70, 0x12, 0x33, 0x0a, 0x07, 0x61,
 	0x64, 0x64, 0x55, 0x73, 0x65, 0x72, 0x12, 0x13, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
 	0x2e, 0x61, 0x64, 0x64, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x13, 0x2e, 0x70, 0x72,
 	0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x61, 0x64, 0x64, 0x55, 0x73, 0x65, 0x72, 0x52, 0x73, 0x70,
@@ -1156,7 +1259,7 @@ func file_project_proto_rawDescGZIP() []byte {
 	return file_project_proto_rawDescData
 }
 
-var file_project_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_project_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_project_proto_goTypes = []interface{}{
 	(*ProjectModel)(nil),          // 0: project.ProjectModel
 	(*UserModel)(nil),             // 1: project.UserModel
@@ -1176,31 +1279,35 @@ var file_project_proto_goTypes = []interface{}{
 	(*ModifyPermissionRsp)(nil),   // 15: project.modifyPermissionRsp
 	(*RemoveUserReq)(nil),         // 16: project.removeUserReq
 	(*RemoveUserRsp)(nil),         // 17: project.removeUserRsp
-	(*timestamppb.Timestamp)(nil), // 18: google.protobuf.Timestamp
+	(*ListProjectFilesReq)(nil),   // 18: project.listProjectFilesReq
+	(*ListProjectFilesRsp)(nil),   // 19: project.listProjectFilesRsp
+	(*timestamppb.Timestamp)(nil), // 20: google.protobuf.Timestamp
 }
 var file_project_proto_depIdxs = []int32{
 	1,  // 0: project.ProjectModel.owner:type_name -> project.UserModel
-	18, // 1: project.getProjectRsp.createdAt:type_name -> google.protobuf.Timestamp
-	18, // 2: project.getProjectRsp.updatedAt:type_name -> google.protobuf.Timestamp
+	20, // 1: project.getProjectRsp.createdAt:type_name -> google.protobuf.Timestamp
+	20, // 2: project.getProjectRsp.updatedAt:type_name -> google.protobuf.Timestamp
 	0,  // 3: project.listProjectRsp.result:type_name -> project.ProjectModel
 	2,  // 4: project.project.getProject:input_type -> project.getProjectReq
 	6,  // 5: project.project.addProject:input_type -> project.addProjectReq
 	8,  // 6: project.project.updateProject:input_type -> project.updateProjectReq
 	10, // 7: project.project.deleteProject:input_type -> project.deleteProjectReq
 	4,  // 8: project.project.listProject:input_type -> project.listProjectReq
-	12, // 9: project.project.addUser:input_type -> project.addUserReq
-	16, // 10: project.project.removeUser:input_type -> project.removeUserReq
-	14, // 11: project.project.modifyPermission:input_type -> project.modifyPermissionReq
-	3,  // 12: project.project.getProject:output_type -> project.getProjectRsp
-	7,  // 13: project.project.addProject:output_type -> project.addProjectRsp
-	9,  // 14: project.project.updateProject:output_type -> project.updateProjectRsp
-	11, // 15: project.project.deleteProject:output_type -> project.deleteProjectRsp
-	5,  // 16: project.project.listProject:output_type -> project.listProjectRsp
-	13, // 17: project.project.addUser:output_type -> project.addUserRsp
-	17, // 18: project.project.removeUser:output_type -> project.removeUserRsp
-	15, // 19: project.project.modifyPermission:output_type -> project.modifyPermissionRsp
-	12, // [12:20] is the sub-list for method output_type
-	4,  // [4:12] is the sub-list for method input_type
+	18, // 9: project.project.listProjectFiles:input_type -> project.listProjectFilesReq
+	12, // 10: project.project.addUser:input_type -> project.addUserReq
+	16, // 11: project.project.removeUser:input_type -> project.removeUserReq
+	14, // 12: project.project.modifyPermission:input_type -> project.modifyPermissionReq
+	3,  // 13: project.project.getProject:output_type -> project.getProjectRsp
+	7,  // 14: project.project.addProject:output_type -> project.addProjectRsp
+	9,  // 15: project.project.updateProject:output_type -> project.updateProjectRsp
+	11, // 16: project.project.deleteProject:output_type -> project.deleteProjectRsp
+	5,  // 17: project.project.listProject:output_type -> project.listProjectRsp
+	19, // 18: project.project.listProjectFiles:output_type -> project.listProjectFilesRsp
+	13, // 19: project.project.addUser:output_type -> project.addUserRsp
+	17, // 20: project.project.removeUser:output_type -> project.removeUserRsp
+	15, // 21: project.project.modifyPermission:output_type -> project.modifyPermissionRsp
+	13, // [13:22] is the sub-list for method output_type
+	4,  // [4:13] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
 	4,  // [4:4] is the sub-list for extension extendee
 	0,  // [0:4] is the sub-list for field type_name
@@ -1428,6 +1535,30 @@ func file_project_proto_init() {
 				return nil
 			}
 		}
+		file_project_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListProjectFilesReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_project_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListProjectFilesRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1435,7 +1566,7 @@ func file_project_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_project_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

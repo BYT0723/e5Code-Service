@@ -1,0 +1,16 @@
+Name: ci.rpc
+ListenOn: 127.0.0.1:8080
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: ci.rpc
+ProjectRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: project.rpc
+  NonBlock: true
+RegistryConf:
+  Local: /tmp/e5Code/registrys
+  Tar: /tmp/e5Code/tars
+  BuildLog: /tmp/e5Code/build_logs
