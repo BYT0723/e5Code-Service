@@ -4,6 +4,12 @@ import (
 	git "github.com/go-git/go-git/v5"
 )
 
+type File struct {
+	Name   string
+	IsFile bool
+	Size   int64 //unit:Byte
+}
+
 type GitCloneOpt struct {
 	Local  string
 	IsBare bool
@@ -16,4 +22,48 @@ func Clone(opt GitCloneOpt) error {
 		return err
 	}
 	return nil
+}
+
+// 拉取远程仓库最新提交
+func Pull(rep *git.Repository, remoteName string) error {
+	w, err := rep.Worktree()
+	if err != nil {
+		return err
+	}
+	return w.Pull(&git.PullOptions{RemoteName: remoteName})
+}
+
+func ListFile(rep *git.Repository, path string) (files []*File, err error) {
+	ref, err := rep.Head()
+	if err != nil {
+		return
+	}
+	commit, err := rep.CommitObject(ref.Hash())
+	if err != nil {
+		return
+	}
+	tree, err := commit.Tree()
+	if err != nil {
+		return
+	}
+	if path != "" {
+		tree, err = tree.Tree(path)
+		if err != nil {
+			return
+		}
+	}
+
+	res := make([]*File, len(tree.Entries))
+
+	for i, v := range tree.Entries {
+		res[i] = &File{
+			Name:   v.Name,
+			IsFile: v.Mode.IsFile(),
+		}
+		if v.Mode.IsFile() {
+			file, _ := tree.File(v.Name)
+			res[i].Size = file.Size
+		}
+	}
+	return res, nil
 }
