@@ -21,6 +21,8 @@ type (
 	DeleteProjectRsp    = pb.DeleteProjectRsp
 	GetProjectReq       = pb.GetProjectReq
 	GetProjectRsp       = pb.GetProjectRsp
+	ListProjectFilesReq = pb.ListProjectFilesReq
+	ListProjectFilesRsp = pb.ListProjectFilesRsp
 	ListProjectReq      = pb.ListProjectReq
 	ListProjectRsp      = pb.ListProjectRsp
 	ModifyPermissionReq = pb.ModifyPermissionReq
@@ -39,6 +41,7 @@ type (
 		UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*UpdateProjectRsp, error)
 		DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*DeleteProjectRsp, error)
 		ListProject(ctx context.Context, in *ListProjectReq, opts ...grpc.CallOption) (*ListProjectRsp, error)
+		ListProjectFiles(ctx context.Context, in *ListProjectFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error)
 		//  permission manager
 		AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*AddUserRsp, error)
 		RemoveUser(ctx context.Context, in *RemoveUserReq, opts ...grpc.CallOption) (*RemoveUserRsp, error)
@@ -80,6 +83,11 @@ func (m *defaultProject) DeleteProject(ctx context.Context, in *DeleteProjectReq
 func (m *defaultProject) ListProject(ctx context.Context, in *ListProjectReq, opts ...grpc.CallOption) (*ListProjectRsp, error) {
 	client := pb.NewProjectClient(m.cli.Conn())
 	return client.ListProject(ctx, in, opts...)
+}
+
+func (m *defaultProject) ListProjectFiles(ctx context.Context, in *ListProjectFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.ListProjectFiles(ctx, in, opts...)
 }
 
 //  permission manager

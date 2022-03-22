@@ -16,4 +16,9 @@ type Config struct {
 		Http string
 		SSH  string
 	}
+	RegistryConf struct {
+		Local    string
+		Tar      string
+		BuildLog string
+	}
 }

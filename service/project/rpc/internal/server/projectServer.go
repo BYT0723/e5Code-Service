@@ -48,6 +48,11 @@ func (s *ProjectServer) ListProject(ctx context.Context, in *pb.ListProjectReq) 
 	return l.ListProject(in)
 }
 
+func (s *ProjectServer) ListProjectFiles(ctx context.Context, in *pb.ListProjectFilesReq) (*pb.ListProjectFilesRsp, error) {
+	l := logic.NewListProjectFilesLogic(ctx, s.svcCtx)
+	return l.ListProjectFiles(in)
+}
+
 //  permission manager
 func (s *ProjectServer) AddUser(ctx context.Context, in *pb.AddUserReq) (*pb.AddUserRsp, error) {
 	l := logic.NewAddUserLogic(ctx, s.svcCtx)

@@ -7,6 +7,10 @@ Etcd:
 GitRegistryUrl:
   Http: 42.192.5.238
   SSH: git.byt0723.xyz
+RegistryConf:
+  Local: /tmp/e5Code/registrys
+  Tar: /tmp/e5Code/tars
+  BuildLog: /tmp/e5Code/build_logs
 Mysql:
   DataSource: root:wangtao@tcp(db:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 CacheRedis:

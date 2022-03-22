@@ -1,0 +1,21 @@
+syntax ="proto3";
+
+package ci;
+
+option go_package="./pb";
+
+message BuildReq {
+    string ProjectID = 1;
+    string Tag = 2;
+    string Version = 3;
+    string Dockerfile = 4;
+}
+
+message BuildRsp {
+    string ImageUrl = 1;
+}
+
+service ci {
+    rpc BuildImage(BuildReq) returns(BuildRsp);
+}
+
