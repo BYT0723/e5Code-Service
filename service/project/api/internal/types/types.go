@@ -7,6 +7,14 @@ type Project struct {
 	Desc    string `json:"desc"`
 	Url     string `json:"url"`
 	OwnerID string `json:"owner_id"`
+	Owner   User   `json:"owner"`
+}
+
+type User struct {
+	ID      string `json:"id"`
+	Email   string `json:"email"`
+	Account string `json:"account"`
+	Name    string `json:"Name"`
 }
 
 type GetProjectReq struct {
@@ -77,4 +85,13 @@ type ModifyPermissionReq struct {
 
 type ModifyPermissionReply struct {
 	Result bool `json:"result"`
+}
+
+type ListProjectReq struct {
+	Filter string `json:"filter"`
+}
+
+type ListProjectReply struct {
+	Count  int64     `json:"count"`
+	Result []Project `json:"result"`
 }

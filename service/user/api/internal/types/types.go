@@ -15,6 +15,8 @@ type LoginReq struct {
 
 type LoginReply struct {
 	Id           string `json:"id"`
+	Account      string `json:"account"`
+	Name         string `json:"name"`
 	AccessToken  string `json:"access_token"`
 	AccessExpire int64  `json:"access_expire"`
 }
@@ -56,7 +58,7 @@ type UserInfoReply struct {
 	Id      string `json:"id"`
 	Email   string `json:"email"`
 	Account string `json:"account"`
-	Name    string `json:"Name"`
+	Name    string `json:"name"`
 }
 
 type GetPermissionReq struct {
@@ -75,5 +77,23 @@ type SetPermissionReq struct {
 }
 
 type SetPermissionReply struct {
+	Result bool `json:"result"`
+}
+
+type ListUserReq struct {
+	Filter string `json:"filter"`
+}
+
+type ListUserReply struct {
+	Count  int64  `json:"count"`
+	Result []User `json:"result"`
+}
+
+type DeletePermissionReq struct {
+	UserID    string `json:"user_id,optional"`
+	ProjectID string `json:"project_id,optional"`
+}
+
+type DeletePermissionReply struct {
 	Result bool `json:"result"`
 }

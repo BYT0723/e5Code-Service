@@ -28,8 +28,10 @@ type UserClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserRsp, error)
 	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserRsp, error)
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginRsp, error)
+	ListUser(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserRsp, error)
 	GetPermission(ctx context.Context, in *GetPermissionReq, opts ...grpc.CallOption) (*GetPermissionRsp, error)
 	SetPermission(ctx context.Context, in *SetPermissionReq, opts ...grpc.CallOption) (*SetPermissionRsp, error)
+	DeletePermission(ctx context.Context, in *DeletePermissionReq, opts ...grpc.CallOption) (*DeletePermissionRsp, error)
 }
 
 type userClient struct {
@@ -94,6 +96,15 @@ func (c *userClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallO
 	return out, nil
 }
 
+func (c *userClient) ListUser(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserRsp, error) {
+	out := new(ListUserRsp)
+	err := c.cc.Invoke(ctx, "/user.user/listUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) GetPermission(ctx context.Context, in *GetPermissionReq, opts ...grpc.CallOption) (*GetPermissionRsp, error) {
 	out := new(GetPermissionRsp)
 	err := c.cc.Invoke(ctx, "/user.user/getPermission", in, out, opts...)
@@ -112,6 +123,15 @@ func (c *userClient) SetPermission(ctx context.Context, in *SetPermissionReq, op
 	return out, nil
 }
 
+func (c *userClient) DeletePermission(ctx context.Context, in *DeletePermissionReq, opts ...grpc.CallOption) (*DeletePermissionRsp, error) {
+	out := new(DeletePermissionRsp)
+	err := c.cc.Invoke(ctx, "/user.user/deletePermission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -122,8 +142,10 @@ type UserServer interface {
 	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserRsp, error)
 	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserRsp, error)
 	Login(context.Context, *LoginReq) (*LoginRsp, error)
+	ListUser(context.Context, *ListUserReq) (*ListUserRsp, error)
 	GetPermission(context.Context, *GetPermissionReq) (*GetPermissionRsp, error)
 	SetPermission(context.Context, *SetPermissionReq) (*SetPermissionRsp, error)
+	DeletePermission(context.Context, *DeletePermissionReq) (*DeletePermissionRsp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -149,11 +171,17 @@ func (UnimplementedUserServer) DeleteUser(context.Context, *DeleteUserReq) (*Del
 func (UnimplementedUserServer) Login(context.Context, *LoginReq) (*LoginRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
+func (UnimplementedUserServer) ListUser(context.Context, *ListUserReq) (*ListUserRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
+}
 func (UnimplementedUserServer) GetPermission(context.Context, *GetPermissionReq) (*GetPermissionRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPermission not implemented")
 }
 func (UnimplementedUserServer) SetPermission(context.Context, *SetPermissionReq) (*SetPermissionRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPermission not implemented")
+}
+func (UnimplementedUserServer) DeletePermission(context.Context, *DeletePermissionReq) (*DeletePermissionRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePermission not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -276,6 +304,24 @@ func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.user/listUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListUser(ctx, req.(*ListUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _User_GetPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetPermissionReq)
 	if err := dec(in); err != nil {
@@ -312,6 +358,24 @@ func _User_SetPermission_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_DeletePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePermissionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeletePermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.user/deletePermission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeletePermission(ctx, req.(*DeletePermissionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -344,12 +408,20 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_Login_Handler,
 		},
 		{
+			MethodName: "listUser",
+			Handler:    _User_ListUser_Handler,
+		},
+		{
 			MethodName: "getPermission",
 			Handler:    _User_GetPermission_Handler,
 		},
 		{
 			MethodName: "setPermission",
 			Handler:    _User_SetPermission_Handler,
+		},
+		{
+			MethodName: "deletePermission",
+			Handler:    _User_DeletePermission_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

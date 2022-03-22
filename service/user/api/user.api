@@ -11,6 +11,8 @@ type (
 	}
 	LoginReply {
 		Id           string `json:"id"`
+		Account      string `json:"account"`
+		Name         string `json:"name"`
 		AccessToken  string `json:"access_token"`
 		AccessExpire int64  `json:"access_expire"`
 	}
@@ -45,7 +47,7 @@ type (
 		Id      string `json:"id"`
 		Email   string `json:"email"`
 		Account string `json:"account"`
-		Name    string `json:"Name"`
+		Name    string `json:"name"`
 	}
 	GetPermissionReq {
 		UserID    string `json:"user_id"`
@@ -62,6 +64,20 @@ type (
 	SetPermissionReply {
 		Result bool `json:"result"`
 	}
+	ListUserReq {
+		Filter string `json:"filter"`
+	}
+	ListUserReply {
+		Count  int64  `json:"count"`
+		Result []User `json:"result"`
+	}
+	DeletePermissionReq {
+		UserID    string `json:"user_id,optional"`
+		ProjectID string `json:"project_id,optional"`
+	}
+	DeletePermissionReply {
+		Result bool `json:"result"`
+	}
 )
 
 @server(
@@ -74,10 +90,15 @@ service user-api {
 	post /user/deleteUser(DeleteUserReq) returns(DeleteUserReply)
 	@handler userInfo
 	post /user/userInfo(UserInfoReq) returns(UserInfoReply)
+	@handler listUser
+	post /user/listUser(ListUserReq) returns(ListUserReply)
 	@handler getPermission
 	post /user/getPermission(GetPermissionReq) returns(GetPermissionReply)
 	@handler setPermission
 	post /user/setPermission(SetPermissionReq) returns(SetPermissionReply)
+	@handler deletePermission
+	post /user/deletePermission(DeletePermissionReq) returns(DeletePermissionReply)
+	
 }
 
 service user-api {

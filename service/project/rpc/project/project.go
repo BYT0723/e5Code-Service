@@ -30,6 +30,7 @@ type (
 	RemoveUserRsp       = pb.RemoveUserRsp
 	UpdateProjectReq    = pb.UpdateProjectReq
 	UpdateProjectRsp    = pb.UpdateProjectRsp
+	UserModel           = pb.UserModel
 
 	Project interface {
 		//  basic operation

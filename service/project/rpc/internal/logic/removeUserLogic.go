@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"e5Code-Service/common/errorx/codesx"
-	"e5Code-Service/common/permission"
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/pb"
 	"e5Code-Service/service/user/rpc/user"
@@ -28,12 +27,11 @@ func NewRemoveUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Remove
 }
 
 func (l *RemoveUserLogic) RemoveUser(in *pb.RemoveUserReq) (*pb.RemoveUserRsp, error) {
-	if _, err := l.svcCtx.UserRpc.SetPermission(l.ctx, &user.SetPermissionReq{
-		UserID:     in.UserID,
-		ProjectID:  in.ProjectID,
-		Permission: permission.None,
+	if _, err := l.svcCtx.UserRpc.DeletePermission(l.ctx, &user.DeletePermissionReq{
+		UserID:    in.UserID,
+		ProjectID: in.ProjectID,
 	}); err != nil {
-		logx.Error("Fail to SetPermission on RemoveUser: ", err.Error())
+		logx.Error("Fail to DeletePermission on RemoveUser: ", err.Error())
 		return nil, status.Error(codesx.RPCError, err.Error())
 	}
 	return &pb.RemoveUserRsp{}, nil

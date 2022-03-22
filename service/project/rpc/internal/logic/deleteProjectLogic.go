@@ -68,5 +68,13 @@ func (l *DeleteProjectLogic) DeleteProject(in *project.DeleteProjectReq) (*proje
 		logx.Error("Fail to delete Project, err: ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
+
+	if _, err := l.svcCtx.UserRpc.DeletePermission(l.ctx, &user.DeletePermissionReq{
+		ProjectID: p.ID,
+	}); err != nil {
+		logx.Error("Fail to DeletePermission on DeleteProject:", err.Error())
+		return nil, status.Error(codesx.RPCError, err.Error())
+	}
+
 	return &project.DeleteProjectRsp{}, nil
 }

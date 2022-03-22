@@ -5,6 +5,13 @@ type (
 		Desc    string `json:"desc"`
 		Url     string `json:"url"`
 		OwnerID string `json:"owner_id"`
+		Owner   User   `json:"owner"`
+	}
+	User {
+		ID      string `json:"id"`
+		Email   string `json:"email"`
+		Account string `json:"account"`
+		Name    string `json:"Name"`
 	}
 	GetProjectReq {
 		ID string `json:"id"`
@@ -62,6 +69,13 @@ type (
 	ModifyPermissionReply {
 		Result bool `json:"result"`
 	}
+	ListProjectReq {
+		Filter string `json:"filter"`
+	}
+	ListProjectReply {
+		Count  int64     `json:"count"`
+		Result []Project `json:"result"`
+	}
 )
 
 @server(
@@ -77,6 +91,8 @@ service project-api {
 	post /project/updateProject(UpdateProjectReq) returns(UpdateProjectReply)
 	@handler deleteProject
 	post /project/deleteProject(DeleteProjectReq) returns(DeleteProjectReply)
+	@handler listProject
+	post /project/listProject(ListProjectReq) returns(ListProjectReply)
 	
 	@handler addUser
 	post /project/addUser(AddUserReq) returns(AddUserReply)

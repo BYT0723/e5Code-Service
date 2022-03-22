@@ -8,12 +8,18 @@ import "google/protobuf/timestamp.proto";
 
 message ProjectModel {
     string id = 1;
-    google.protobuf.Timestamp createdAt = 2;
-    google.protobuf.Timestamp updatedAt = 3;
     string name = 4;
     string desc = 5;
     string url = 6;
     string ownerID = 7;
+    UserModel owner = 8;
+}
+
+message UserModel {
+   string id = 1;
+   string email = 2;
+   string account = 3;
+   string name = 4;
 }
 
 message getProjectReq {

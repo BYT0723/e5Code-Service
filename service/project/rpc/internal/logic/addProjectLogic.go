@@ -7,9 +7,11 @@ import (
 	"e5Code-Service/common"
 	"e5Code-Service/common/contextx"
 	"e5Code-Service/common/errorx/codesx"
+	"e5Code-Service/common/permission"
 	"e5Code-Service/service/project/model"
 	"e5Code-Service/service/project/rpc/internal/svc"
 	"e5Code-Service/service/project/rpc/project"
+	"e5Code-Service/service/user/rpc/pb"
 	"e5Code-Service/service/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -41,7 +43,7 @@ func (l *AddProjectLogic) AddProject(in *project.AddProjectReq) (*project.AddPro
 	var url string
 	if in.Url == "" {
 		u, _ := l.svcCtx.UserRpc.GetUser(l.ctx, &user.GetUserReq{Id: ownerID})
-		if res, err := l.svcCtx.GitCli.CreateRegistry(u.Name, in.Name); err != nil {
+		if res, err := l.svcCtx.GitCli.CreateRegistry(u.Account, in.Name); err != nil {
 			logx.Error("Fail to CreateRegistry on AddProject: ", err.Error())
 			return nil, status.Error(codesx.GitError, res)
 		}
@@ -59,6 +61,14 @@ func (l *AddProjectLogic) AddProject(in *project.AddProjectReq) (*project.AddPro
 	if err := l.svcCtx.DB.Create(p).Error; err != nil {
 		logx.Errorf("Fail to insert Project(Name: %s), err: %s", in.Name, err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
+	}
+	if _, err := l.svcCtx.UserRpc.SetPermission(l.ctx, &pb.SetPermissionReq{
+		UserID:     ownerID,
+		ProjectID:  id,
+		Permission: permission.ALL,
+	}); err != nil {
+		logx.Error("Fail to SetPermission on AddProject:", err.Error())
+		return nil, status.Error(codesx.RPCError, err.Error())
 	}
 	return &project.AddProjectRsp{
 		Id: id,

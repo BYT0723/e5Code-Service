@@ -36,6 +36,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
+					Path:    "/project/listProject",
+					Handler: listProjectHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
 					Path:    "/project/addUser",
 					Handler: addUserHandler(serverCtx),
 				},

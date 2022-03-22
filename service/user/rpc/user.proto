@@ -13,6 +13,15 @@ message getUserByEmailReq {
     string email = 1;
 }
 
+message UserModel {
+    string id = 1;
+    google.protobuf.Timestamp createdAt = 2;
+    google.protobuf.Timestamp updatedAt = 3;
+    string email = 4;
+    string account = 5;
+    string name = 6;
+}
+
 message getUserRsp {
     string id = 1;
     google.protobuf.Timestamp createdAt = 2;
@@ -20,6 +29,15 @@ message getUserRsp {
     string email = 4;
     string account = 5;
     string name = 6;
+}
+
+message listUserReq {
+  string filter = 1;
+}
+
+message listUserRsp {
+  int64 count = 1;  
+  repeated UserModel result = 2;
 }
 
 message addUserReq {
@@ -54,7 +72,7 @@ message loginReq {
 
 message loginRsp {
     string id = 1;
-    string email = 2;
+    string account = 2;
     string name = 3;
 }
 
@@ -75,6 +93,12 @@ message setPermissionReq {
 
 message setPermissionRsp {}
 
+message deletePermissionReq {
+   string userID = 1;
+   string projectID = 2;
+}
+message deletePermissionRsp {}
+
 
 service user {
    rpc getUser(getUserReq) returns(getUserRsp);
@@ -83,7 +107,9 @@ service user {
    rpc updateUser(updateUserReq) returns(updateUserRsp);
    rpc deleteUser(deleteUserReq) returns(deleteUserRsp);
    rpc login(loginReq) returns(loginRsp);
+   rpc listUser(listUserReq) returns(listUserRsp);
 
    rpc getPermission(getPermissionReq) returns(getPermissionRsp);
    rpc setPermission(setPermissionReq) returns(setPermissionRsp);
+   rpc deletePermission(deletePermissionReq) returns(deletePermissionRsp);
 }

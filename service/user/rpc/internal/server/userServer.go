@@ -52,6 +52,11 @@ func (s *UserServer) Login(ctx context.Context, in *pb.LoginReq) (*pb.LoginRsp, 
 	return l.Login(in)
 }
 
+func (s *UserServer) ListUser(ctx context.Context, in *pb.ListUserReq) (*pb.ListUserRsp, error) {
+	l := logic.NewListUserLogic(ctx, s.svcCtx)
+	return l.ListUser(in)
+}
+
 func (s *UserServer) GetPermission(ctx context.Context, in *pb.GetPermissionReq) (*pb.GetPermissionRsp, error) {
 	l := logic.NewGetPermissionLogic(ctx, s.svcCtx)
 	return l.GetPermission(in)
@@ -60,4 +65,9 @@ func (s *UserServer) GetPermission(ctx context.Context, in *pb.GetPermissionReq)
 func (s *UserServer) SetPermission(ctx context.Context, in *pb.SetPermissionReq) (*pb.SetPermissionRsp, error) {
 	l := logic.NewSetPermissionLogic(ctx, s.svcCtx)
 	return l.SetPermission(in)
+}
+
+func (s *UserServer) DeletePermission(ctx context.Context, in *pb.DeletePermissionReq) (*pb.DeletePermissionRsp, error) {
+	l := logic.NewDeletePermissionLogic(ctx, s.svcCtx)
+	return l.DeletePermission(in)
 }

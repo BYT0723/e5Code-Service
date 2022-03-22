@@ -41,7 +41,7 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 	now := time.Now().Unix()
 	var accessExpire int64
 
-	token, err := l.svcCtx.Redis.Get(rsp.Email).Result()
+	token, err := l.svcCtx.Redis.Get(req.Email).Result()
 	if err != nil {
 		// 否则生成新token
 		accessExpire = l.svcCtx.Config.Auth.AccessExpire
@@ -63,6 +63,8 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 
 	return &types.LoginReply{
 		Id:           rsp.Id,
+		Account:      rsp.Account,
+		Name:         rsp.Name,
 		AccessToken:  token,
 		AccessExpire: accessExpire,
 	}, nil
