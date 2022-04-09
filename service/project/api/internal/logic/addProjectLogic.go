@@ -27,17 +27,12 @@ func NewAddProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) AddProj
 }
 
 func (l *AddProjectLogic) AddProject(req types.AddProjectReq) (*types.AddProjectReply, error) {
-	// userID, err := contextx.GetValueFromContext(l.ctx, contextx.UserID)
-	// if err != nil {
-	//   logx.Error("Fail to GetUserID on AddProject: ", err.Error())
-	//   return nil, errorx.NewCodeError(codesx.ContextError, err.Error())
-	// }
-	// l.ctx = contextx.SetValueToMetadata(l.ctx, contextx.UserID, userID)
-
 	rsp, err := l.svcCtx.ProjectRpc.AddProject(l.ctx, &project.AddProjectReq{
-		Name: req.Name,
-		Desc: req.Desc,
-		Url:  req.Url,
+		Name:     req.Name,
+		Desc:     req.Desc,
+		Url:      req.Url,
+		Username: req.UserName,
+		Password: req.Password,
 	})
 	if err != nil {
 		logx.Error("Fail to add Project, err: ", err.Error())

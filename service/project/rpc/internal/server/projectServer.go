@@ -28,6 +28,11 @@ func (s *ProjectServer) GetProject(ctx context.Context, in *pb.GetProjectReq) (*
 	return l.GetProject(in)
 }
 
+func (s *ProjectServer) GetProjectAuth(ctx context.Context, in *pb.GetProjectReq) (*pb.GetProjectAuthRsp, error) {
+	l := logic.NewGetProjectAuthLogic(ctx, s.svcCtx)
+	return l.GetProjectAuth(in)
+}
+
 func (s *ProjectServer) AddProject(ctx context.Context, in *pb.AddProjectReq) (*pb.AddProjectRsp, error) {
 	l := logic.NewAddProjectLogic(ctx, s.svcCtx)
 	return l.AddProject(in)
@@ -51,6 +56,51 @@ func (s *ProjectServer) ListProject(ctx context.Context, in *pb.ListProjectReq) 
 func (s *ProjectServer) ListProjectFiles(ctx context.Context, in *pb.ListProjectFilesReq) (*pb.ListProjectFilesRsp, error) {
 	l := logic.NewListProjectFilesLogic(ctx, s.svcCtx)
 	return l.ListProjectFiles(in)
+}
+
+func (s *ProjectServer) ListProjectAllFiles(ctx context.Context, in *pb.ListProjectAllFilesReq) (*pb.ListProjectFilesRsp, error) {
+	l := logic.NewListProjectAllFilesLogic(ctx, s.svcCtx)
+	return l.ListProjectAllFiles(in)
+}
+
+func (s *ProjectServer) CreateFile(ctx context.Context, in *pb.CreateFileReq) (*pb.CreateFileRsp, error) {
+	l := logic.NewCreateFileLogic(ctx, s.svcCtx)
+	return l.CreateFile(in)
+}
+
+func (s *ProjectServer) ReadFile(ctx context.Context, in *pb.ReadFileReq) (*pb.ReadFileRsp, error) {
+	l := logic.NewReadFileLogic(ctx, s.svcCtx)
+	return l.ReadFile(in)
+}
+
+func (s *ProjectServer) UpdateFile(ctx context.Context, in *pb.UpdateFileReq) (*pb.UpdateFileRsp, error) {
+	l := logic.NewUpdateFileLogic(ctx, s.svcCtx)
+	return l.UpdateFile(in)
+}
+
+func (s *ProjectServer) DeleteFile(ctx context.Context, in *pb.DeleteFileReq) (*pb.DeleteFileRsp, error) {
+	l := logic.NewDeleteFileLogic(ctx, s.svcCtx)
+	return l.DeleteFile(in)
+}
+
+func (s *ProjectServer) MoveFile(ctx context.Context, in *pb.MoveFileReq) (*pb.MoveFileRsp, error) {
+	l := logic.NewMoveFileLogic(ctx, s.svcCtx)
+	return l.MoveFile(in)
+}
+
+func (s *ProjectServer) MkDir(ctx context.Context, in *pb.MkDirReq) (*pb.MkDirRsp, error) {
+	l := logic.NewMkDirLogic(ctx, s.svcCtx)
+	return l.MkDir(in)
+}
+
+func (s *ProjectServer) WorkStatus(ctx context.Context, in *pb.WorkStatusReq) (*pb.WorkStatusRsp, error) {
+	l := logic.NewWorkStatusLogic(ctx, s.svcCtx)
+	return l.WorkStatus(in)
+}
+
+func (s *ProjectServer) Commit(ctx context.Context, in *pb.CommitReq) (*pb.CommitRsp, error) {
+	l := logic.NewCommitLogic(ctx, s.svcCtx)
+	return l.Commit(in)
 }
 
 //  permission manager

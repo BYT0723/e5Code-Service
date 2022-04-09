@@ -21,6 +21,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
+					Path:    "/project/getProjectAuth",
+					Handler: getProjectAuthHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
 					Path:    "/project/addProject",
 					Handler: addProjectHandler(serverCtx),
 				},
@@ -38,6 +43,56 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/project/listProject",
 					Handler: listProjectHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/listProjectFiles",
+					Handler: listProjectFilesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/listProjectAllFiles",
+					Handler: listProjectAllFilesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/createFile",
+					Handler: createFileHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/readFile",
+					Handler: readFileHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/updateFile",
+					Handler: updateFileHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/deleteFile",
+					Handler: deleteFileHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/moveFile",
+					Handler: moveFileHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/mkDir",
+					Handler: mkDirHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/workStatus",
+					Handler: workStatusHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/project/commit",
+					Handler: commitHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,

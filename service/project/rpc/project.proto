@@ -2,17 +2,18 @@ syntax ="proto3";
 
 package project;
 
-option go_package="./pb";
-
 import "google/protobuf/timestamp.proto";
+
+option go_package="./pb";
 
 message ProjectModel {
     string id = 1;
     string name = 4;
     string desc = 5;
     string url = 6;
-    string ownerID = 7;
-    UserModel owner = 8;
+    string status = 7;
+    string ownerID = 8;
+    UserModel owner = 9;
 }
 
 message UserModel {
@@ -20,6 +21,25 @@ message UserModel {
    string email = 2;
    string account = 3;
    string name = 4;
+   string bio = 5;
+}
+
+
+message CommitInfo {
+   string message = 1;
+   string author = 2;
+   google.protobuf.Timestamp when = 3;
+}
+
+message FileModel {
+  string name = 1;
+  bool isFile = 2;
+  string mode = 3;
+  int64 size = 4;
+  string path = 5;
+  string commitHash = 6;
+  CommitInfo commitInfo = 7;
+  repeated FileModel Children = 8;
 }
 
 message getProjectReq {
@@ -33,7 +53,14 @@ message getProjectRsp {
     string name = 4;
     string desc = 5;
     string url = 6;
-    string ownerID = 7;
+    string status = 7;
+    string ownerID = 8;
+    UserModel owner = 9;
+}
+
+message getProjectAuthRsp {
+	string username = 1;
+	string password = 2;
 }
 
 message listProjectReq {
@@ -48,6 +75,8 @@ message addProjectReq {
     string name = 1;
     string desc = 2;
     string url = 3;
+	 string username = 4;
+	 string password = 5;
 }
 
 message addProjectRsp {
@@ -59,6 +88,7 @@ message updateProjectReq {
     string name = 2;
     string desc = 3;
     string url = 4;
+    string status = 5;
 }
 
 message updateProjectRsp {}
@@ -94,22 +124,108 @@ message removeUserRsp {}
 
 message listProjectFilesReq {
    string id = 1;
-   string opt = 2;
+   string path = 2;
+   bool isWork = 3;
 }
 
 message listProjectFilesRsp {
-   
+  int64 count = 1;
+  repeated FileModel result = 2;
 }
+
+message listProjectAllFilesReq {
+   string id = 1;
+   bool isWork = 2;
+}
+
+message listProjectAllFilesRsp {
+  int64 count = 1;
+  repeated FileModel result = 2;
+}
+
+message createFileReq {
+  string id = 1;
+  string path = 2;
+}
+message createFileRsp {}
+
+message readFileReq {
+   string id = 1;
+   string path = 2;
+   bool isWork =3;
+}
+message readFileRsp {
+   string body = 1;
+}
+
+message updateFileReq {
+   string id = 1;
+   string path = 2;
+   string body = 3;
+}
+message updateFileRsp {}
+
+message deleteFileReq {
+	string id = 1;
+	string path = 2;
+}
+
+message deleteFileRsp {}
+
+message moveFileReq {
+	string id =1 ;
+	string oldpath = 2;
+	string newpath = 3;
+}
+
+message moveFileRsp {}
+
+message mkDirReq {
+	string id =1 ;
+  string path = 2;
+}
+
+message mkDirRsp {}
+
+message fileStatus {
+   string path = 1;
+   string status = 2;
+}
+message workStatusReq {
+  string id = 1;
+}
+
+message workStatusRsp {
+  repeated fileStatus status = 1;
+}
+
+message commitReq {
+    string id = 1;
+    string msg = 2;
+    repeated string filePaths = 3;
+}
+
+message commitRsp {}
 
 
 service project {
     // basic operation
     rpc getProject(getProjectReq) returns(getProjectRsp);
+	  rpc getProjectAuth(getProjectReq) returns(getProjectAuthRsp);
     rpc addProject(addProjectReq) returns(addProjectRsp);
     rpc updateProject(updateProjectReq) returns(updateProjectRsp);
     rpc deleteProject(deleteProjectReq) returns(deleteProjectRsp);
     rpc listProject(listProjectReq) returns(listProjectRsp);
     rpc listProjectFiles(listProjectFilesReq) returns(listProjectFilesRsp);
+    rpc listProjectAllFiles(listProjectAllFilesReq) returns(listProjectFilesRsp);
+    rpc createFile(createFileReq) returns(createFileRsp);
+    rpc readFile(readFileReq) returns(readFileRsp);
+    rpc updateFile(updateFileReq) returns(updateFileRsp);
+    rpc deleteFile(deleteFileReq) returns(deleteFileRsp);
+    rpc moveFile(moveFileReq) returns(moveFileRsp);
+    rpc mkDir(mkDirReq) returns(mkDirRsp);
+    rpc workStatus(workStatusReq) returns(workStatusRsp);
+    rpc commit(commitReq) returns(commitRsp);
 
     // permission manager
     rpc addUser(addUserReq) returns(addUserRsp);

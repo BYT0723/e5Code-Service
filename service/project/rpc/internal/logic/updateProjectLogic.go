@@ -46,6 +46,9 @@ func (l *UpdateProjectLogic) UpdateProject(in *project.UpdateProjectReq) (*proje
 	if in.Url != "" {
 		p.Url = in.Url
 	}
+	if in.Status != "" {
+		p.Status = in.Status
+	}
 	if err := l.svcCtx.DB.Save(p).Error; err != nil {
 		logx.Error("Fail to UpdateProject : ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())

@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-git/go-git/plumbing/transport/ssh"
 	git "github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
 )
 
 func TestGit(t *testing.T) {
@@ -44,8 +45,47 @@ func TestClone(t *testing.T) {
 
 func TestList(t *testing.T) {
 	rep, _ := git.PlainOpen("/home/tao/Documents/Github/e5code")
-	result, _ := ListFile(rep, "")
+	result, _ := ListFile(rep, "", true, false)
 	for _, v := range result {
-		fmt.Printf("v: %v\n", v)
+		fmt.Printf("v: %v\n", v.CommitInfo)
+		if v.Children != nil {
+			for _, v2 := range v.Children {
+				fmt.Printf("v2: %v\n", v2.CommitInfo)
+			}
+		}
 	}
+}
+
+func TestUpdateFile(t *testing.T) {
+	rep, _ := git.PlainOpen("/home/tao/Documents/Gitee/configs")
+	body, _ := ReadFile(rep, "README", true)
+	fmt.Printf("body: %v\n", body)
+
+	if err := UpdateFile(rep, "README", []byte("Test")); err != nil {
+		log.Fatal("Fail to updateFile:", err.Error())
+		return
+	}
+	body, _ = ReadFile(rep, "README", false)
+	fmt.Printf("body: %v\n", body)
+}
+
+func TestGitStauts(t *testing.T) {
+	// rep, _ := git.PlainOpen("/home/tao/Documents/Gitee/configs")
+}
+
+func TestPush(t *testing.T) {
+	rep, _ := git.PlainOpen("/home/tao/Documents/Gitee/configs")
+	if err := Commit(rep, &CommitOption{
+		Msg:    "go-git测试",
+		Author: "wangtao",
+		Email:  "1151713064@qq.com",
+		Remote: "origin",
+		BasicAuth: &http.BasicAuth{
+			Username: "13164884812",
+			Password: "WTlove0910..",
+		},
+	}); err != nil {
+		log.Fatal("Fail:", err.Error())
+	}
+	fmt.Println("Success")
 }

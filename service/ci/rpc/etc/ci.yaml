@@ -4,13 +4,15 @@ Etcd:
   Hosts:
   - 127.0.0.1:2379
   Key: ci.rpc
+Mysql:
+  DataSource: root:wangtao@tcp(db:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 ProjectRpc:
   Etcd:
     Hosts:
       - etcd:2379
     Key: project.rpc
   NonBlock: true
-RegistryConf:
-  Local: /tmp/e5Code/registrys
-  Tar: /tmp/e5Code/tars
-  BuildLog: /tmp/e5Code/build_logs
+RepositoryConf:
+  Repositories: /tmp/e5Code/repositories
+  Tars: /tmp/e5Code/tars
+  BuildLogs: /tmp/e5Code/build_logs

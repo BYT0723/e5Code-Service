@@ -42,6 +42,7 @@ func (l *ListUserLogic) ListUser(in *pb.ListUserReq) (*pb.ListUserRsp, error) {
 			Email:     v.Email,
 			Account:   v.Accout,
 			Name:      v.Name,
+			Bio:       v.Bio,
 		})
 	}
 

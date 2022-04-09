@@ -4,6 +4,7 @@ type (
 		Email   string `json:"email"`
 		Account string `json:"account"`
 		Name    string `json:"name"`
+		Bio     string `json:"bio"`
 	}
 	LoginReq {
 		Email    string `json:"email"`
@@ -21,6 +22,7 @@ type (
 		Account  string `json:"account"`
 		Name     string `json:"name"`
 		Password string `json:"password"`
+		Bio      string `json:"bio,optional"`
 	}
 	RegisterUserReply {
 		Id string `json:"id"`
@@ -29,6 +31,7 @@ type (
 		Id       string `json:"id"`
 		Name     string `json:"name,optional"`
 		Password string `json:"password,optional"`
+		Bio      string `json:"bio,optional"`
 	}
 	UpdateUserReply {
 		Result bool `json:"result"`
@@ -48,6 +51,7 @@ type (
 		Email   string `json:"email"`
 		Account string `json:"account"`
 		Name    string `json:"name"`
+		Bio     string `json:"bio"`
 	}
 	GetPermissionReq {
 		UserID    string `json:"user_id"`

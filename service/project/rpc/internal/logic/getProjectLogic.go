@@ -43,6 +43,7 @@ func (l *GetProjectLogic) GetProject(in *project.GetProjectReq) (*project.GetPro
 		Name:      p.Name,
 		Desc:      p.Desc,
 		Url:       p.Url,
+		Status:    p.Status,
 		OwnerID:   p.OwnerId,
 		CreatedAt: timestamppb.New(p.CreatedAt),
 		UpdatedAt: timestamppb.New(p.UpdatedAt),

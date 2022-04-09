@@ -44,5 +44,6 @@ func (l *GetUserByEmailLogic) GetUserByEmail(in *user.GetUserByEmailReq) (*user.
 		Email:     in.Email,
 		Account:   u.Accout,
 		Name:      u.Name,
+		Bio:       u.Bio,
 	}, nil
 }

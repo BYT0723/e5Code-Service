@@ -42,6 +42,7 @@ func (l *ListProjectLogic) ListProject(req types.ListProjectReq) (resp *types.Li
 			Desc:    v.Desc,
 			Url:     v.Url,
 			OwnerID: v.OwnerID,
+			Status:  v.Status,
 			Owner: types.User{
 				ID:      v.Owner.Id,
 				Email:   v.Owner.Email,

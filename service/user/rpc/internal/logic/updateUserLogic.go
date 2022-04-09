@@ -43,6 +43,9 @@ func (l *UpdateUserLogic) UpdateUser(in *user.UpdateUserReq) (*user.UpdateUserRs
 	if in.Password != "" {
 		u.Password = cryptx.EncryptPwd(in.Password, l.svcCtx.Config.Salt)
 	}
+	if in.Bio != "" {
+		u.Bio = in.Bio
+	}
 	if err := l.svcCtx.Db.Save(u).Error; err != nil {
 		l.Logger.Errorf("Fail to update user(id: %s): %s", in.Id, err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())

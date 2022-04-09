@@ -13,35 +13,67 @@ import (
 )
 
 type (
-	AddProjectReq       = pb.AddProjectReq
-	AddProjectRsp       = pb.AddProjectRsp
-	AddUserReq          = pb.AddUserReq
-	AddUserRsp          = pb.AddUserRsp
-	DeleteProjectReq    = pb.DeleteProjectReq
-	DeleteProjectRsp    = pb.DeleteProjectRsp
-	GetProjectReq       = pb.GetProjectReq
-	GetProjectRsp       = pb.GetProjectRsp
-	ListProjectFilesReq = pb.ListProjectFilesReq
-	ListProjectFilesRsp = pb.ListProjectFilesRsp
-	ListProjectReq      = pb.ListProjectReq
-	ListProjectRsp      = pb.ListProjectRsp
-	ModifyPermissionReq = pb.ModifyPermissionReq
-	ModifyPermissionRsp = pb.ModifyPermissionRsp
-	ProjectModel        = pb.ProjectModel
-	RemoveUserReq       = pb.RemoveUserReq
-	RemoveUserRsp       = pb.RemoveUserRsp
-	UpdateProjectReq    = pb.UpdateProjectReq
-	UpdateProjectRsp    = pb.UpdateProjectRsp
-	UserModel           = pb.UserModel
+	AddProjectReq          = pb.AddProjectReq
+	AddProjectRsp          = pb.AddProjectRsp
+	AddUserReq             = pb.AddUserReq
+	AddUserRsp             = pb.AddUserRsp
+	CommitInfo             = pb.CommitInfo
+	CommitReq              = pb.CommitReq
+	CommitRsp              = pb.CommitRsp
+	CreateFileReq          = pb.CreateFileReq
+	CreateFileRsp          = pb.CreateFileRsp
+	DeleteFileReq          = pb.DeleteFileReq
+	DeleteFileRsp          = pb.DeleteFileRsp
+	DeleteProjectReq       = pb.DeleteProjectReq
+	DeleteProjectRsp       = pb.DeleteProjectRsp
+	FileModel              = pb.FileModel
+	FileStatus             = pb.FileStatus
+	GetProjectAuthRsp      = pb.GetProjectAuthRsp
+	GetProjectReq          = pb.GetProjectReq
+	GetProjectRsp          = pb.GetProjectRsp
+	ListProjectAllFilesReq = pb.ListProjectAllFilesReq
+	ListProjectAllFilesRsp = pb.ListProjectAllFilesRsp
+	ListProjectFilesReq    = pb.ListProjectFilesReq
+	ListProjectFilesRsp    = pb.ListProjectFilesRsp
+	ListProjectReq         = pb.ListProjectReq
+	ListProjectRsp         = pb.ListProjectRsp
+	MkDirReq               = pb.MkDirReq
+	MkDirRsp               = pb.MkDirRsp
+	ModifyPermissionReq    = pb.ModifyPermissionReq
+	ModifyPermissionRsp    = pb.ModifyPermissionRsp
+	MoveFileReq            = pb.MoveFileReq
+	MoveFileRsp            = pb.MoveFileRsp
+	ProjectModel           = pb.ProjectModel
+	ReadFileReq            = pb.ReadFileReq
+	ReadFileRsp            = pb.ReadFileRsp
+	RemoveUserReq          = pb.RemoveUserReq
+	RemoveUserRsp          = pb.RemoveUserRsp
+	UpdateFileReq          = pb.UpdateFileReq
+	UpdateFileRsp          = pb.UpdateFileRsp
+	UpdateProjectReq       = pb.UpdateProjectReq
+	UpdateProjectRsp       = pb.UpdateProjectRsp
+	UserModel              = pb.UserModel
+	WorkStatusReq          = pb.WorkStatusReq
+	WorkStatusRsp          = pb.WorkStatusRsp
 
 	Project interface {
 		//  basic operation
 		GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*GetProjectRsp, error)
+		GetProjectAuth(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*GetProjectAuthRsp, error)
 		AddProject(ctx context.Context, in *AddProjectReq, opts ...grpc.CallOption) (*AddProjectRsp, error)
 		UpdateProject(ctx context.Context, in *UpdateProjectReq, opts ...grpc.CallOption) (*UpdateProjectRsp, error)
 		DeleteProject(ctx context.Context, in *DeleteProjectReq, opts ...grpc.CallOption) (*DeleteProjectRsp, error)
 		ListProject(ctx context.Context, in *ListProjectReq, opts ...grpc.CallOption) (*ListProjectRsp, error)
 		ListProjectFiles(ctx context.Context, in *ListProjectFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error)
+		ListProjectAllFiles(ctx context.Context, in *ListProjectAllFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error)
+		CreateFile(ctx context.Context, in *CreateFileReq, opts ...grpc.CallOption) (*CreateFileRsp, error)
+		ReadFile(ctx context.Context, in *ReadFileReq, opts ...grpc.CallOption) (*ReadFileRsp, error)
+		UpdateFile(ctx context.Context, in *UpdateFileReq, opts ...grpc.CallOption) (*UpdateFileRsp, error)
+		DeleteFile(ctx context.Context, in *DeleteFileReq, opts ...grpc.CallOption) (*DeleteFileRsp, error)
+		MoveFile(ctx context.Context, in *MoveFileReq, opts ...grpc.CallOption) (*MoveFileRsp, error)
+		MkDir(ctx context.Context, in *MkDirReq, opts ...grpc.CallOption) (*MkDirRsp, error)
+		WorkStatus(ctx context.Context, in *WorkStatusReq, opts ...grpc.CallOption) (*WorkStatusRsp, error)
+		Commit(ctx context.Context, in *CommitReq, opts ...grpc.CallOption) (*CommitRsp, error)
 		//  permission manager
 		AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*AddUserRsp, error)
 		RemoveUser(ctx context.Context, in *RemoveUserReq, opts ...grpc.CallOption) (*RemoveUserRsp, error)
@@ -63,6 +95,11 @@ func NewProject(cli zrpc.Client) Project {
 func (m *defaultProject) GetProject(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*GetProjectRsp, error) {
 	client := pb.NewProjectClient(m.cli.Conn())
 	return client.GetProject(ctx, in, opts...)
+}
+
+func (m *defaultProject) GetProjectAuth(ctx context.Context, in *GetProjectReq, opts ...grpc.CallOption) (*GetProjectAuthRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.GetProjectAuth(ctx, in, opts...)
 }
 
 func (m *defaultProject) AddProject(ctx context.Context, in *AddProjectReq, opts ...grpc.CallOption) (*AddProjectRsp, error) {
@@ -88,6 +125,51 @@ func (m *defaultProject) ListProject(ctx context.Context, in *ListProjectReq, op
 func (m *defaultProject) ListProjectFiles(ctx context.Context, in *ListProjectFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error) {
 	client := pb.NewProjectClient(m.cli.Conn())
 	return client.ListProjectFiles(ctx, in, opts...)
+}
+
+func (m *defaultProject) ListProjectAllFiles(ctx context.Context, in *ListProjectAllFilesReq, opts ...grpc.CallOption) (*ListProjectFilesRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.ListProjectAllFiles(ctx, in, opts...)
+}
+
+func (m *defaultProject) CreateFile(ctx context.Context, in *CreateFileReq, opts ...grpc.CallOption) (*CreateFileRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.CreateFile(ctx, in, opts...)
+}
+
+func (m *defaultProject) ReadFile(ctx context.Context, in *ReadFileReq, opts ...grpc.CallOption) (*ReadFileRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.ReadFile(ctx, in, opts...)
+}
+
+func (m *defaultProject) UpdateFile(ctx context.Context, in *UpdateFileReq, opts ...grpc.CallOption) (*UpdateFileRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.UpdateFile(ctx, in, opts...)
+}
+
+func (m *defaultProject) DeleteFile(ctx context.Context, in *DeleteFileReq, opts ...grpc.CallOption) (*DeleteFileRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.DeleteFile(ctx, in, opts...)
+}
+
+func (m *defaultProject) MoveFile(ctx context.Context, in *MoveFileReq, opts ...grpc.CallOption) (*MoveFileRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.MoveFile(ctx, in, opts...)
+}
+
+func (m *defaultProject) MkDir(ctx context.Context, in *MkDirReq, opts ...grpc.CallOption) (*MkDirRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.MkDir(ctx, in, opts...)
+}
+
+func (m *defaultProject) WorkStatus(ctx context.Context, in *WorkStatusReq, opts ...grpc.CallOption) (*WorkStatusRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.WorkStatus(ctx, in, opts...)
+}
+
+func (m *defaultProject) Commit(ctx context.Context, in *CommitReq, opts ...grpc.CallOption) (*CommitRsp, error) {
+	client := pb.NewProjectClient(m.cli.Conn())
+	return client.Commit(ctx, in, opts...)
 }
 
 //  permission manager

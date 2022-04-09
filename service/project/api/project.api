@@ -4,6 +4,7 @@ type (
 		Name    string `json:"name"`
 		Desc    string `json:"desc"`
 		Url     string `json:"url"`
+		Status  string `json:"status"`
 		OwnerID string `json:"owner_id"`
 		Owner   User   `json:"owner"`
 	}
@@ -11,7 +12,22 @@ type (
 		ID      string `json:"id"`
 		Email   string `json:"email"`
 		Account string `json:"account"`
-		Name    string `json:"Name"`
+		Name    string `json:"name"`
+	}
+	CommitInfo {
+		Message string `json:"message"`
+		Author  string `json:"author"`
+		When    string `json:"when"`
+	}
+	File {
+		Name       string     `json:"name"`
+		IsFile     bool       `json:"isFile"`
+		Mode       string     `json:"mode"`
+		Size       int64      `json:"size"`
+		Path       string     `json:"path"`
+		CommitHasg string     `json:"commitHash"`
+		CommitInfo CommitInfo `json:"commitInfo"`
+		Children   []File     `json:"children"`
 	}
 	GetProjectReq {
 		ID string `json:"id"`
@@ -23,10 +39,16 @@ type (
 		Url     string `json:"url"`
 		OwnerID string `json:"owner_id"`
 	}
+	GetProjectAuthReply {
+		UserName string `json:"username"`
+		Password string `json:"password"`
+	}
 	AddProjectReq {
-		Name string `json:"name"`
-		Desc string `json:"desc"`
-		Url  string `json:"url"`
+		Name     string `json:"name"`
+		Desc     string `json:"desc"`
+		Url      string `json:"url"`
+		UserName string `json:"username"`
+		Password string `json:"password"`
 	}
 	AddProjectReply {
 		ID string `json:"id"`
@@ -76,6 +98,86 @@ type (
 		Count  int64     `json:"count"`
 		Result []Project `json:"result"`
 	}
+	ListProjectFilesReq {
+		ID     string `json:"id"`
+		Path   string `json:"path"`
+		IsWork bool   `json:"isWork"`
+	}
+	ListProjectFilesReply {
+		Count  int64  `json:"count"`
+		Result []File `json:"result"`
+	}
+	ListProjectAllFilesReq {
+		ID     string `json:"id"`
+		IsWork bool   `json:"isWork"`
+	}
+	ListProjectAllFilesReply {
+		Count  int64  `json:"count"`
+		Result []File `json:"result"`
+	}
+	CreateFileReq {
+		ID   string `json:"id"`
+		Path string `json:"path"`
+	}
+	CreateFileReply {
+		Result bool `json:"result"`
+	}
+	ReadFileReq {
+		ID     string `json:"id"`
+		Path   string `json:"path"`
+		IsWork bool   `json:"isWork"`
+	}
+	ReadFileReply {
+		Body string `json:"body"`
+	}
+	UpdateFileReq {
+		ID   string `json:"id"`
+		Path string `json:"path"`
+		Body string `json:"body"`
+	}
+	UpdateFileReply {
+		Result bool `json:"result"`
+	}
+	DeleteFileReq {
+		ID   string `json:"id"`
+		Path string `json:"path"`
+	}
+	DeleteFileReply {
+		Result bool `json:"result"`
+	}
+	MoveFileReq {
+		ID      string `json:"id"`
+		Oldpath string `json:"oldpath"`
+		Newpath string `json:"newpath"`
+	}
+	MoveFileReply {
+		Result bool `json:"result"`
+	}
+	MkDirReq {
+		ID   string `json:"id"`
+		Path string `json:"path"`
+	}
+	MkDirReply {
+		Result bool `json:"result"`
+	}
+	FileStatus {
+		Path   string `json:"path"`
+		Status string `json:"status"`
+	}
+	WorkStatusReq {
+		ID string `json:"id"`
+	}
+	WorkStatusReply {
+		Result []FileStatus `json:"result"`
+	}
+	CommitReq {
+		ID        string   `json:"id"`
+		Msg       string   `json:"msg"`
+		FilePaths []string `json:"filePaths"`
+	}
+	CommitReply {
+		Result bool `json:"result"`
+	}
 )
 
 @server(
@@ -85,6 +187,8 @@ type (
 service project-api {
 	@handler getProject
 	post /project/getProject(GetProjectReq) returns(GetProjectReply)
+	@handler getProjectAuth
+	post /project/getProjectAuth(GetProjectReq) returns(GetProjectAuthReply)
 	@handler addProject
 	post /project/addProject(AddProjectReq) returns(AddProjectReply)
 	@handler updateProject
@@ -93,6 +197,26 @@ service project-api {
 	post /project/deleteProject(DeleteProjectReq) returns(DeleteProjectReply)
 	@handler listProject
 	post /project/listProject(ListProjectReq) returns(ListProjectReply)
+	@handler listProjectFiles
+	post /project/listProjectFiles(ListProjectFilesReq) returns(ListProjectFilesReply)
+	@handler listProjectAllFiles
+	post /project/listProjectAllFiles(ListProjectAllFilesReq) returns(ListProjectAllFilesReply)
+	@handler createFile
+	post /project/createFile(CreateFileReq) returns(CreateFileReply)
+	@handler readFile
+	post /project/readFile(ReadFileReq) returns(ReadFileReply)
+	@handler updateFile
+	post /project/updateFile(UpdateFileReq) returns(UpdateFileReply)
+	@handler deleteFile
+	post /project/deleteFile(DeleteFileReq) returns(DeleteFileReply)
+	@handler moveFile
+	post /project/moveFile(MoveFileReq) returns(MoveFileReply)
+	@handler mkDir
+	post /project/mkDir(MkDirReq) returns(MkDirReply)
+	@handler workStatus
+	post /project/workStatus(WorkStatusReq) returns(WorkStatusReply)
+	@handler commit
+	post /project/commit(CommitReq) returns(CommitReply)
 	
 	@handler addUser
 	post /project/addUser(AddUserReq) returns(AddUserReply)

@@ -76,6 +76,7 @@ func (l *ListProjectLogic) ListProject(in *pb.ListProjectReq) (*pb.ListProjectRs
 			Email:   v.Email,
 			Account: v.Account,
 			Name:    v.Name,
+			Bio:     v.Bio,
 		}
 	}
 	res := []*pb.ProjectModel{}
@@ -85,6 +86,7 @@ func (l *ListProjectLogic) ListProject(in *pb.ListProjectReq) (*pb.ListProjectRs
 			Name:    v.Name,
 			Url:     v.Url,
 			Desc:    v.Desc,
+			Status:  v.Status,
 			OwnerID: v.OwnerId,
 			Owner:   userMap[v.OwnerId],
 		})

@@ -6,6 +6,7 @@ type User struct {
 	Email   string `json:"email"`
 	Account string `json:"account"`
 	Name    string `json:"name"`
+	Bio     string `json:"bio"`
 }
 
 type LoginReq struct {
@@ -26,6 +27,7 @@ type RegisterUserReq struct {
 	Account  string `json:"account"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
+	Bio      string `json:"bio,optional"`
 }
 
 type RegisterUserReply struct {
@@ -36,6 +38,7 @@ type UpdateUserReq struct {
 	Id       string `json:"id"`
 	Name     string `json:"name,optional"`
 	Password string `json:"password,optional"`
+	Bio      string `json:"bio,optional"`
 }
 
 type UpdateUserReply struct {
@@ -59,6 +62,7 @@ type UserInfoReply struct {
 	Email   string `json:"email"`
 	Account string `json:"account"`
 	Name    string `json:"name"`
+	Bio     string `json:"bio"`
 }
 
 type GetPermissionReq struct {

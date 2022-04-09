@@ -45,6 +45,7 @@ func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.AddUserRsp, error) {
 		Email:    in.Email,
 		Accout:   in.Account,
 		Name:     in.Name,
+		Bio:      in.Bio,
 		Password: cryptx.EncryptPwd(in.Password, l.svcCtx.Config.Salt),
 	}).Error; err != nil {
 		l.Logger.Errorf("Fail to add user(%s): %s", in.Email, err.Error())

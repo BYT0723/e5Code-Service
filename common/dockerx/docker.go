@@ -88,6 +88,9 @@ func StoreActiveContainer(ctx context.Context, dockerHost string) error {
 	return nil
 }
 
+// 打包指定的文件路径
+// target : tar包路径
+// source : 源文件夹路径
 func TarProject(target, source string) error {
 	tf, err := os.OpenFile(target, os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {

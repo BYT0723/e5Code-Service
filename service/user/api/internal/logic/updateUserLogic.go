@@ -30,6 +30,7 @@ func (l *UpdateUserLogic) UpdateUser(req types.UpdateUserReq) (*types.UpdateUser
 		Id:       req.Id,
 		Name:     req.Name,
 		Password: req.Password,
+		Bio:      req.Bio,
 	}); err != nil {
 		logx.Errorf("Fail to Update User(id:%s), err: %s", req.Id, err.Error())
 		return &types.UpdateUserReply{Result: false}, errorx.NewCodeError(codesx.RPCError, err.Error())

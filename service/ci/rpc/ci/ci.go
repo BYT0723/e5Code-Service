@@ -13,10 +13,26 @@ import (
 )
 
 type (
-	BuildReq = pb.BuildReq
-	BuildRsp = pb.BuildRsp
+	AddBuildPlanReq    = pb.AddBuildPlanReq
+	AddBuildPlanRsp    = pb.AddBuildPlanRsp
+	BuildPlanModel     = pb.BuildPlanModel
+	BuildReq           = pb.BuildReq
+	BuildRsp           = pb.BuildRsp
+	DeleteBuildPlanReq = pb.DeleteBuildPlanReq
+	DeleteBuildPlanRsp = pb.DeleteBuildPlanRsp
+	GetBuildPlanReq    = pb.GetBuildPlanReq
+	GetBuildPlanRsp    = pb.GetBuildPlanRsp
+	ListBuildPlanReq   = pb.ListBuildPlanReq
+	ListBuildPlanRsp   = pb.ListBuildPlanRsp
+	UpdateBuildPlanReq = pb.UpdateBuildPlanReq
+	UpdateBuildPlanRsp = pb.UpdateBuildPlanRsp
 
 	Ci interface {
+		GetBuildPlan(ctx context.Context, in *GetBuildPlanReq, opts ...grpc.CallOption) (*GetBuildPlanRsp, error)
+		AddBuildPlan(ctx context.Context, in *AddBuildPlanReq, opts ...grpc.CallOption) (*AddBuildPlanRsp, error)
+		UpdateBuildPlan(ctx context.Context, in *UpdateBuildPlanReq, opts ...grpc.CallOption) (*UpdateBuildPlanRsp, error)
+		DeleteBuildPlan(ctx context.Context, in *DeleteBuildPlanReq, opts ...grpc.CallOption) (*DeleteBuildPlanRsp, error)
+		ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opts ...grpc.CallOption) (*ListBuildPlanRsp, error)
 		BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error)
 	}
 
@@ -29,6 +45,31 @@ func NewCi(cli zrpc.Client) Ci {
 	return &defaultCi{
 		cli: cli,
 	}
+}
+
+func (m *defaultCi) GetBuildPlan(ctx context.Context, in *GetBuildPlanReq, opts ...grpc.CallOption) (*GetBuildPlanRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.GetBuildPlan(ctx, in, opts...)
+}
+
+func (m *defaultCi) AddBuildPlan(ctx context.Context, in *AddBuildPlanReq, opts ...grpc.CallOption) (*AddBuildPlanRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.AddBuildPlan(ctx, in, opts...)
+}
+
+func (m *defaultCi) UpdateBuildPlan(ctx context.Context, in *UpdateBuildPlanReq, opts ...grpc.CallOption) (*UpdateBuildPlanRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.UpdateBuildPlan(ctx, in, opts...)
+}
+
+func (m *defaultCi) DeleteBuildPlan(ctx context.Context, in *DeleteBuildPlanReq, opts ...grpc.CallOption) (*DeleteBuildPlanRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.DeleteBuildPlan(ctx, in, opts...)
+}
+
+func (m *defaultCi) ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opts ...grpc.CallOption) (*ListBuildPlanRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.ListBuildPlan(ctx, in, opts...)
 }
 
 func (m *defaultCi) BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error) {

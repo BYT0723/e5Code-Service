@@ -1,6 +1,7 @@
 syntax ="proto3";
 
 package user;
+
 import "google/protobuf/timestamp.proto";
 
 option go_package="./pb";
@@ -20,6 +21,7 @@ message UserModel {
     string email = 4;
     string account = 5;
     string name = 6;
+    string bio = 7;
 }
 
 message getUserRsp {
@@ -29,6 +31,7 @@ message getUserRsp {
     string email = 4;
     string account = 5;
     string name = 6;
+    string bio = 7;
 }
 
 message listUserReq {
@@ -45,6 +48,7 @@ message addUserReq {
     string account = 2;
     string name = 3;
     string password = 4;
+    string bio = 5;
 }
 
 message addUserRsp {
@@ -55,6 +59,7 @@ message updateUserReq {
     string id = 1;
     string name = 2;
     string password = 3;
+    string bio = 4;
 }
 
 message updateUserRsp {}

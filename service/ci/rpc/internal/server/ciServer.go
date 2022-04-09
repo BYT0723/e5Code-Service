@@ -22,6 +22,31 @@ func NewCiServer(svcCtx *svc.ServiceContext) *CiServer {
 	}
 }
 
+func (s *CiServer) GetBuildPlan(ctx context.Context, in *pb.GetBuildPlanReq) (*pb.GetBuildPlanRsp, error) {
+	l := logic.NewGetBuildPlanLogic(ctx, s.svcCtx)
+	return l.GetBuildPlan(in)
+}
+
+func (s *CiServer) AddBuildPlan(ctx context.Context, in *pb.AddBuildPlanReq) (*pb.AddBuildPlanRsp, error) {
+	l := logic.NewAddBuildPlanLogic(ctx, s.svcCtx)
+	return l.AddBuildPlan(in)
+}
+
+func (s *CiServer) UpdateBuildPlan(ctx context.Context, in *pb.UpdateBuildPlanReq) (*pb.UpdateBuildPlanRsp, error) {
+	l := logic.NewUpdateBuildPlanLogic(ctx, s.svcCtx)
+	return l.UpdateBuildPlan(in)
+}
+
+func (s *CiServer) DeleteBuildPlan(ctx context.Context, in *pb.DeleteBuildPlanReq) (*pb.DeleteBuildPlanRsp, error) {
+	l := logic.NewDeleteBuildPlanLogic(ctx, s.svcCtx)
+	return l.DeleteBuildPlan(in)
+}
+
+func (s *CiServer) ListBuildPlan(ctx context.Context, in *pb.ListBuildPlanReq) (*pb.ListBuildPlanRsp, error) {
+	l := logic.NewListBuildPlanLogic(ctx, s.svcCtx)
+	return l.ListBuildPlan(in)
+}
+
 func (s *CiServer) BuildImage(ctx context.Context, in *pb.BuildReq) (*pb.BuildRsp, error) {
 	l := logic.NewBuildImageLogic(ctx, s.svcCtx)
 	return l.BuildImage(in)

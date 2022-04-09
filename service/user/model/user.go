@@ -9,5 +9,6 @@ type User struct {
 	Email     string `gorm:"uniqueIndex; not null; type:varchar(255)"`
 	Accout    string `gorm:"uniqueIndex; not null; type:varchar(255)"`
 	Name      string
+	Bio       string
 	Password  string `gorm:"not null"`
 }

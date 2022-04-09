@@ -8,15 +8,16 @@ import (
 	"e5Code-Service/common/contextx"
 	"e5Code-Service/common/dockerx"
 	"e5Code-Service/common/errorx/codesx"
-	"e5Code-Service/common/gitx"
+	"e5Code-Service/service/ci/model"
 	"e5Code-Service/service/ci/rpc/internal/svc"
 	"e5Code-Service/service/ci/rpc/pb"
+	modelProject "e5Code-Service/service/project/model"
 	"e5Code-Service/service/project/rpc/project"
 
 	"github.com/docker/docker/api/types"
-	"github.com/go-git/go-git/v5"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 )
 
 type BuildImageLogic struct {
@@ -48,44 +49,54 @@ func (l *BuildImageLogic) BuildImage(in *pb.BuildReq) (*pb.BuildRsp, error) {
 		return nil, status.Error(codesx.ContextError, err.Error())
 	}
 
-	// Clone Registry
-	local := fmt.Sprintf("%s/%s/%s", l.svcCtx.Config.RegistryConf.Local, userID, pj.Id)
-	if err := gitx.Clone(gitx.GitCloneOpt{
-		Local: local,
-		CloneOptions: &git.CloneOptions{
-			URL: pj.Url,
-		},
+	// 获取BuildPlan
+	plan := &model.BuildPlan{Id: in.BuildPlanID}
+	if err := l.svcCtx.DB.First(plan).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Error(codesx.NotFound, "BuildPlanNotFound")
+		}
+		logx.Error("Fail to GetBuildPlan on BuildProject:", err.Error())
+		return nil, status.Error(codesx.SQLError, err.Error())
+	}
+	// 更新项目状态
+	if _, err := l.svcCtx.ProjectRpc.UpdateProject(l.ctx, &project.UpdateProjectReq{
+		Id:     pj.Id,
+		Status: modelProject.Building,
 	}); err != nil {
-		logx.Error("Fail to Clone Registry: ", err.Error())
-		return nil, status.Error(codesx.GitError, err.Error())
+		logx.Error("Fail to UpdateProject Status:", err.Error())
 	}
 
 	// 打包Registry
-	tarLocal := fmt.Sprintf("%s/%s/%s.tar", l.svcCtx.Config.RegistryConf.Tar, userID, pj.Id)
-	dockerx.TarProject(tarLocal, local)
+	local := fmt.Sprintf("%s/%s/%s", l.svcCtx.Config.RepositoryConf.Repositories, userID, pj.Id)
+	tarLocal := fmt.Sprintf("%s/%s/%s", l.svcCtx.Config.RepositoryConf.Tars, userID, pj.Id)
+	if err := dockerx.TarProject(tarLocal, local); err != nil {
+		logx.Error("Fail to TarProject:", err.Error())
+		return nil, status.Error(codesx.DockeError, err.Error())
+	}
 
 	// 构建镜像
 	reader, err := l.svcCtx.DockerClient.BuildImage(l.ctx, tarLocal, types.ImageBuildOptions{
-		Tags:    []string{in.Tag},
-		Version: types.BuilderVersion(in.Version),
+		Tags: []string{plan.Tag},
 	})
 	if err != nil {
 		logx.Error("Fail to BuildImage: ", err.Error())
-		return nil, status.Error(codesx.RPCError, err.Error())
+		return nil, status.Error(codesx.DockeError, err.Error())
 	}
 
 	// 记录日志
-	logLocal := fmt.Sprintf("%s/%s/%s-%s:%s.log", l.svcCtx.Config.RegistryConf.BuildLog, userID, pj.Id, in.Tag, in.Version)
-	logFile, err := os.OpenFile(logLocal, os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		logx.Error("Fail to OpenLogFile on BuildImage: ", err.Error())
-		return nil, status.Error(codesx.RPCError, err.Error())
-	}
-	defer logFile.Close()
+	go func(svcCtx *svc.ServiceContext) {
+		logLocal := fmt.Sprintf("%s/%s/%s-%s.log", svcCtx.Config.RepositoryConf.BuildLogs, userID, pj.Id, plan.Tag)
+		logFile, err := os.OpenFile(logLocal, os.O_CREATE|os.O_WRONLY, 0666)
+		if err != nil {
+			logx.Error("Fail to OpenLogFile on BuildImage: ", err.Error())
+			return
+		}
+		defer logFile.Close()
 
-	if _, err = reader.WriteTo(logFile); err != nil {
-		logx.Error("Fail to WriteTo Log File on BuildImage: ", err.Error())
-		return nil, status.Error(codesx.RPCError, err.Error())
-	}
+		if _, err = reader.WriteTo(logFile); err != nil {
+			logx.Error("Fail to WriteTo Log File on BuildImage: ", err.Error())
+			return
+		}
+	}(l.svcCtx)
 	return &pb.BuildRsp{}, nil
 }

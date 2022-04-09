@@ -11,6 +11,7 @@ import (
 	"e5Code-Service/service/project/rpc/pb"
 
 	git "github.com/go-git/go-git/v5"
+	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
@@ -35,30 +36,42 @@ func (l *ListProjectFilesLogic) ListProjectFiles(in *pb.ListProjectFilesReq) (*p
 	p := &model.Project{}
 	if err := l.svcCtx.DB.Where("id = ?", in.Id).First(p).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, status.Error(codesx.NotFound, err.Error())
+			return nil, status.Error(codesx.NotFound, "ProjectNotFound")
 		}
 		logx.Error("Fail to Find Project:", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 	// 打开本地仓库
-	rep, err := git.PlainOpen(fmt.Sprintf("%s/%s/%s", l.svcCtx.Config.RegistryConf.Local, p.OwnerId, p.ID))
+	rep, err := git.PlainOpen(fmt.Sprintf("%s/%s/%s", l.svcCtx.Config.RepositoryConf.Repositories, p.OwnerId, p.ID))
 	if err != nil {
 		logx.Error("Fail to Open repository: ", err.Error())
 		return nil, status.Error(codesx.GitError, err.Error())
 	}
 
+	// 拉取最新镜像
 	if err := gitx.Pull(rep, "origin"); err != nil {
+		if err != git.NoErrAlreadyUpToDate {
+			logx.Error("Fail to Pull Latest Commit for Repository: ", err.Error())
+			return nil, status.Error(codesx.GitError, err.Error())
+		}
 	}
 
-	w, err := rep.Worktree()
-	w.Pull(&git.PullOptions{RemoteName: "origin"})
-
-	ref, err := rep.Head()
+	// 获取指定路径的
+	files, err := gitx.ListFile(rep, in.Path, false, in.IsWork)
 	if err != nil {
-		logx.Error("Fail to get Head from repository:", err.Error())
+		logx.Error("Fail to List File for Repository: ", err.Error())
 		return nil, status.Error(codesx.GitError, err.Error())
 	}
-	rep.CommitObject(ref.Hash())
+	count := len(files)
+	result := make([]*pb.FileModel, count)
+	for i := 0; i < count; i++ {
+		result[i] = &pb.FileModel{}
+	}
 
-	return &pb.ListProjectFilesRsp{}, nil
+	copier.Copy(&result, &files)
+
+	return &pb.ListProjectFilesRsp{
+		Count:  int64(count),
+		Result: result,
+	}, nil
 }

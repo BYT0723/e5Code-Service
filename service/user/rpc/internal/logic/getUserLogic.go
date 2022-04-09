@@ -44,5 +44,6 @@ func (l *GetUserLogic) GetUser(in *user.GetUserReq) (*user.GetUserRsp, error) {
 		Email:     u.Email,
 		Account:   u.Accout,
 		Name:      u.Name,
+		Bio:       u.Bio,
 	}, nil
 }

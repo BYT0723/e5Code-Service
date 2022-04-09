@@ -22,6 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CiClient interface {
+	GetBuildPlan(ctx context.Context, in *GetBuildPlanReq, opts ...grpc.CallOption) (*GetBuildPlanRsp, error)
+	AddBuildPlan(ctx context.Context, in *AddBuildPlanReq, opts ...grpc.CallOption) (*AddBuildPlanRsp, error)
+	UpdateBuildPlan(ctx context.Context, in *UpdateBuildPlanReq, opts ...grpc.CallOption) (*UpdateBuildPlanRsp, error)
+	DeleteBuildPlan(ctx context.Context, in *DeleteBuildPlanReq, opts ...grpc.CallOption) (*DeleteBuildPlanRsp, error)
+	ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opts ...grpc.CallOption) (*ListBuildPlanRsp, error)
 	BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error)
 }
 
@@ -31,6 +36,51 @@ type ciClient struct {
 
 func NewCiClient(cc grpc.ClientConnInterface) CiClient {
 	return &ciClient{cc}
+}
+
+func (c *ciClient) GetBuildPlan(ctx context.Context, in *GetBuildPlanReq, opts ...grpc.CallOption) (*GetBuildPlanRsp, error) {
+	out := new(GetBuildPlanRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/GetBuildPlan", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ciClient) AddBuildPlan(ctx context.Context, in *AddBuildPlanReq, opts ...grpc.CallOption) (*AddBuildPlanRsp, error) {
+	out := new(AddBuildPlanRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/AddBuildPlan", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ciClient) UpdateBuildPlan(ctx context.Context, in *UpdateBuildPlanReq, opts ...grpc.CallOption) (*UpdateBuildPlanRsp, error) {
+	out := new(UpdateBuildPlanRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/UpdateBuildPlan", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ciClient) DeleteBuildPlan(ctx context.Context, in *DeleteBuildPlanReq, opts ...grpc.CallOption) (*DeleteBuildPlanRsp, error) {
+	out := new(DeleteBuildPlanRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/DeleteBuildPlan", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ciClient) ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opts ...grpc.CallOption) (*ListBuildPlanRsp, error) {
+	out := new(ListBuildPlanRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/ListBuildPlan", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *ciClient) BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error) {
@@ -46,6 +96,11 @@ func (c *ciClient) BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.Ca
 // All implementations must embed UnimplementedCiServer
 // for forward compatibility
 type CiServer interface {
+	GetBuildPlan(context.Context, *GetBuildPlanReq) (*GetBuildPlanRsp, error)
+	AddBuildPlan(context.Context, *AddBuildPlanReq) (*AddBuildPlanRsp, error)
+	UpdateBuildPlan(context.Context, *UpdateBuildPlanReq) (*UpdateBuildPlanRsp, error)
+	DeleteBuildPlan(context.Context, *DeleteBuildPlanReq) (*DeleteBuildPlanRsp, error)
+	ListBuildPlan(context.Context, *ListBuildPlanReq) (*ListBuildPlanRsp, error)
 	BuildImage(context.Context, *BuildReq) (*BuildRsp, error)
 	mustEmbedUnimplementedCiServer()
 }
@@ -54,6 +109,21 @@ type CiServer interface {
 type UnimplementedCiServer struct {
 }
 
+func (UnimplementedCiServer) GetBuildPlan(context.Context, *GetBuildPlanReq) (*GetBuildPlanRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBuildPlan not implemented")
+}
+func (UnimplementedCiServer) AddBuildPlan(context.Context, *AddBuildPlanReq) (*AddBuildPlanRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBuildPlan not implemented")
+}
+func (UnimplementedCiServer) UpdateBuildPlan(context.Context, *UpdateBuildPlanReq) (*UpdateBuildPlanRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBuildPlan not implemented")
+}
+func (UnimplementedCiServer) DeleteBuildPlan(context.Context, *DeleteBuildPlanReq) (*DeleteBuildPlanRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBuildPlan not implemented")
+}
+func (UnimplementedCiServer) ListBuildPlan(context.Context, *ListBuildPlanReq) (*ListBuildPlanRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBuildPlan not implemented")
+}
 func (UnimplementedCiServer) BuildImage(context.Context, *BuildReq) (*BuildRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BuildImage not implemented")
 }
@@ -68,6 +138,96 @@ type UnsafeCiServer interface {
 
 func RegisterCiServer(s grpc.ServiceRegistrar, srv CiServer) {
 	s.RegisterService(&Ci_ServiceDesc, srv)
+}
+
+func _Ci_GetBuildPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBuildPlanReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CiServer).GetBuildPlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ci.ci/GetBuildPlan",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CiServer).GetBuildPlan(ctx, req.(*GetBuildPlanReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Ci_AddBuildPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddBuildPlanReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CiServer).AddBuildPlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ci.ci/AddBuildPlan",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CiServer).AddBuildPlan(ctx, req.(*AddBuildPlanReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Ci_UpdateBuildPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBuildPlanReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CiServer).UpdateBuildPlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ci.ci/UpdateBuildPlan",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CiServer).UpdateBuildPlan(ctx, req.(*UpdateBuildPlanReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Ci_DeleteBuildPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBuildPlanReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CiServer).DeleteBuildPlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ci.ci/DeleteBuildPlan",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CiServer).DeleteBuildPlan(ctx, req.(*DeleteBuildPlanReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Ci_ListBuildPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBuildPlanReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CiServer).ListBuildPlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ci.ci/ListBuildPlan",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CiServer).ListBuildPlan(ctx, req.(*ListBuildPlanReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Ci_BuildImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -95,6 +255,26 @@ var Ci_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "ci.ci",
 	HandlerType: (*CiServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetBuildPlan",
+			Handler:    _Ci_GetBuildPlan_Handler,
+		},
+		{
+			MethodName: "AddBuildPlan",
+			Handler:    _Ci_AddBuildPlan_Handler,
+		},
+		{
+			MethodName: "UpdateBuildPlan",
+			Handler:    _Ci_UpdateBuildPlan_Handler,
+		},
+		{
+			MethodName: "DeleteBuildPlan",
+			Handler:    _Ci_DeleteBuildPlan_Handler,
+		},
+		{
+			MethodName: "ListBuildPlan",
+			Handler:    _Ci_ListBuildPlan_Handler,
+		},
 		{
 			MethodName: "BuildImage",
 			Handler:    _Ci_BuildImage_Handler,

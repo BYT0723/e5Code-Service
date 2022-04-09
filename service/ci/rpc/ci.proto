@@ -4,18 +4,70 @@ package ci;
 
 option go_package="./pb";
 
+message BuildPlanModel {
+  string id = 1;
+  string name = 2;
+  string projectID = 3;
+  string tag = 4;
+  string dockerFile = 5;
+}
+
+message GetBuildPlanReq {
+  string id = 1;
+}
+
+message GetBuildPlanRsp {
+  string id = 1;
+  string name = 2;
+  string projectID = 3;
+  string tag = 4;
+  string dockerFile = 5;
+}
+
+message AddBuildPlanReq {
+  string name = 1;
+  string projectID = 2;
+  string tag = 3;
+  string dockerFile = 4;
+}
+message AddBuildPlanRsp {
+  string id = 1;
+}
+
+message UpdateBuildPlanReq {
+  string id = 1;
+  string name = 2;
+  string tag = 3;
+  string dockerFile = 4;
+}
+message UpdateBuildPlanRsp {}
+
+message DeleteBuildPlanReq {
+   string id = 1;
+}
+message DeleteBuildPlanRsp {}
+
+message ListBuildPlanReq {
+   string projectID = 1;
+}
+message ListBuildPlanRsp {
+  int64 count = 1;
+  repeated BuildPlanModel result = 2;
+}
+
 message BuildReq {
     string ProjectID = 1;
-    string Tag = 2;
-    string Version = 3;
-    string Dockerfile = 4;
+    string buildPlanID = 2;
 }
 
-message BuildRsp {
-    string ImageUrl = 1;
-}
+message BuildRsp {}
 
 service ci {
+    rpc GetBuildPlan(GetBuildPlanReq) returns(GetBuildPlanRsp);
+    rpc AddBuildPlan(AddBuildPlanReq) returns(AddBuildPlanRsp);
+    rpc UpdateBuildPlan(UpdateBuildPlanReq) returns(UpdateBuildPlanRsp);
+    rpc DeleteBuildPlan(DeleteBuildPlanReq) returns(DeleteBuildPlanRsp);
+    rpc ListBuildPlan(ListBuildPlanReq) returns(ListBuildPlanRsp);
     rpc BuildImage(BuildReq) returns(BuildRsp);
 }
 
