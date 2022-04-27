@@ -2,14 +2,18 @@ syntax ="proto3";
 
 package ci;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package="./pb";
 
 message BuildPlanModel {
-  string id = 1;
+  string ID = 1;
   string name = 2;
   string projectID = 3;
-  string tag = 4;
-  string dockerFile = 5;
+  string context = 4;
+  string dockerfile = 5;
+  string version = 6;
+  string tag = 7;
 }
 
 message GetBuildPlanReq {
@@ -20,27 +24,34 @@ message GetBuildPlanRsp {
   string id = 1;
   string name = 2;
   string projectID = 3;
-  string tag = 4;
-  string dockerFile = 5;
+  string context = 4;
+  string dockerfile = 5;
+  string version = 6;
+  string tag = 7;
 }
 
 message AddBuildPlanReq {
   string name = 1;
   string projectID = 2;
-  string tag = 3;
-  string dockerFile = 4;
+  string context = 3;
+  string dockerfile = 4;
+  string version = 5;
 }
 message AddBuildPlanRsp {
   string id = 1;
+  string tag = 2;
 }
 
 message UpdateBuildPlanReq {
   string id = 1;
   string name = 2;
-  string tag = 3;
-  string dockerFile = 4;
+  string context = 3;
+  string dockerfile = 4;
+  string version = 5;
 }
-message UpdateBuildPlanRsp {}
+message UpdateBuildPlanRsp {
+  string tag = 1;
+}
 
 message DeleteBuildPlanReq {
    string id = 1;
@@ -56,11 +67,55 @@ message ListBuildPlanRsp {
 }
 
 message BuildReq {
-    string ProjectID = 1;
-    string buildPlanID = 2;
+  string buildPlanID = 2;
 }
 
-message BuildRsp {}
+message BuildRsp {
+  string logInfo = 1;
+}
+
+message UserModel {
+   string ID = 1;
+   string email = 2;
+   string account = 3;
+   string name = 4;
+   string bio = 5;
+}
+
+message Image {
+  string ID = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  google.protobuf.Timestamp updatedAt = 3;
+  string name = 4;
+  string imageID = 5;
+  string projectID = 6;
+  string buildPlanID = 7;
+  string builderID = 8;
+  UserModel builder = 9;
+}
+
+message GetImageReq {
+   string ID = 1;
+}
+
+message GetImageRsp {
+   Image result = 1;
+}
+
+message ListImageReq {
+   string projectID = 1;
+}
+
+message ListImageRsp {
+   int64 count = 1;
+   repeated Image result = 2;
+}
+
+message DeleteImageReq {
+   string ID = 1;
+}
+
+message DeleteImageRsp {}
 
 service ci {
     rpc GetBuildPlan(GetBuildPlanReq) returns(GetBuildPlanRsp);
@@ -68,6 +123,10 @@ service ci {
     rpc UpdateBuildPlan(UpdateBuildPlanReq) returns(UpdateBuildPlanRsp);
     rpc DeleteBuildPlan(DeleteBuildPlanReq) returns(DeleteBuildPlanRsp);
     rpc ListBuildPlan(ListBuildPlanReq) returns(ListBuildPlanRsp);
-    rpc BuildImage(BuildReq) returns(BuildRsp);
+    rpc BuildImage(BuildReq) returns(stream BuildRsp);
+
+    rpc GetImage(GetImageReq) returns(GetImageRsp);
+    rpc ListImage(ListImageReq) returns(ListImageRsp);
+    rpc DeleteImage(DeleteImageReq) returns(DeleteImageRsp);
 }
 

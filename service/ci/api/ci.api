@@ -1,0 +1,113 @@
+type (
+	BuildPlan {
+		ID         string `json:"id"`
+		Name       string `json:"name"`
+		ProjectID  string `json:"project_id"`
+		Context    string `json:"context"`
+		Dockerfile string `json:"docker_file"`
+		Version    string `json:"version"`
+		Tag        string `json:"tag"`
+	}
+	GetBuildPlanReq {
+		Id string `json:"id"`
+	}
+	GetBuildPlanReply {
+		Result BuildPlan `json:"result"`
+	}
+	AddBuildPlanReq {
+		Name       string `json:"name"`
+		ProjectID  string `json:"project_id"`
+		Context    string `json:"context"`
+		Dockerfile string `json:"docker_file"`
+		Version    string `json:"version"`
+	}
+	AddBuildPlanReply {
+		Id  string `json:"id"`
+		Tag string `json:"tag"`
+	}
+	UpdateBuildPlanReq {
+		Id         string `json:"id"`
+		Name       string `json:"name"`
+		Context    string `json:"context"`
+		Dockerfile string `json:"docker_file"`
+		Version    string `json:"version"`
+	}
+	UpdateBuildPlanReply {
+		Result bool   `json:"result"`
+		Tag    string `json:"tag"`
+	}
+	DeleteBuildPlanReq {
+		Id string `json:"id"`
+	}
+	DeleteBuildPlanReply {
+		Result bool `json:"result"`
+	}
+	ListBuildPlanReq {
+		ProjectID string `json:"project_id"`
+	}
+	ListBuildPlanReply {
+		Count  int64       `json:"count"`
+		Result []BuildPlan `json:"result"`
+	}
+
+	User {
+		ID      string `json:"id"`
+		Email   string `json:"email"`
+		Account string `json:"account"`
+		Name    string `json:"name"`
+		Bio     string `json:"bio"`
+	}
+	Image {
+		ID          string `json:"id"`
+		CreatedAt   int64  `json:"created_at"`
+		UpdatedAt   int64  `json:"updated_at"`
+		Name        string `json:"name"`
+		ImageID     string `json:"image_id"`
+		ProjectID   string `json:"project_id"`
+		BuildPlanID string `json:"build_plan_id"`
+		BuilderID   string `json:"builder_id"`
+		Builder     User   `json:"builder"`
+	}
+	GetImageReq {
+		ID string `json:"id"`
+	}
+	GetImageReply {
+		Result Image `json:"result"`
+	}
+	ListImageReq {
+		ProjectID string `json:"project_id"`
+	}
+	ListImageReply {
+		Count  int64   `json:"count"`
+		Result []Image `json:"result"`
+	}
+	DeleteImageReq {
+		ID string `json:"id"`
+	}
+	DeleteImageReply {
+		Result bool `json:"result"`
+	}
+)
+
+@server(
+	jwt: Auth
+	middleware: LoadValue
+)
+service ci-api {
+	@handler getBuildPlan
+	post /ci/getBuildPlan(GetBuildPlanReq) returns(GetBuildPlanReply)
+	@handler addBuildPlan
+	post /ci/addBuildPlan(AddBuildPlanReq) returns(AddBuildPlanReply)
+	@handler updateBuildPlan
+	post /ci/updateBuildPlan(UpdateBuildPlanReq) returns(UpdateBuildPlanReply)
+	@handler deleteBuildPlan
+	post /ci/deleteBuildPlan(DeleteBuildPlanReq) returns(DeleteBuildPlanReply)
+	@handler listBuildPlan
+	post /ci/listBuildPlan(ListBuildPlanReq) returns(ListBuildPlanReply)
+	@handler getImage
+	post /ci/getImage(GetImageReq) returns(GetImageReply)
+	@handler deleteImage
+	post /ci/deleteImage(DeleteImageReq) returns(DeleteImageReply)
+	@handler listImage
+	post /ci/listImage(ListImageReq) returns(ListImageReply)
+}

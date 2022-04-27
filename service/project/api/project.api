@@ -83,16 +83,15 @@ type (
 		Result bool `json:"result"`
 	}
 	ModifyPermissionReq {
-		UserID       string `json:"user_id"`
-		ProjectID    string `json:"project_id"`
-		ModifiedType int64  `json:"modified_type"`
-		Value        int64  `json:"value"`
+		UserID    string `json:"user_id"`
+		ProjectID string `json:"project_id"`
+		Value     int64  `json:"value"`
 	}
 	ModifyPermissionReply {
 		Result bool `json:"result"`
 	}
 	ListProjectReq {
-		Filter string `json:"filter"`
+		UserID string `json:"user_id"`
 	}
 	ListProjectReply {
 		Count  int64     `json:"count"`
@@ -217,7 +216,6 @@ service project-api {
 	post /project/workStatus(WorkStatusReq) returns(WorkStatusReply)
 	@handler commit
 	post /project/commit(CommitReq) returns(CommitReply)
-	
 	@handler addUser
 	post /project/addUser(AddUserReq) returns(AddUserReply)
 	@handler removeUser

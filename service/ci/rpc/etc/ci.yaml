@@ -1,11 +1,17 @@
 Name: ci.rpc
-ListenOn: 127.0.0.1:8080
+ListenOn: 0.0.0.0:8003
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+  - etcd:2379
   Key: ci.rpc
 Mysql:
   DataSource: root:wangtao@tcp(db:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+UserRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: user.rpc
+  NonBlock: true
 ProjectRpc:
   Etcd:
     Hosts:
@@ -14,5 +20,7 @@ ProjectRpc:
   NonBlock: true
 RepositoryConf:
   Repositories: /tmp/e5Code/repositories
-  Tars: /tmp/e5Code/tars
-  BuildLogs: /tmp/e5Code/build_logs
+  Tars: target
+  BuildLogs: buildLogs
+ImageConf:
+  BaseUrl: git.byt0723.xyz:5000

@@ -6,7 +6,9 @@ import (
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/project/model"
 	"e5Code-Service/service/project/rpc/internal/svc"
+	"e5Code-Service/service/project/rpc/pb"
 	"e5Code-Service/service/project/rpc/project"
+	"e5Code-Service/service/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
@@ -38,6 +40,12 @@ func (l *GetProjectLogic) GetProject(in *project.GetProjectReq) (*project.GetPro
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 
+	rsp, err := l.svcCtx.UserRpc.GetUser(l.ctx, &user.GetUserReq{Id: p.OwnerId})
+	if err != nil {
+		logx.Error("Fail to GetUser on GetProject:", err.Error())
+		return nil, status.Error(codesx.RPCError, err.Error())
+	}
+
 	return &project.GetProjectRsp{
 		Id:        p.ID,
 		Name:      p.Name,
@@ -47,5 +55,12 @@ func (l *GetProjectLogic) GetProject(in *project.GetProjectReq) (*project.GetPro
 		OwnerID:   p.OwnerId,
 		CreatedAt: timestamppb.New(p.CreatedAt),
 		UpdatedAt: timestamppb.New(p.UpdatedAt),
+		Owner: &pb.UserModel{
+			ID:      rsp.Id,
+			Email:   rsp.Email,
+			Account: rsp.Account,
+			Name:    rsp.Name,
+			Bio:     rsp.Bio,
+		},
 	}, nil
 }

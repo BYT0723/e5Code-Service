@@ -18,6 +18,8 @@ RUN go build -ldflags="-s -w" -o /app/ci service/ci/rpc/ci.go
 
 FROM alpine
 
+USER root:root
+
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk update --no-cache && apk add --no-cache ca-certificates tzdata
 ENV TZ Asia/Shanghai

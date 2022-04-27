@@ -22,6 +22,7 @@ services:
       - 6379:6379
     networks:
       - e5Code
+    restart: always
 
   db:
     image: mysql
@@ -40,7 +41,6 @@ services:
       - 5000:5000
     networks:
       - e5Code
-    restart: always
 
   user-rpc:
     build:
@@ -85,3 +85,54 @@ services:
       - e5Code
     depends_on:
       - project-rpc
+
+  ci-rpc:
+    build:
+      context: .
+      dockerfile: ./service/ci/rpc/Dockerfile
+    ports:
+      - 8003:8003
+    networks:
+      - e5Code
+    depends_on:
+      - project-rpc
+    volumes:
+      - /tmp/e5Code:/tmp/e5Code
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+
+  ci-api:
+    build:
+      context: .
+      dockerfile: ./service/ci/api/Dockerfile
+    ports:
+      - 8053:8053
+    networks:
+      - e5Code
+    depends_on:
+      - ci-rpc
+
+  cd-rpc:
+    build:
+      context: .
+      dockerfile: ./service/cd/rpc/Dockerfile
+    ports:
+      - 8004:8004
+    networks:
+      - e5Code
+    depends_on:
+      - project-rpc
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+
+  cd-api:
+    build:
+      context: .
+      dockerfile: ./service/cd/api/Dockerfile
+    ports:
+      - 8054:8054
+    networks:
+      - e5Code
+    depends_on:
+      - ci-rpc

@@ -55,7 +55,7 @@ func (l *DeleteUserLogic) DeleteUser(in *user.DeleteUserReq) (*user.DeleteUserRs
 	}
 
 	// 删除仓库
-	if res, err := l.svcCtx.GitCli.DestoryUser(u.Accout); err != nil {
+	if res, err := l.svcCtx.GitCli.DestoryUser(u.Account); err != nil {
 		logx.Error("Fail to DestoryGitUser on DeleteUser: ", err.Error())
 		return nil, status.Error(codesx.GitError, res)
 	}

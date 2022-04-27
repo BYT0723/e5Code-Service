@@ -71,3 +71,8 @@ func (s *UserServer) DeletePermission(ctx context.Context, in *pb.DeletePermissi
 	l := logic.NewDeletePermissionLogic(ctx, s.svcCtx)
 	return l.DeletePermission(in)
 }
+
+func (s *UserServer) GetPermissions(ctx context.Context, in *pb.GetPermissionsReq) (*pb.GetPermissionsRsp, error) {
+	l := logic.NewGetPermissionsLogic(ctx, s.svcCtx)
+	return l.GetPermissions(in)
+}

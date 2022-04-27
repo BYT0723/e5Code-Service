@@ -102,10 +102,9 @@ type RemoveUserReply struct {
 }
 
 type ModifyPermissionReq struct {
-	UserID       string `json:"user_id"`
-	ProjectID    string `json:"project_id"`
-	ModifiedType int64  `json:"modified_type"`
-	Value        int64  `json:"value"`
+	UserID    string `json:"user_id"`
+	ProjectID string `json:"project_id"`
+	Value     int64  `json:"value"`
 }
 
 type ModifyPermissionReply struct {
@@ -113,7 +112,7 @@ type ModifyPermissionReply struct {
 }
 
 type ListProjectReq struct {
-	Filter string `json:"filter"`
+	UserID string `json:"user_id"`
 }
 
 type ListProjectReply struct {

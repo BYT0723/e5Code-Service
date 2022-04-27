@@ -9,7 +9,9 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang-jwt/jwt v3.2.1+incompatible
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/websocket v1.4.2
 	github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab
+	github.com/jinzhu/copier v0.3.5
 	github.com/zeromicro/go-zero v1.3.0
 	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58
 	google.golang.org/grpc v1.43.0
@@ -47,7 +49,6 @@ require (
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
-	github.com/jinzhu/copier v0.3.5 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect

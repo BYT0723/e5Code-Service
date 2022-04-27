@@ -1,0 +1,18 @@
+Name: ci-api
+Host: 0.0.0.0
+Port: 8053
+Timeout: 0
+Mysql:
+  DataSource: root:wangtao@tcp(db:3306)/e5Code?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+CacheRedis:
+  - Host: redis:6379
+    Type: node
+Auth:
+  AccessSecret: a966227a-e009-405a-911b-056b46453441
+  AccessExpire: 36000
+CIRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: ci.rpc
+  NonBlock: true

@@ -28,10 +28,9 @@ func NewModifyPermissionLogic(ctx context.Context, svcCtx *svc.ServiceContext) M
 
 func (l *ModifyPermissionLogic) ModifyPermission(req types.ModifyPermissionReq) (resp *types.ModifyPermissionReply, err error) {
 	if _, err := l.svcCtx.ProjectRpc.ModifyPermission(l.ctx, &project.ModifyPermissionReq{
-		UserID:       req.UserID,
-		ProjectID:    req.ProjectID,
-		ModifiedType: req.ModifiedType,
-		Value:        req.Value,
+		UserID:    req.UserID,
+		ProjectID: req.ProjectID,
+		Value:     req.Value,
 	}); err != nil {
 		logx.Error("Fail to ModifyPermission: ", err.Error())
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())

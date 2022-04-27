@@ -42,7 +42,7 @@ func (l *GetUserLogic) GetUser(in *user.GetUserReq) (*user.GetUserRsp, error) {
 		UpdatedAt: timestamppb.New(u.UpdatedAt),
 		Id:        in.Id,
 		Email:     u.Email,
-		Account:   u.Accout,
+		Account:   u.Account,
 		Name:      u.Name,
 		Bio:       u.Bio,
 	}, nil

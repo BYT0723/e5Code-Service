@@ -32,7 +32,7 @@ func NewListProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListP
 
 func (l *ListProjectLogic) ListProject(in *pb.ListProjectReq) (*pb.ListProjectRsp, error) {
 	pms := []userModel.Permission{}
-	if err := l.svcCtx.DB.Model(&userModel.Permission{}).Where(in.Filter).Find(&pms).Error; err != nil {
+	if err := l.svcCtx.DB.Find(&pms, "user_id = ? and permission >= ?", in.UserID, 1).Error; err != nil {
 		logx.Error("Fail to Find Permission: ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
@@ -58,11 +58,11 @@ func (l *ListProjectLogic) ListProject(in *pb.ListProjectReq) (*pb.ListProjectRs
 
 	uids := make([]string, len(ps))
 	for i, v := range ps {
-		uids[i] = "'" + v.OwnerId + "'"
+		uids[i] = v.OwnerId
 	}
 
 	rsp, err := l.svcCtx.UserRpc.ListUser(l.ctx, &user.ListUserReq{
-		Filter: fmt.Sprintf("id in (%s)", strings.Join(uids, ",")),
+		Ids: uids,
 	})
 	if err != nil {
 		logx.Error("Fail to ListUser on ListProject: ", err.Error())
@@ -71,8 +71,8 @@ func (l *ListProjectLogic) ListProject(in *pb.ListProjectReq) (*pb.ListProjectRs
 
 	userMap := make(map[string]*pb.UserModel)
 	for _, v := range rsp.Result {
-		userMap[v.Id] = &pb.UserModel{
-			Id:      v.Id,
+		userMap[v.ID] = &pb.UserModel{
+			ID:      v.ID,
 			Email:   v.Email,
 			Account: v.Account,
 			Name:    v.Name,
@@ -80,15 +80,15 @@ func (l *ListProjectLogic) ListProject(in *pb.ListProjectReq) (*pb.ListProjectRs
 		}
 	}
 	res := []*pb.ProjectModel{}
-	for _, v := range ps {
+	for _, p := range ps {
 		res = append(res, &pb.ProjectModel{
-			Id:      v.ID,
-			Name:    v.Name,
-			Url:     v.Url,
-			Desc:    v.Desc,
-			Status:  v.Status,
-			OwnerID: v.OwnerId,
-			Owner:   userMap[v.OwnerId],
+			ID:      p.ID,
+			Name:    p.Name,
+			Desc:    p.Desc,
+			Url:     p.Url,
+			Status:  p.Status,
+			OwnerID: p.OwnerId,
+			Owner:   userMap[p.OwnerId],
 		})
 	}
 

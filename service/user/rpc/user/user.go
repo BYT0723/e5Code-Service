@@ -21,6 +21,8 @@ type (
 	DeleteUserRsp       = pb.DeleteUserRsp
 	GetPermissionReq    = pb.GetPermissionReq
 	GetPermissionRsp    = pb.GetPermissionRsp
+	GetPermissionsReq   = pb.GetPermissionsReq
+	GetPermissionsRsp   = pb.GetPermissionsRsp
 	GetUserByEmailReq   = pb.GetUserByEmailReq
 	GetUserReq          = pb.GetUserReq
 	GetUserRsp          = pb.GetUserRsp
@@ -28,6 +30,7 @@ type (
 	ListUserRsp         = pb.ListUserRsp
 	LoginReq            = pb.LoginReq
 	LoginRsp            = pb.LoginRsp
+	PermissionInfo      = pb.PermissionInfo
 	SetPermissionReq    = pb.SetPermissionReq
 	SetPermissionRsp    = pb.SetPermissionRsp
 	UpdateUserReq       = pb.UpdateUserReq
@@ -45,6 +48,7 @@ type (
 		GetPermission(ctx context.Context, in *GetPermissionReq, opts ...grpc.CallOption) (*GetPermissionRsp, error)
 		SetPermission(ctx context.Context, in *SetPermissionReq, opts ...grpc.CallOption) (*SetPermissionRsp, error)
 		DeletePermission(ctx context.Context, in *DeletePermissionReq, opts ...grpc.CallOption) (*DeletePermissionRsp, error)
+		GetPermissions(ctx context.Context, in *GetPermissionsReq, opts ...grpc.CallOption) (*GetPermissionsRsp, error)
 	}
 
 	defaultUser struct {
@@ -106,4 +110,9 @@ func (m *defaultUser) SetPermission(ctx context.Context, in *SetPermissionReq, o
 func (m *defaultUser) DeletePermission(ctx context.Context, in *DeletePermissionReq, opts ...grpc.CallOption) (*DeletePermissionRsp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.DeletePermission(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetPermissions(ctx context.Context, in *GetPermissionsReq, opts ...grpc.CallOption) (*GetPermissionsRsp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetPermissions(ctx, in, opts...)
 }

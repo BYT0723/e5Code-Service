@@ -1,0 +1,88 @@
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e a0f880b3748b\n"}
+{"stream":"Step 3/21 : ENV CGO_ENABLED 0"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 62babad61d26\n"}
+{"stream":"Step 4/21 : ENV GOOS linux"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 8883c7417f6f\n"}
+{"stream":"Step 5/21 : ENV GOPROXY https://goproxy.cn,direct"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 36c349c12790\n"}
+{"stream":"Step 6/21 : WORKDIR /build/zero"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 9dd213af9ce0\n"}
+{"stream":"Step 7/21 : ADD go.mod ."}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 2cb786043750\n"}
+{"stream":"Step 8/21 : ADD go.sum ."}
+{"stream":"\n"}
+2047e474\n"}
+{"stream":" ---\u003e 9dd213af9ce0\n"}
+{"stream":"Step 7/21 : ADD go.mod ."}
+{"stream":"\n"}
+{"stream":" ---\u003e 2cb786043750\n"}
+{"stream":"Step 8/21 : ADD go.sum ."}
+{"stream":"\n"}
+{"stream":" ---\u003e f184b129bb63\n"}
+{"stream":"Step 9/21 : RUN go mod download"}
+{"stream":"\n"}
+{"stream":" ---\u003e Running in 49ba31259907\n"}
+\n"}
+{"stream":" ---\u003e 6d8ecde9081b\n"}
+{"stream":"Step 10/21 : COPY . ."}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e ead530d85bc5\n"}
+{"stream":"Step 11/21 : COPY service/user/api/etc /app/etc"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 6bec7a3357b2\n"}
+{"stream":"Step 12/21 : RUN go build -ldflags=\"-s -w\" -o /app/user service/user/api/user.go"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 8c71d5c6460f\n"}
+{"aux":{"ID":"sha256:8c71d5c6460f3888cc1e3094a629d2803460fba0a6b94760232281f19d1b9873"}}
+{"stream":"Step 13/21 : FROM alpine"}
+{"stream":"\n"}
+{"stream":" ---\u003e c059bfaa849c\n"}
+{"stream":"Step 14/21 : RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 9b9b1b485813\n"}
+{"stream":"Step 15/21 : RUN apk update --no-cache \u0026\u0026 apk add --no-cache ca-certificates tzdata"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 11c6e30fe97a\n"}
+{"stream":"Step 16/21 : ENV TZ Asia/Shanghai"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e a6a86b3a73c9\n"}
+{"stream":"Step 17/21 : WORKDIR /app"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 4cef58d1d180\n"}
+{"stream":"Step 18/21 : COPY --from=builder /app/user /app/user"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 4d768bbd5145\n"}
+{"stream":"Step 19/21 : COPY --from=builder /app/etc /app/etc"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 4b1769aca483\n"}
+{"stream":"Step 20/21 : EXPOSE 8051"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 0d61b5f9f5d9\n"}
+{"stream":"Step 21/21 : CMD [\"./user\", \"-f\", \"etc/user-api.yaml\"]"}
+{"stream":"\n"}
+{"stream":" ---\u003e Using cache\n"}
+{"stream":" ---\u003e 794f8805298f\n"}
+{"aux":{"ID":"sha256:794f8805298fa6ef7ba48dbe003adf906d59cd2031b2fecc904beb9706fce471"}}
+{"stream":"Successfully built 794f8805298f\n"}
+{"stream":"Successfully tagged test:latest\n"}

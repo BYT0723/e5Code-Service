@@ -7,7 +7,7 @@ import "google/protobuf/timestamp.proto";
 option go_package="./pb";
 
 message ProjectModel {
-    string id = 1;
+    string ID = 1;
     string name = 4;
     string desc = 5;
     string url = 6;
@@ -17,7 +17,7 @@ message ProjectModel {
 }
 
 message UserModel {
-   string id = 1;
+   string ID = 1;
    string email = 2;
    string account = 3;
    string name = 4;
@@ -64,7 +64,7 @@ message getProjectAuthRsp {
 }
 
 message listProjectReq {
-  string filter = 1;
+  string userID = 1;
 }
 message listProjectRsp {
   int64 count = 1;

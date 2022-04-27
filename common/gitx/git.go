@@ -1,9 +1,13 @@
 package gitx
 
 import (
+	"archive/tar"
 	"errors"
+	"io"
+	"io/fs"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -355,4 +359,55 @@ func Commit(rep *git.Repository, opt *CommitOption) (err error) {
 		return
 	}
 	return
+}
+
+// 打包指定的文件路径
+// target : tar包路径
+// source : 源文件夹路径
+func TarProject(rep *git.Repository, target, source string) error {
+	wt, err := rep.Worktree()
+	if err != nil {
+		return err
+	}
+	tf, err := wt.Filesystem.OpenFile(target, os.O_CREATE|os.O_WRONLY, 0777)
+	if err != nil {
+		return err
+	}
+	defer tf.Close()
+
+	w := tar.NewWriter(tf)
+	defer w.Close()
+
+	if err := filepath.Walk(source, func(path string, info fs.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		f, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+
+		hr := &tar.Header{
+			Name: strings.Replace(path, source, ".", -1),
+			Size: info.Size(),
+			Mode: 0666,
+		}
+
+		w.WriteHeader(hr)
+		var buf [1024]byte
+		for {
+			n, err := f.Read(buf[:])
+			w.Write(buf[:n])
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	return nil
 }

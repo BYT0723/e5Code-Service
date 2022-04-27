@@ -46,7 +46,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginRsp, error) {
 
 	return &user.LoginRsp{
 		Id:      u.ID,
-		Account: u.Accout,
+		Account: u.Account,
 		Name:    u.Name,
 	}, nil
 }

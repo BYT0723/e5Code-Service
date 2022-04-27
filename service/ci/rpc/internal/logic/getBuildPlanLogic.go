@@ -25,14 +25,16 @@ func NewGetBuildPlanLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetB
 }
 
 func (l *GetBuildPlanLogic) GetBuildPlan(in *pb.GetBuildPlanReq) (*pb.GetBuildPlanRsp, error) {
-	res := &model.BuildPlan{Id: in.Id}
+	res := &model.BuildPlan{ID: in.Id}
 	l.svcCtx.DB.First(res)
 
 	return &pb.GetBuildPlanRsp{
-		Id:         res.Id,
+		Id:         res.ID,
 		ProjectID:  res.ProjectID,
 		Name:       res.Name,
+		Context:    res.Context,
+		Dockerfile: res.Dockerfile,
+		Version:    res.Version,
 		Tag:        res.Tag,
-		DockerFile: res.Dockerfile,
 	}, nil
 }

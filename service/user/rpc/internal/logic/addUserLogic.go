@@ -43,7 +43,7 @@ func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.AddUserRsp, error) {
 	if err := l.svcCtx.Db.Model(&model.User{}).Create(&model.User{
 		ID:       id,
 		Email:    in.Email,
-		Accout:   in.Account,
+		Account:  in.Account,
 		Name:     in.Name,
 		Bio:      in.Bio,
 		Password: cryptx.EncryptPwd(in.Password, l.svcCtx.Config.Salt),

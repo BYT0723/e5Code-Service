@@ -20,7 +20,9 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	db, err := gorm.Open(mysql.Open(c.Mysql.DataSource), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(c.Mysql.DataSource), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 	db.AutoMigrate(
 		&model.Project{},
 	)

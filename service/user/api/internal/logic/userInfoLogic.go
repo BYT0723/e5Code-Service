@@ -37,6 +37,7 @@ func (l *UserInfoLogic) UserInfo(req types.UserInfoReq) (resp *types.UserInfoRep
 		Email:   rsp.Email,
 		Account: rsp.Account,
 		Name:    rsp.Name,
+		Bio:     rsp.Bio,
 	}
 	return
 }

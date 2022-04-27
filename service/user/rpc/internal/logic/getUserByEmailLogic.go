@@ -42,7 +42,7 @@ func (l *GetUserByEmailLogic) GetUserByEmail(in *user.GetUserByEmailReq) (*user.
 		CreatedAt: timestamppb.New(u.CreatedAt),
 		UpdatedAt: timestamppb.New(u.UpdatedAt),
 		Email:     in.Email,
-		Account:   u.Accout,
+		Account:   u.Account,
 		Name:      u.Name,
 		Bio:       u.Bio,
 	}, nil

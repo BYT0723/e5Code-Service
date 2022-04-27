@@ -20,12 +20,20 @@ type (
 	BuildRsp           = pb.BuildRsp
 	DeleteBuildPlanReq = pb.DeleteBuildPlanReq
 	DeleteBuildPlanRsp = pb.DeleteBuildPlanRsp
+	DeleteImageReq     = pb.DeleteImageReq
+	DeleteImageRsp     = pb.DeleteImageRsp
 	GetBuildPlanReq    = pb.GetBuildPlanReq
 	GetBuildPlanRsp    = pb.GetBuildPlanRsp
+	GetImageReq        = pb.GetImageReq
+	GetImageRsp        = pb.GetImageRsp
+	Image              = pb.Image
 	ListBuildPlanReq   = pb.ListBuildPlanReq
 	ListBuildPlanRsp   = pb.ListBuildPlanRsp
+	ListImageReq       = pb.ListImageReq
+	ListImageRsp       = pb.ListImageRsp
 	UpdateBuildPlanReq = pb.UpdateBuildPlanReq
 	UpdateBuildPlanRsp = pb.UpdateBuildPlanRsp
+	UserModel          = pb.UserModel
 
 	Ci interface {
 		GetBuildPlan(ctx context.Context, in *GetBuildPlanReq, opts ...grpc.CallOption) (*GetBuildPlanRsp, error)
@@ -33,7 +41,10 @@ type (
 		UpdateBuildPlan(ctx context.Context, in *UpdateBuildPlanReq, opts ...grpc.CallOption) (*UpdateBuildPlanRsp, error)
 		DeleteBuildPlan(ctx context.Context, in *DeleteBuildPlanReq, opts ...grpc.CallOption) (*DeleteBuildPlanRsp, error)
 		ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opts ...grpc.CallOption) (*ListBuildPlanRsp, error)
-		BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error)
+		BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (pb.Ci_BuildImageClient, error)
+		GetImage(ctx context.Context, in *GetImageReq, opts ...grpc.CallOption) (*GetImageRsp, error)
+		ListImage(ctx context.Context, in *ListImageReq, opts ...grpc.CallOption) (*ListImageRsp, error)
+		DeleteImage(ctx context.Context, in *DeleteImageReq, opts ...grpc.CallOption) (*DeleteImageRsp, error)
 	}
 
 	defaultCi struct {
@@ -72,7 +83,22 @@ func (m *defaultCi) ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opt
 	return client.ListBuildPlan(ctx, in, opts...)
 }
 
-func (m *defaultCi) BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error) {
+func (m *defaultCi) BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (pb.Ci_BuildImageClient, error) {
 	client := pb.NewCiClient(m.cli.Conn())
 	return client.BuildImage(ctx, in, opts...)
+}
+
+func (m *defaultCi) GetImage(ctx context.Context, in *GetImageReq, opts ...grpc.CallOption) (*GetImageRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.GetImage(ctx, in, opts...)
+}
+
+func (m *defaultCi) ListImage(ctx context.Context, in *ListImageReq, opts ...grpc.CallOption) (*ListImageRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.ListImage(ctx, in, opts...)
+}
+
+func (m *defaultCi) DeleteImage(ctx context.Context, in *DeleteImageReq, opts ...grpc.CallOption) (*DeleteImageRsp, error) {
+	client := pb.NewCiClient(m.cli.Conn())
+	return client.DeleteImage(ctx, in, opts...)
 }

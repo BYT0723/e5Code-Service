@@ -47,7 +47,22 @@ func (s *CiServer) ListBuildPlan(ctx context.Context, in *pb.ListBuildPlanReq) (
 	return l.ListBuildPlan(in)
 }
 
-func (s *CiServer) BuildImage(ctx context.Context, in *pb.BuildReq) (*pb.BuildRsp, error) {
-	l := logic.NewBuildImageLogic(ctx, s.svcCtx)
-	return l.BuildImage(in)
+func (s *CiServer) BuildImage(in *pb.BuildReq, stream pb.Ci_BuildImageServer) error {
+	l := logic.NewBuildImageLogic(stream.Context(), s.svcCtx)
+	return l.BuildImage(in, stream)
+}
+
+func (s *CiServer) GetImage(ctx context.Context, in *pb.GetImageReq) (*pb.GetImageRsp, error) {
+	l := logic.NewGetImageLogic(ctx, s.svcCtx)
+	return l.GetImage(in)
+}
+
+func (s *CiServer) ListImage(ctx context.Context, in *pb.ListImageReq) (*pb.ListImageRsp, error) {
+	l := logic.NewListImageLogic(ctx, s.svcCtx)
+	return l.ListImage(in)
+}
+
+func (s *CiServer) DeleteImage(ctx context.Context, in *pb.DeleteImageReq) (*pb.DeleteImageRsp, error) {
+	l := logic.NewDeleteImageLogic(ctx, s.svcCtx)
+	return l.DeleteImage(in)
 }

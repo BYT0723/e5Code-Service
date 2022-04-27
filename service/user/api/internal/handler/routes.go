@@ -29,6 +29,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/user/userInfoByEmail",
+				Handler: userInfoByEmailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/user/listUser",
 				Handler: listUserHandler(serverCtx),
 			},
@@ -46,6 +51,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/user/deletePermission",
 				Handler: deletePermissionHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/getPermissions",
+				Handler: getPermissionsHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

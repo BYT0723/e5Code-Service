@@ -12,5 +12,9 @@ type Config struct {
 		Tars         string
 		BuildLogs    string
 	}
+	ImageConf struct {
+		BaseUrl string
+	}
+	UserRpc    zrpc.RpcClientConf
 	ProjectRpc zrpc.RpcClientConf
 }

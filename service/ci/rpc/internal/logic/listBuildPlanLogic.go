@@ -36,9 +36,6 @@ func (l *ListBuildPlanLogic) ListBuildPlan(in *pb.ListBuildPlanReq) (*pb.ListBui
 
 	count := len(plans)
 	res := make([]*pb.BuildPlanModel, count)
-	for i := 0; i < count; i++ {
-		res[i] = &pb.BuildPlanModel{}
-	}
 
 	copier.Copy(&res, &plans)
 

@@ -1,15 +1,9 @@
 package dockerx
 
 import (
-	"archive/tar"
 	"context"
 	"e5Code-Service/common/influxx"
-	"io"
-	"io/fs"
 	"log"
-	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/docker/docker/api/types"
 )
@@ -84,53 +78,6 @@ func StoreActiveContainer(ctx context.Context, dockerHost string) error {
 		if err := client.Insert("container_datas", nil, fields); err != nil {
 			log.Fatalf("Fail to insert(name: %s), err: %s", v.Name, err.Error())
 		}
-	}
-	return nil
-}
-
-// 打包指定的文件路径
-// target : tar包路径
-// source : 源文件夹路径
-func TarProject(target, source string) error {
-	tf, err := os.OpenFile(target, os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		return err
-	}
-	defer tf.Close()
-
-	w := tar.NewWriter(tf)
-	defer w.Close()
-
-	if err := filepath.Walk(source, func(path string, info fs.FileInfo, err error) error {
-		if info.IsDir() {
-			return nil
-		}
-		f, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-
-		hr := &tar.Header{
-			Name: strings.Replace(path, source, ".", -1),
-			Size: info.Size(),
-			Mode: 0666,
-		}
-
-		w.WriteHeader(hr)
-		var buf [1024]byte
-		for {
-			n, err := f.Read(buf[:])
-			w.Write(buf[:n])
-			if err != nil {
-				if err == io.EOF {
-					break
-				}
-				return err
-			}
-		}
-		return nil
-	}); err != nil {
-		return err
 	}
 	return nil
 }

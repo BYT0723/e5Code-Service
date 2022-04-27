@@ -46,6 +46,9 @@ type (
 	UserInfoReq {
 		Id string `json:"id"`
 	}
+	UserInfoByEmailReq {
+		Email string `json:"email"`
+	}
 	UserInfoReply {
 		Id      string `json:"id"`
 		Email   string `json:"email"`
@@ -69,7 +72,7 @@ type (
 		Result bool `json:"result"`
 	}
 	ListUserReq {
-		Filter string `json:"filter"`
+		IDs []string `json:"ids"`
 	}
 	ListUserReply {
 		Count  int64  `json:"count"`
@@ -81,6 +84,18 @@ type (
 	}
 	DeletePermissionReply {
 		Result bool `json:"result"`
+	}
+	PermissionInfo {
+		User       User  `json:"user"`
+		Permission int64 `json:"permission"`
+	}
+	GetPermissionsReq {
+		ProjectID  string `json:"project_id"`
+		Permission int64  `json:"permission"`
+	}
+	GetPermissionsReply {
+		Count  int64            `json:"count"`
+		Result []PermissionInfo `json:"result"`
 	}
 )
 
@@ -94,6 +109,8 @@ service user-api {
 	post /user/deleteUser(DeleteUserReq) returns(DeleteUserReply)
 	@handler userInfo
 	post /user/userInfo(UserInfoReq) returns(UserInfoReply)
+	@handler userInfoByEmail
+	post /user/userInfoByEmail(UserInfoByEmailReq) returns(UserInfoReply)
 	@handler listUser
 	post /user/listUser(ListUserReq) returns(ListUserReply)
 	@handler getPermission
@@ -102,7 +119,8 @@ service user-api {
 	post /user/setPermission(SetPermissionReq) returns(SetPermissionReply)
 	@handler deletePermission
 	post /user/deletePermission(DeletePermissionReq) returns(DeletePermissionReply)
-	
+	@handler getPermissions
+	post /user/getPermissions(GetPermissionsReq) returns(GetPermissionsReply)
 }
 
 service user-api {

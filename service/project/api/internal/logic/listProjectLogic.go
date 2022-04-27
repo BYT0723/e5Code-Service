@@ -27,27 +27,26 @@ func NewListProjectLogic(ctx context.Context, svcCtx *svc.ServiceContext) ListPr
 }
 
 func (l *ListProjectLogic) ListProject(req types.ListProjectReq) (resp *types.ListProjectReply, err error) {
-	rsp, err := l.svcCtx.ProjectRpc.ListProject(l.ctx, &pb.ListProjectReq{Filter: req.Filter})
+	rsp, err := l.svcCtx.ProjectRpc.ListProject(l.ctx, &pb.ListProjectReq{UserID: req.UserID})
 	if err != nil {
 		logx.Error("Fail to ListProject on ListProject: ", err.Error())
 		return nil, status.Error(codesx.RPCError, err.Error())
 	}
 
 	res := make([]types.Project, rsp.Count)
-
-	for i, v := range rsp.Result {
+	for i, p := range rsp.Result {
 		res[i] = types.Project{
-			ID:      v.Id,
-			Name:    v.Name,
-			Desc:    v.Desc,
-			Url:     v.Url,
-			OwnerID: v.OwnerID,
-			Status:  v.Status,
+			ID:      p.ID,
+			Name:    p.Name,
+			Desc:    p.Desc,
+			Url:     p.Url,
+			Status:  p.Status,
+			OwnerID: p.OwnerID,
 			Owner: types.User{
-				ID:      v.Owner.Id,
-				Email:   v.Owner.Email,
-				Account: v.Owner.Account,
-				Name:    v.Owner.Name,
+				ID:      p.Owner.ID,
+				Email:   p.Owner.Email,
+				Account: p.Owner.Account,
+				Name:    p.Owner.Name,
 			},
 		}
 	}

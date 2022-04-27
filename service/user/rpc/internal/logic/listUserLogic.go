@@ -8,9 +8,9 @@ import (
 	"e5Code-Service/service/user/rpc/internal/svc"
 	"e5Code-Service/service/user/rpc/pb"
 
+	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type ListUserLogic struct {
@@ -29,22 +29,12 @@ func NewListUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListUser
 
 func (l *ListUserLogic) ListUser(in *pb.ListUserReq) (*pb.ListUserRsp, error) {
 	us := []model.User{}
-	if err := l.svcCtx.Db.Model(&model.User{}).Where(in.Filter).Find(&us).Error; err != nil {
+	if err := l.svcCtx.Db.Find(&us, "id in ?", in.Ids).Error; err != nil {
 		logx.Error("Fail to Find User: ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 	res := []*pb.UserModel{}
-	for _, v := range us {
-		res = append(res, &pb.UserModel{
-			Id:        v.ID,
-			CreatedAt: timestamppb.New(v.CreatedAt),
-			UpdatedAt: timestamppb.New(v.UpdatedAt),
-			Email:     v.Email,
-			Account:   v.Accout,
-			Name:      v.Name,
-			Bio:       v.Bio,
-		})
-	}
+	copier.Copy(&res, us)
 
 	return &pb.ListUserRsp{
 		Count:  int64(len(us)),

@@ -57,6 +57,10 @@ type UserInfoReq struct {
 	Id string `json:"id"`
 }
 
+type UserInfoByEmailReq struct {
+	Email string `json:"email"`
+}
+
 type UserInfoReply struct {
 	Id      string `json:"id"`
 	Email   string `json:"email"`
@@ -85,7 +89,7 @@ type SetPermissionReply struct {
 }
 
 type ListUserReq struct {
-	Filter string `json:"filter"`
+	IDs []string `json:"ids"`
 }
 
 type ListUserReply struct {
@@ -100,4 +104,19 @@ type DeletePermissionReq struct {
 
 type DeletePermissionReply struct {
 	Result bool `json:"result"`
+}
+
+type PermissionInfo struct {
+	User       User  `json:"user"`
+	Permission int64 `json:"permission"`
+}
+
+type GetPermissionsReq struct {
+	ProjectID  string `json:"project_id"`
+	Permission int64  `json:"permission"`
+}
+
+type GetPermissionsReply struct {
+	Count  int64            `json:"count"`
+	Result []PermissionInfo `json:"result"`
 }

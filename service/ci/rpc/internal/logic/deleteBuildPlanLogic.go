@@ -27,7 +27,7 @@ func NewDeleteBuildPlanLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 }
 
 func (l *DeleteBuildPlanLogic) DeleteBuildPlan(in *pb.DeleteBuildPlanReq) (*pb.DeleteBuildPlanRsp, error) {
-	if err := l.svcCtx.DB.Delete(&model.BuildPlan{Id: in.Id}).Error; err != nil {
+	if err := l.svcCtx.DB.Delete(&model.BuildPlan{ID: in.Id}).Error; err != nil {
 		logx.Error("Fail to Delete BuildPlan: ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}

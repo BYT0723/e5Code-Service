@@ -27,7 +27,10 @@ type CiClient interface {
 	UpdateBuildPlan(ctx context.Context, in *UpdateBuildPlanReq, opts ...grpc.CallOption) (*UpdateBuildPlanRsp, error)
 	DeleteBuildPlan(ctx context.Context, in *DeleteBuildPlanReq, opts ...grpc.CallOption) (*DeleteBuildPlanRsp, error)
 	ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opts ...grpc.CallOption) (*ListBuildPlanRsp, error)
-	BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error)
+	BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (Ci_BuildImageClient, error)
+	GetImage(ctx context.Context, in *GetImageReq, opts ...grpc.CallOption) (*GetImageRsp, error)
+	ListImage(ctx context.Context, in *ListImageReq, opts ...grpc.CallOption) (*ListImageRsp, error)
+	DeleteImage(ctx context.Context, in *DeleteImageReq, opts ...grpc.CallOption) (*DeleteImageRsp, error)
 }
 
 type ciClient struct {
@@ -83,9 +86,59 @@ func (c *ciClient) ListBuildPlan(ctx context.Context, in *ListBuildPlanReq, opts
 	return out, nil
 }
 
-func (c *ciClient) BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (*BuildRsp, error) {
-	out := new(BuildRsp)
-	err := c.cc.Invoke(ctx, "/ci.ci/BuildImage", in, out, opts...)
+func (c *ciClient) BuildImage(ctx context.Context, in *BuildReq, opts ...grpc.CallOption) (Ci_BuildImageClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Ci_ServiceDesc.Streams[0], "/ci.ci/BuildImage", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &ciBuildImageClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Ci_BuildImageClient interface {
+	Recv() (*BuildRsp, error)
+	grpc.ClientStream
+}
+
+type ciBuildImageClient struct {
+	grpc.ClientStream
+}
+
+func (x *ciBuildImageClient) Recv() (*BuildRsp, error) {
+	m := new(BuildRsp)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *ciClient) GetImage(ctx context.Context, in *GetImageReq, opts ...grpc.CallOption) (*GetImageRsp, error) {
+	out := new(GetImageRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/GetImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ciClient) ListImage(ctx context.Context, in *ListImageReq, opts ...grpc.CallOption) (*ListImageRsp, error) {
+	out := new(ListImageRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/ListImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ciClient) DeleteImage(ctx context.Context, in *DeleteImageReq, opts ...grpc.CallOption) (*DeleteImageRsp, error) {
+	out := new(DeleteImageRsp)
+	err := c.cc.Invoke(ctx, "/ci.ci/DeleteImage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +154,10 @@ type CiServer interface {
 	UpdateBuildPlan(context.Context, *UpdateBuildPlanReq) (*UpdateBuildPlanRsp, error)
 	DeleteBuildPlan(context.Context, *DeleteBuildPlanReq) (*DeleteBuildPlanRsp, error)
 	ListBuildPlan(context.Context, *ListBuildPlanReq) (*ListBuildPlanRsp, error)
-	BuildImage(context.Context, *BuildReq) (*BuildRsp, error)
+	BuildImage(*BuildReq, Ci_BuildImageServer) error
+	GetImage(context.Context, *GetImageReq) (*GetImageRsp, error)
+	ListImage(context.Context, *ListImageReq) (*ListImageRsp, error)
+	DeleteImage(context.Context, *DeleteImageReq) (*DeleteImageRsp, error)
 	mustEmbedUnimplementedCiServer()
 }
 
@@ -124,8 +180,17 @@ func (UnimplementedCiServer) DeleteBuildPlan(context.Context, *DeleteBuildPlanRe
 func (UnimplementedCiServer) ListBuildPlan(context.Context, *ListBuildPlanReq) (*ListBuildPlanRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBuildPlan not implemented")
 }
-func (UnimplementedCiServer) BuildImage(context.Context, *BuildReq) (*BuildRsp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BuildImage not implemented")
+func (UnimplementedCiServer) BuildImage(*BuildReq, Ci_BuildImageServer) error {
+	return status.Errorf(codes.Unimplemented, "method BuildImage not implemented")
+}
+func (UnimplementedCiServer) GetImage(context.Context, *GetImageReq) (*GetImageRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetImage not implemented")
+}
+func (UnimplementedCiServer) ListImage(context.Context, *ListImageReq) (*ListImageRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListImage not implemented")
+}
+func (UnimplementedCiServer) DeleteImage(context.Context, *DeleteImageReq) (*DeleteImageRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteImage not implemented")
 }
 func (UnimplementedCiServer) mustEmbedUnimplementedCiServer() {}
 
@@ -230,20 +295,77 @@ func _Ci_ListBuildPlan_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Ci_BuildImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BuildReq)
+func _Ci_BuildImage_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(BuildReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CiServer).BuildImage(m, &ciBuildImageServer{stream})
+}
+
+type Ci_BuildImageServer interface {
+	Send(*BuildRsp) error
+	grpc.ServerStream
+}
+
+type ciBuildImageServer struct {
+	grpc.ServerStream
+}
+
+func (x *ciBuildImageServer) Send(m *BuildRsp) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _Ci_GetImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetImageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CiServer).BuildImage(ctx, in)
+		return srv.(CiServer).GetImage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ci.ci/BuildImage",
+		FullMethod: "/ci.ci/GetImage",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CiServer).BuildImage(ctx, req.(*BuildReq))
+		return srv.(CiServer).GetImage(ctx, req.(*GetImageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Ci_ListImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListImageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CiServer).ListImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ci.ci/ListImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CiServer).ListImage(ctx, req.(*ListImageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Ci_DeleteImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteImageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CiServer).DeleteImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ci.ci/DeleteImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CiServer).DeleteImage(ctx, req.(*DeleteImageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -276,10 +398,24 @@ var Ci_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Ci_ListBuildPlan_Handler,
 		},
 		{
-			MethodName: "BuildImage",
-			Handler:    _Ci_BuildImage_Handler,
+			MethodName: "GetImage",
+			Handler:    _Ci_GetImage_Handler,
+		},
+		{
+			MethodName: "ListImage",
+			Handler:    _Ci_ListImage_Handler,
+		},
+		{
+			MethodName: "DeleteImage",
+			Handler:    _Ci_DeleteImage_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "BuildImage",
+			Handler:       _Ci_BuildImage_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "ci.proto",
 }

@@ -32,6 +32,7 @@ type UserClient interface {
 	GetPermission(ctx context.Context, in *GetPermissionReq, opts ...grpc.CallOption) (*GetPermissionRsp, error)
 	SetPermission(ctx context.Context, in *SetPermissionReq, opts ...grpc.CallOption) (*SetPermissionRsp, error)
 	DeletePermission(ctx context.Context, in *DeletePermissionReq, opts ...grpc.CallOption) (*DeletePermissionRsp, error)
+	GetPermissions(ctx context.Context, in *GetPermissionsReq, opts ...grpc.CallOption) (*GetPermissionsRsp, error)
 }
 
 type userClient struct {
@@ -132,6 +133,15 @@ func (c *userClient) DeletePermission(ctx context.Context, in *DeletePermissionR
 	return out, nil
 }
 
+func (c *userClient) GetPermissions(ctx context.Context, in *GetPermissionsReq, opts ...grpc.CallOption) (*GetPermissionsRsp, error) {
+	out := new(GetPermissionsRsp)
+	err := c.cc.Invoke(ctx, "/user.user/getPermissions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -146,6 +156,7 @@ type UserServer interface {
 	GetPermission(context.Context, *GetPermissionReq) (*GetPermissionRsp, error)
 	SetPermission(context.Context, *SetPermissionReq) (*SetPermissionRsp, error)
 	DeletePermission(context.Context, *DeletePermissionReq) (*DeletePermissionRsp, error)
+	GetPermissions(context.Context, *GetPermissionsReq) (*GetPermissionsRsp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -182,6 +193,9 @@ func (UnimplementedUserServer) SetPermission(context.Context, *SetPermissionReq)
 }
 func (UnimplementedUserServer) DeletePermission(context.Context, *DeletePermissionReq) (*DeletePermissionRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePermission not implemented")
+}
+func (UnimplementedUserServer) GetPermissions(context.Context, *GetPermissionsReq) (*GetPermissionsRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPermissions not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -376,6 +390,24 @@ func _User_DeletePermission_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_GetPermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPermissionsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetPermissions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.user/getPermissions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetPermissions(ctx, req.(*GetPermissionsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -422,6 +454,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "deletePermission",
 			Handler:    _User_DeletePermission_Handler,
+		},
+		{
+			MethodName: "getPermissions",
+			Handler:    _User_GetPermissions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -11,7 +11,8 @@ const (
 	JSONMarshalError
 	ContextError
 	GitError
-	DockeError
+	DockerError
+	CopierError
 
 	NotFound
 	AlreadyExist
