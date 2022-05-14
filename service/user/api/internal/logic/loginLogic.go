@@ -32,6 +32,7 @@ func (l *LoginLogic) Login(req types.LoginReq) (*types.LoginReply, error) {
 	rsp, err := l.svcCtx.UserRpc.Login(l.ctx, &user.LoginReq{
 		Email:    req.Email,
 		Password: req.Password,
+		Code:     req.Code,
 	})
 	if err != nil {
 		logx.Errorf("Fail to Login(email: %s), err: %s", req.Email, err.Error())

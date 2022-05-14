@@ -15,6 +15,7 @@ const (
 	CopierError
 
 	NotFound
+	NotVerify
 	AlreadyExist
 	PasswordNotMatch
 	TokenGenerateError

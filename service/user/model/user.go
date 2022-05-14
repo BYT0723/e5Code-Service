@@ -11,4 +11,5 @@ type User struct {
 	Name      string
 	Bio       string
 	Password  string `gorm:"not null"`
+	Verify    bool   `gorm:"default:false"`
 }

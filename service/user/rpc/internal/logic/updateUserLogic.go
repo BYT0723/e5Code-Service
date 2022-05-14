@@ -47,7 +47,7 @@ func (l *UpdateUserLogic) UpdateUser(in *user.UpdateUserReq) (*user.UpdateUserRs
 		u.Bio = in.Bio
 	}
 	if err := l.svcCtx.Db.Save(u).Error; err != nil {
-		l.Logger.Errorf("Fail to update user(id: %s): %s", in.Id, err.Error())
+		logx.Errorf("Fail to update user(id: %s): %s", in.Id, err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
 	return &user.UpdateUserRsp{}, nil

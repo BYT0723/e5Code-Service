@@ -9,6 +9,7 @@ type (
 	LoginReq {
 		Email    string `json:"email"`
 		Password string `json:"password"`
+		Code     string `json:"code,optional"`
 	}
 	LoginReply {
 		Id           string `json:"id"`

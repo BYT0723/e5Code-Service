@@ -27,7 +27,7 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) DeleteU
 
 func (l *DeleteUserLogic) DeleteUser(req types.DeleteUserReq) (*types.DeleteUserReply, error) {
 	if _, err := l.svcCtx.UserRpc.DeleteUser(l.ctx, &user.DeleteUserReq{Id: req.Id}); err != nil {
-		l.Logger.Errorf("Fail to delete user(id: %s)", req.Id)
+		logx.Errorf("Fail to delete user(id: %s)", req.Id)
 		return &types.DeleteUserReply{Result: false}, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
 	return &types.DeleteUserReply{Result: true}, nil
