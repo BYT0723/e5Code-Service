@@ -2,13 +2,13 @@ package logic
 
 import (
 	"context"
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common"
 	"e5Code-Service/common/cryptx"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/common/mailx"
 	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/user"
 	"fmt"
 	"math/rand"
 	"time"

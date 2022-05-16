@@ -2,11 +2,13 @@
 package types
 
 type User struct {
-	ID      string `json:"id"`
-	Email   string `json:"email"`
-	Account string `json:"account"`
-	Name    string `json:"name"`
-	Bio     string `json:"bio"`
+	ID        string `json:"id"`
+	CreatedAt int64  `json:"created_at"`
+	UpdatedAt int64  `json:"updated_at"`
+	Email     string `json:"email"`
+	Account   string `json:"account"`
+	Name      string `json:"name"`
+	Bio       string `json:"bio"`
 }
 
 type LoginReq struct {
@@ -63,11 +65,7 @@ type UserInfoByEmailReq struct {
 }
 
 type UserInfoReply struct {
-	Id      string `json:"id"`
-	Email   string `json:"email"`
-	Account string `json:"account"`
-	Name    string `json:"name"`
-	Bio     string `json:"bio"`
+	Result User `json:"result"`
 }
 
 type GetPermissionReq struct {
@@ -120,4 +118,39 @@ type GetPermissionsReq struct {
 type GetPermissionsReply struct {
 	Count  int64            `json:"count"`
 	Result []PermissionInfo `json:"result"`
+}
+
+type SSHKey struct {
+	ID        string `json:"id"`
+	CreatedAt int64  `json:"created_at"`
+	UpdatedAt int64  `json:"updated_at"`
+	Name      string `json:"name"`
+	Key       string `json:"key"`
+	OwnerID   string `json:"owner_id"`
+}
+
+type AddSSHKeyReq struct {
+	Name string `json:"name"`
+	Key  string `json:"key"`
+}
+
+type AddSSHKeyReply struct {
+	ID string `json:"id"`
+}
+
+type DeleteSSHKeyReq struct {
+	ID string `json:"id"`
+}
+
+type DeleteSSHKeyReply struct {
+	Result bool `json:"result"`
+}
+
+type ListSSHKeysReq struct {
+	OwnerID string `json:"owner_id"`
+}
+
+type ListSSHKeysReply struct {
+	Count  int64    `json:"count"`
+	Result []SSHKey `json:"result"`
 }

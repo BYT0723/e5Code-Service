@@ -11,53 +11,71 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/updateUser",
-				Handler: updateUserHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/deleteUser",
-				Handler: deleteUserHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/userInfo",
-				Handler: userInfoHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/userInfoByEmail",
-				Handler: userInfoByEmailHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/listUser",
-				Handler: listUserHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/getPermission",
-				Handler: getPermissionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/setPermission",
-				Handler: setPermissionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/deletePermission",
-				Handler: deletePermissionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/getPermissions",
-				Handler: getPermissionsHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.LoadValue},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/updateUser",
+					Handler: updateUserHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/deleteUser",
+					Handler: deleteUserHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/userInfo",
+					Handler: userInfoHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/userInfoByEmail",
+					Handler: userInfoByEmailHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/listUser",
+					Handler: listUserHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/getPermission",
+					Handler: getPermissionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/setPermission",
+					Handler: setPermissionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/deletePermission",
+					Handler: deletePermissionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/getPermissions",
+					Handler: getPermissionsHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/addSSHKey",
+					Handler: addSSHKeyHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/deleteSSHKey",
+					Handler: deleteSSHKeyHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/user/listSSHKeys",
+					Handler: listSSHKeysHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)
 

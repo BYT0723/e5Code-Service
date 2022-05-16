@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/common/copierx"
 	"e5Code-Service/common/errorx"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/api/internal/svc"
@@ -32,12 +33,14 @@ func (l *UserInfoLogic) UserInfo(req types.UserInfoReq) (resp *types.UserInfoRep
 		logx.Error("Fail to getUser, err: ", err.Error())
 		return nil, errorx.NewCodeError(codesx.RPCError, err.Error())
 	}
+
+	res := types.User{}
+	if err := copierx.Copy(&res, &rsp.Result); err != nil {
+		logx.Error("Fail to Copy on UserInfoByEmail:", err.Error())
+		return nil, errorx.NewCodeError(codesx.CopierError, err.Error())
+	}
 	resp = &types.UserInfoReply{
-		Id:      rsp.Id,
-		Email:   rsp.Email,
-		Account: rsp.Account,
-		Name:    rsp.Name,
-		Bio:     rsp.Bio,
+		Result: res,
 	}
 	return
 }

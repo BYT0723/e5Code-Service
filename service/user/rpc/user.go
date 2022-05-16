@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/service/user/rpc/internal/config"
 	"e5Code-Service/service/user/rpc/internal/server"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -27,7 +27,7 @@ func main() {
 	srv := server.NewUserServer(ctx)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		pb.RegisterUserServer(grpcServer, srv)
+		user.RegisterUserServer(grpcServer, srv)
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

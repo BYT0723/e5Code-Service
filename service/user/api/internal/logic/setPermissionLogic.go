@@ -3,11 +3,11 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common/errorx"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewSetPermissionLogic(ctx context.Context, svcCtx *svc.ServiceContext) SetP
 }
 
 func (l *SetPermissionLogic) SetPermission(req types.SetPermissionReq) (resp *types.SetPermissionReply, err error) {
-	if _, err := l.svcCtx.UserRpc.SetPermission(l.ctx, &pb.SetPermissionReq{
+	if _, err := l.svcCtx.UserRpc.SetPermission(l.ctx, &user.SetPermissionReq{
 		UserID:     req.UserID,
 		ProjectID:  req.ProjectID,
 		Permission: req.Permission,

@@ -3,11 +3,11 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
@@ -28,7 +28,7 @@ func NewSetPermissionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Set
 	}
 }
 
-func (l *SetPermissionLogic) SetPermission(in *pb.SetPermissionReq) (*pb.SetPermissionRsp, error) {
+func (l *SetPermissionLogic) SetPermission(in *user.SetPermissionReq) (*user.SetPermissionRsp, error) {
 	p := &model.Permission{}
 	if err := l.svcCtx.Db.Where("user_id = ? and project_id = ?", in.UserID, in.ProjectID).First(&p).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -51,5 +51,5 @@ func (l *SetPermissionLogic) SetPermission(in *pb.SetPermissionReq) (*pb.SetPerm
 			return nil, status.Error(codesx.SQLError, err2.Error())
 		}
 	}
-	return &pb.SetPermissionRsp{}, nil
+	return &user.SetPermissionRsp{}, nil
 }

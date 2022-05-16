@@ -28,6 +28,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	db.AutoMigrate(
 		&model.User{},
 		&model.Permission{},
+    &model.SSHKey{},
 	)
 	return &ServiceContext{
 		Config: c,

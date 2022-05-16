@@ -3,10 +3,10 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -27,7 +27,7 @@ func NewGetPermissionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-func (l *GetPermissionsLogic) GetPermissions(in *pb.GetPermissionsReq) (*pb.GetPermissionsRsp, error) {
+func (l *GetPermissionsLogic) GetPermissions(in *user.GetPermissionsReq) (*user.GetPermissionsRsp, error) {
 	permissions := []*model.Permission{}
 	if err := l.svcCtx.Db.Find(&permissions, "project_id = ? and permission >= ?", in.ProjectID, in.Permission).Error; err != nil {
 		logx.Error("Fail to GetPermissions:", err.Error())
@@ -46,15 +46,15 @@ func (l *GetPermissionsLogic) GetPermissions(in *pb.GetPermissionsReq) (*pb.GetP
 		logx.Error("Fail to Find User on GetPermissions:", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
-	userModels := make([]*pb.UserModel, count)
+	userModels := make([]*user.UserModel, count)
 	copier.Copy(&userModels, &users)
 
-	res := make([]*pb.PermissionInfo, count)
+	res := make([]*user.PermissionInfo, count)
 	for i := 0; i < count; i++ {
-		res[i] = &pb.PermissionInfo{
+		res[i] = &user.PermissionInfo{
 			User:       userModels[i],
 			Permission: int64(upMap[userModels[i].ID]),
 		}
 	}
-	return &pb.GetPermissionsRsp{Count: int64(count), Result: res}, nil
+	return &user.GetPermissionsRsp{Count: int64(count), Result: res}, nil
 }

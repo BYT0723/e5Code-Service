@@ -6,14 +6,14 @@ package server
 import (
 	"context"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/service/user/rpc/internal/logic"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/pb"
 )
 
 type UserServer struct {
 	svcCtx *svc.ServiceContext
-	pb.UnimplementedUserServer
+	user.UnimplementedUserServer
 }
 
 func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
@@ -22,57 +22,72 @@ func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
 	}
 }
 
-func (s *UserServer) GetUser(ctx context.Context, in *pb.GetUserReq) (*pb.GetUserRsp, error) {
+func (s *UserServer) GetUser(ctx context.Context, in *user.GetUserReq) (*user.GetUserRsp, error) {
 	l := logic.NewGetUserLogic(ctx, s.svcCtx)
 	return l.GetUser(in)
 }
 
-func (s *UserServer) GetUserByEmail(ctx context.Context, in *pb.GetUserByEmailReq) (*pb.GetUserRsp, error) {
+func (s *UserServer) GetUserByEmail(ctx context.Context, in *user.GetUserByEmailReq) (*user.GetUserRsp, error) {
 	l := logic.NewGetUserByEmailLogic(ctx, s.svcCtx)
 	return l.GetUserByEmail(in)
 }
 
-func (s *UserServer) AddUser(ctx context.Context, in *pb.AddUserReq) (*pb.AddUserRsp, error) {
+func (s *UserServer) AddUser(ctx context.Context, in *user.AddUserReq) (*user.AddUserRsp, error) {
 	l := logic.NewAddUserLogic(ctx, s.svcCtx)
 	return l.AddUser(in)
 }
 
-func (s *UserServer) UpdateUser(ctx context.Context, in *pb.UpdateUserReq) (*pb.UpdateUserRsp, error) {
+func (s *UserServer) UpdateUser(ctx context.Context, in *user.UpdateUserReq) (*user.UpdateUserRsp, error) {
 	l := logic.NewUpdateUserLogic(ctx, s.svcCtx)
 	return l.UpdateUser(in)
 }
 
-func (s *UserServer) DeleteUser(ctx context.Context, in *pb.DeleteUserReq) (*pb.DeleteUserRsp, error) {
+func (s *UserServer) DeleteUser(ctx context.Context, in *user.DeleteUserReq) (*user.DeleteUserRsp, error) {
 	l := logic.NewDeleteUserLogic(ctx, s.svcCtx)
 	return l.DeleteUser(in)
 }
 
-func (s *UserServer) Login(ctx context.Context, in *pb.LoginReq) (*pb.LoginRsp, error) {
+func (s *UserServer) Login(ctx context.Context, in *user.LoginReq) (*user.LoginRsp, error) {
 	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
 }
 
-func (s *UserServer) ListUser(ctx context.Context, in *pb.ListUserReq) (*pb.ListUserRsp, error) {
+func (s *UserServer) ListUser(ctx context.Context, in *user.ListUserReq) (*user.ListUserRsp, error) {
 	l := logic.NewListUserLogic(ctx, s.svcCtx)
 	return l.ListUser(in)
 }
 
-func (s *UserServer) GetPermission(ctx context.Context, in *pb.GetPermissionReq) (*pb.GetPermissionRsp, error) {
+func (s *UserServer) GetPermission(ctx context.Context, in *user.GetPermissionReq) (*user.GetPermissionRsp, error) {
 	l := logic.NewGetPermissionLogic(ctx, s.svcCtx)
 	return l.GetPermission(in)
 }
 
-func (s *UserServer) SetPermission(ctx context.Context, in *pb.SetPermissionReq) (*pb.SetPermissionRsp, error) {
+func (s *UserServer) SetPermission(ctx context.Context, in *user.SetPermissionReq) (*user.SetPermissionRsp, error) {
 	l := logic.NewSetPermissionLogic(ctx, s.svcCtx)
 	return l.SetPermission(in)
 }
 
-func (s *UserServer) DeletePermission(ctx context.Context, in *pb.DeletePermissionReq) (*pb.DeletePermissionRsp, error) {
+func (s *UserServer) DeletePermission(ctx context.Context, in *user.DeletePermissionReq) (*user.DeletePermissionRsp, error) {
 	l := logic.NewDeletePermissionLogic(ctx, s.svcCtx)
 	return l.DeletePermission(in)
 }
 
-func (s *UserServer) GetPermissions(ctx context.Context, in *pb.GetPermissionsReq) (*pb.GetPermissionsRsp, error) {
+func (s *UserServer) GetPermissions(ctx context.Context, in *user.GetPermissionsReq) (*user.GetPermissionsRsp, error) {
 	l := logic.NewGetPermissionsLogic(ctx, s.svcCtx)
 	return l.GetPermissions(in)
+}
+
+func (s *UserServer) AddSSHKey(ctx context.Context, in *user.AddSSHKeyReq) (*user.AddSSHKeyRsp, error) {
+	l := logic.NewAddSSHKeyLogic(ctx, s.svcCtx)
+	return l.AddSSHKey(in)
+}
+
+func (s *UserServer) DeleteSSHKey(ctx context.Context, in *user.DeleteSSHKeyReq) (*user.DeleteSSHKeyRsp, error) {
+	l := logic.NewDeleteSSHKeyLogic(ctx, s.svcCtx)
+	return l.DeleteSSHKey(in)
+}
+
+func (s *UserServer) ListSSHKey(ctx context.Context, in *user.ListSSHKeysReq) (*user.ListSSHKeysRsp, error) {
+	l := logic.NewListSSHKeyLogic(ctx, s.svcCtx)
+	return l.ListSSHKey(in)
 }

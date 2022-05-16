@@ -3,10 +3,10 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -27,16 +27,16 @@ func NewListUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListUser
 	}
 }
 
-func (l *ListUserLogic) ListUser(in *pb.ListUserReq) (*pb.ListUserRsp, error) {
+func (l *ListUserLogic) ListUser(in *user.ListUserReq) (*user.ListUserRsp, error) {
 	us := []model.User{}
 	if err := l.svcCtx.Db.Find(&us, "id in ?", in.Ids).Error; err != nil {
 		logx.Error("Fail to Find User: ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
-	res := []*pb.UserModel{}
+	res := []*user.UserModel{}
 	copier.Copy(&res, us)
 
-	return &pb.ListUserRsp{
+	return &user.ListUserRsp{
 		Count:  int64(len(us)),
 		Result: res,
 	}, nil

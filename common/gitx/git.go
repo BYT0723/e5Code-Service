@@ -13,7 +13,7 @@ import (
 
 	git "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
-	"github.com/go-git/go-git/v5/plumbing/transport/http"
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
 type File struct {
@@ -32,15 +32,19 @@ type CommitInfo struct {
 	Author  string
 	When    time.Time
 }
-type GitCloneOpt struct {
-	Local  string
-	IsBare bool
-	*git.CloneOptions
-}
 
 // Clone远程仓库到本地，返回Clone到的本地URL
-func Clone(opt GitCloneOpt) error {
-	if _, err := git.PlainClone(opt.Local, opt.IsBare, opt.CloneOptions); err != nil {
+func Clone(local, url string) error {
+	auth, err := ssh.NewPublicKeysFromFile("git", "./id_keys/id_rsa", "")
+	if err != nil {
+		return err
+	}
+	opt := &git.CloneOptions{
+		URL:  url,
+		Auth: auth,
+	}
+	opt.Auth = auth
+	if _, err := git.PlainClone(local, false, opt); err != nil {
 		return err
 	}
 	return nil
@@ -324,8 +328,6 @@ type CommitOption struct {
 	Msg       string
 	Author    string
 	Email     string
-	Remote    string
-	*http.BasicAuth
 }
 
 func Commit(rep *git.Repository, opt *CommitOption) (err error) {
@@ -349,12 +351,17 @@ func Commit(rep *git.Repository, opt *CommitOption) (err error) {
 	}); err != nil {
 		return
 	}
-	if opt.Remote == "" {
-		opt.Remote = "origin"
+	return
+}
+
+func Push(rep *git.Repository) (err error) {
+	auth, err := ssh.NewPublicKeysFromFile("git", "./id_keys/id_rsa", "")
+	if err != nil {
+		return err
 	}
 	if err = rep.Push(&git.PushOptions{
-		RemoteName: opt.Remote,
-		Auth:       opt.BasicAuth,
+		RemoteName: "origin",
+		Auth:       auth,
 	}); err != nil {
 		return
 	}
@@ -388,7 +395,7 @@ func TarProject(rep *git.Repository, target, source string) error {
 		}
 
 		hr := &tar.Header{
-			Name: strings.Replace(path, source, ".", -1),
+			Name: strings.ReplaceAll(path, source, "."),
 			Size: info.Size(),
 			Mode: 0666,
 		}

@@ -1,10 +1,12 @@
 type (
 	User {
-		ID      string `json:"id"`
-		Email   string `json:"email"`
-		Account string `json:"account"`
-		Name    string `json:"name"`
-		Bio     string `json:"bio"`
+		ID        string `json:"id"`
+		CreatedAt int64  `json:"created_at"`
+		UpdatedAt int64  `json:"updated_at"`
+		Email     string `json:"email"`
+		Account   string `json:"account"`
+		Name      string `json:"name"`
+		Bio       string `json:"bio"`
 	}
 	LoginReq {
 		Email    string `json:"email"`
@@ -51,11 +53,7 @@ type (
 		Email string `json:"email"`
 	}
 	UserInfoReply {
-		Id      string `json:"id"`
-		Email   string `json:"email"`
-		Account string `json:"account"`
-		Name    string `json:"name"`
-		Bio     string `json:"bio"`
+		Result User `json:"result"`
 	}
 	GetPermissionReq {
 		UserID    string `json:"user_id"`
@@ -98,10 +96,39 @@ type (
 		Count  int64            `json:"count"`
 		Result []PermissionInfo `json:"result"`
 	}
+	SSHKey {
+		ID        string `json:"id"`
+		CreatedAt int64  `json:"created_at"`
+		UpdatedAt int64  `json:"updated_at"`
+		Name      string `json:"name"`
+		Key       string `json:"key"`
+		OwnerID   string `json:"owner_id"`
+	}
+	AddSSHKeyReq {
+		Name string `json:"name"`
+		Key  string `json:"key"`
+	}
+	AddSSHKeyReply {
+		ID string `json:"id"`
+	}
+	DeleteSSHKeyReq {
+		ID string `json:"id"`
+	}
+	DeleteSSHKeyReply {
+		Result bool `json:"result"`
+	}
+	ListSSHKeysReq {
+		OwnerID string `json:"owner_id"`
+	}
+	ListSSHKeysReply {
+		Count  int64    `json:"count"`
+		Result []SSHKey `json:"result"`
+	}
 )
 
 @server(
 	jwt: Auth
+	middleware: LoadValue
 )
 service user-api {
 	@handler updateUser
@@ -122,6 +149,13 @@ service user-api {
 	post /user/deletePermission(DeletePermissionReq) returns(DeletePermissionReply)
 	@handler getPermissions
 	post /user/getPermissions(GetPermissionsReq) returns(GetPermissionsReply)
+	
+	@handler addSSHKey
+	post /user/addSSHKey(AddSSHKeyReq) returns(AddSSHKeyReply)
+	@handler deleteSSHKey
+	post /user/deleteSSHKey(DeleteSSHKeyReq) returns(DeleteSSHKeyReply)
+	@handler listSSHKeys
+	post /user/listSSHKeys(ListSSHKeysReq) returns(ListSSHKeysReply)
 }
 
 service user-api {

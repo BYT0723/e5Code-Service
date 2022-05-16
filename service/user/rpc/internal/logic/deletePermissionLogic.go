@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
@@ -28,7 +28,7 @@ func NewDeletePermissionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *DeletePermissionLogic) DeletePermission(in *pb.DeletePermissionReq) (*pb.DeletePermissionRsp, error) {
+func (l *DeletePermissionLogic) DeletePermission(in *user.DeletePermissionReq) (*user.DeletePermissionRsp, error) {
 	condition := []string{}
 	if in.UserID != "" {
 		condition = append(condition, fmt.Sprintf("user_id = '%s'", in.UserID))
@@ -43,5 +43,5 @@ func (l *DeletePermissionLogic) DeletePermission(in *pb.DeletePermissionReq) (*p
 		logx.Error("Fail to deletePermission: ", err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
-	return &pb.DeletePermissionRsp{}, nil
+	return &user.DeletePermissionRsp{}, nil
 }

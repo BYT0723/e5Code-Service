@@ -3,11 +3,11 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common/errorx"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewDeletePermissionLogic(ctx context.Context, svcCtx *svc.ServiceContext) D
 }
 
 func (l *DeletePermissionLogic) DeletePermission(req types.DeletePermissionReq) (resp *types.DeletePermissionReply, err error) {
-	if _, err := l.svcCtx.UserRpc.DeletePermission(l.ctx, &pb.DeletePermissionReq{
+	if _, err := l.svcCtx.UserRpc.DeletePermission(l.ctx, &user.DeletePermissionReq{
 		UserID:    req.UserID,
 		ProjectID: req.ProjectID,
 	}); err != nil {

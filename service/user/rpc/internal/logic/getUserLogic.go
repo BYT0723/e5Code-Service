@@ -2,14 +2,14 @@ package logic
 
 import (
 	"context"
+	"e5Code-Service/api/pb/user"
+	"e5Code-Service/common/copierx"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/model"
 	"e5Code-Service/service/user/rpc/internal/svc"
-	"e5Code-Service/service/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
 )
 
@@ -36,14 +36,13 @@ func (l *GetUserLogic) GetUser(in *user.GetUserReq) (*user.GetUserRsp, error) {
 		logx.Errorf("Fail to get user(id: %s): %s", in.Id, err.Error())
 		return nil, status.Error(codesx.SQLError, err.Error())
 	}
+	res := &user.UserModel{}
+	if err := copierx.Copy(&res, &u); err != nil {
+		logx.Error("Fail to Copy on GetUser:", err.Error())
+		return nil, status.Error(codesx.CopierError, err.Error())
+	}
 
 	return &user.GetUserRsp{
-		CreatedAt: timestamppb.New(u.CreatedAt),
-		UpdatedAt: timestamppb.New(u.UpdatedAt),
-		Id:        in.Id,
-		Email:     u.Email,
-		Account:   u.Account,
-		Name:      u.Name,
-		Bio:       u.Bio,
+		Result: res,
 	}, nil
 }

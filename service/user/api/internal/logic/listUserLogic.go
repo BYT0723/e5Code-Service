@@ -3,10 +3,10 @@ package logic
 import (
 	"context"
 
+	"e5Code-Service/api/pb/user"
 	"e5Code-Service/common/errorx/codesx"
 	"e5Code-Service/service/user/api/internal/svc"
 	"e5Code-Service/service/user/api/internal/types"
-	"e5Code-Service/service/user/rpc/pb"
 
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,7 +28,7 @@ func NewListUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) ListUserL
 }
 
 func (l *ListUserLogic) ListUser(req types.ListUserReq) (resp *types.ListUserReply, err error) {
-	rsp, err := l.svcCtx.UserRpc.ListUser(l.ctx, &pb.ListUserReq{Ids: req.IDs})
+	rsp, err := l.svcCtx.UserRpc.ListUser(l.ctx, &user.ListUserReq{Ids: req.IDs})
 	if err != nil {
 		logx.Error("Fail to ListUser on ListUser: ", err.Error())
 		return nil, status.Error(codesx.RPCError, err.Error())
